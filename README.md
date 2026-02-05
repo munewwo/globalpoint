@@ -2,43 +2,46 @@
 
 グローバルポイント社の顧客対応を支援するシステムのプロジェクトです。
 
+## このリポジトリで管理するもの
+
+顧客対応を支援するため、対外的に公開・提示する（または提示の根拠となる）文書を整理・保管します。
+
+- **リリースノート（対外発表の一覧）**: `docs/release/README.md`
+- **利用規約・プライバシーポリシー**: `docs/pokerweb/` / `docs/gameid/`
+- **サービス説明・運用ルール等**: `docs/pokerweb/`
+- **用語集（表記ゆれ・未定義語の解消）**: `docs/terms/README.md`
+
+上記の主な入口:
+
+- **リリースノート一覧**: [docs/release/README.md](docs/release/README.md)
+- **用語集**: [docs/terms/README.md](docs/terms/README.md)
+
+## 参照のしかた（顧客対応の導線）
+
+- **過去の発表内容を確認したい**: [docs/release/README.md](docs/release/README.md)（日付順の一覧）
+- **規約・ポリシーの全文を提示したい**: 下部「利用規約・プライバシーポリシー（参照）」のリンク
+- **用語の定義や表記（ウェブコイン等）を揃えたい**: [docs/terms/README.md](docs/terms/README.md)
+
+## 文書運用ルール（言葉遣い・用語の統一）
+
+- **語尾・文体**: 原則として「です・ます」で統一します（既存文書の原文引用は除く）。
+- **用語**: 新しい用語や表記ゆれを見つけたら、まず [docs/terms/README.md](docs/terms/README.md) に追記してから本文書へ反映します。
+- **「当社」の扱い**: 規約等の文書では、**「当社」等の定義が文書内で指定**されます。本文書の会社情報と一致しない場合があるため、顧客対応では必ず各文書の定義（例: 第2条（定義））を優先してください。
+
+## フォルダ構成
+
+| パス | 内容 |
+|------|------|
+| `docs/release/` | 対外発表したリリースノート（一覧は [docs/release/README.md](docs/release/README.md)） |
+| `docs/pokerweb/` | POKERWEB に関する規約・ポリシー・サービス説明・運用ルール |
+| `docs/gameid/` | GameID に関する規約・ポリシー |
+| `docs/terms/` | 用語集（正規表記、定義、注意点、表記ゆれの整理。入口は [docs/terms/README.md](docs/terms/README.md)） |
+
 ## 法人情報
 
-- **法人番号**: 3230003001837
-- **商号又は名称**: 合同会社グローバルポイント
-- **商号又は名称（フリガナ）**: グローバルポイント
-- **本店所在地**: 京都府京都市中京区鍋屋町221番地 THE CITY木屋町1
-- **代表社員**: 辻 良徳（ツジヨシノリ）
-- **英字表記**: Global Point llc.
-- **コーポレートサイト**: https://global-point.co.jp/
+法人情報および関連サービス情報は、次のファイルに集約しています。
 
-## 主な事業内容
-
-### 1. POKERGUILD
-- 日本のポーカー店および大会のトーナメントを中心としたイベントスケジュール情報サイト「POKERWEB」の開発および運営
-- 日本のポーカー店および大会での優秀選手を認定し、選手契約（業務委託契約）のもと国内外の大会への参加を支援する業務
-
-### 2. POKERWEB 日本代理店
-- 日本のポーカー店および大会向けのマネジメントシステム「POKERWEB」の導入や利用のサポート業務
-- POKERWEBで管理できるポイントシステム「ウェブコイン」の運用業務
-- システム開発に対する日本語対応など開発補助業務
-
-### 3. GameID 日本代理店
-- POKERWEBと連動した会員アプリ「GameID」の日本向けサポート業務
-- 上記に関連したウェブコインの付与や利用に関するサポート業務
-- 会員の本人認証（eKYC）システムの開発および運用に関わる業務
-
-### 4. 業界団体との連携
-- 業界団体「日本ポーカー事業者連盟」（https://jpba-poker.com/）と連携した業界発展のためのロビー活動やコンプライアンス等の取り組み（一般会員として参画）
-
-## 関連ウェブサイト・アプリ
-
-| サービス | URL |
-|---------|-----|
-| POKERGUILD | https://pokerguild.jp/ |
-| POKERWEB | https://pokerguild.jp/pokerweb/ |
-| GameID (iOS) | https://apps.apple.com/jp/app/gameid/id1553156844 |
-| GameID (Android) | https://play.google.com/store/apps/details?id=br.com.pokerweb.gameid&hl=ja |
+- [docs/globalpoint-corporate.md](docs/globalpoint-corporate.md)
 
 ## 利用規約・プライバシーポリシー（参照）
 
