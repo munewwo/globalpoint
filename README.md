@@ -39,3 +39,14 @@
 | POKERWEB | https://pokerguild.jp/pokerweb/ |
 | GameID (iOS) | https://apps.apple.com/jp/app/gameid/id1553156844 |
 | GameID (Android) | https://play.google.com/store/apps/details?id=br.com.pokerweb.gameid&hl=ja |
+
+## 利用規約・プライバシーポリシー（参照）
+
+POKERWEBおよびGameIDの利用規約・プライバシーポリシーの全文は、本リポジトリ内の以下のファイルに保管しています。概要のみここに記載します。
+
+| 資料 | 概要 | 保管先 |
+|------|------|--------|
+| **POKERWEB 利用規約** | ウェブコイン（本サービス）の提供条件および当社と登録事業者との権利義務。適用・定義・登録・料金・禁止事項・ウェブコイン注意事項・停止・権利帰属・登録抹消・退会・免責・秘密保持・利用者情報・規約変更・管轄等（全22条）。 | [docs/pokerweb/pokerweb-terms.md](docs/pokerweb/pokerweb-terms.md) |
+| **POKERWEB プライバシーポリシー** | POKERWEB上で公開するポリシーに準拠し、情報の安全性とプライバシーを重視してデータを取り扱う。登録完了をもって同意とみなす。変更時は最新に準拠。 | [docs/pokerweb/pokerweb-privacy.md](docs/pokerweb/pokerweb-privacy.md) |
+| **GameID 利用規約** | ウェブコインの提供条件および当社と会員との権利義務。適用・定義・登録・運用（付与・送付時5%消費）・禁止事項・停止・権利帰属・登録抹消・退会・免責・秘密保持・利用者情報・規約変更・管轄等（全20条）。 | [docs/gameid/gameid_terms.md](docs/gameid/gameid_terms.md) |
+| **GameID プライバシーポリシー** | GameIDアプリ上で公開するポリシーに準拠し、情報の安全性とプライバシーを重視してデータを取り扱う。アプリ登録完了をもって同意とみなす。変更時は最新に準拠。 | [docs/gameid/gameid_privacy.md](docs/gameid/gameid_privacy.md) |
