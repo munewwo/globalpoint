@@ -29,6 +29,11 @@
 - **GameID 利用規約**: [docs/gameid/gameid_terms.md](docs/gameid/gameid_terms.md)
 - **GameID プライバシーポリシー**: [docs/gameid/gameid_privacy.md](docs/gameid/gameid_privacy.md)
 
+### カスタマー対応（LINE QA）
+
+- **運用ガイド**: [docs/support/line-qa/README.md](docs/support/line-qa/README.md)
+- **校正（レビュー）と誤回答修正フロー**: [docs/support/line-qa/REVIEW_WORKFLOW.md](docs/support/line-qa/REVIEW_WORKFLOW.md)
+
 ## 参照のしかた（顧客対応の導線）
 
 - **過去の発表内容を確認したい**: [docs/release/README.md](docs/release/README.md)（日付順の一覧）
