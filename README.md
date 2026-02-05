@@ -16,6 +16,19 @@
 - **リリースノート一覧**: [docs/release/README.md](docs/release/README.md)
 - **用語集**: [docs/terms/README.md](docs/terms/README.md)
 
+## 主要ドキュメント（参照先）
+
+### POKERWEB（`docs/pokerweb/`）
+
+- **加盟クラブが支払うシステム利用料**: [docs/pokerweb/pokerweb-pricing.md](docs/pokerweb/pokerweb-pricing.md)
+- **POKERWEB の説明**: [docs/pokerweb/pokerweb-service.md](docs/pokerweb/pokerweb-service.md)
+- **ウェブコインの説明**: [docs/pokerweb/pokerweb-webcoin.md](docs/pokerweb/pokerweb-webcoin.md)
+
+### GameID（`docs/gameid/`）
+
+- **GameID 利用規約**: [docs/gameid/gameid_terms.md](docs/gameid/gameid_terms.md)
+- **GameID プライバシーポリシー**: [docs/gameid/gameid_privacy.md](docs/gameid/gameid_privacy.md)
+
 ## 参照のしかた（顧客対応の導線）
 
 - **過去の発表内容を確認したい**: [docs/release/README.md](docs/release/README.md)（日付順の一覧）
