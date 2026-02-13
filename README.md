@@ -16,13 +16,13 @@
 
 - **リリースノート一覧**: [docs/release/README.md](docs/release/README.md)
 - **用語集**: [docs/terms/README.md](docs/terms/README.md)
-- **選手契約関連**: [docs/pokerguild/README.md](docs/pokerguild/README.md)
+- **選手契約関連**: [docs/pokerguild/](docs/pokerguild/)
 
 ## 主要ドキュメント（参照先）
 
 ### POKERWEB（`docs/pokerweb/`）
 
-- **加盟クラブが支払うシステム利用料**: [docs/pokerweb/pokerweb-pricing.md](docs/pokerweb/pokerweb-pricing.md)
+- **登録事業者が支払うシステム利用料**: [docs/pokerweb/pokerweb-pricing.md](docs/pokerweb/pokerweb-pricing.md)
 - **POKERWEB の説明**: [docs/pokerweb/pokerweb-service.md](docs/pokerweb/pokerweb-service.md)
 - **ウェブコインの説明**: [docs/pokerweb/pokerweb-webcoin.md](docs/pokerweb/pokerweb-webcoin.md)
 
@@ -33,10 +33,15 @@
 
 ### 選手契約（`docs/pokerguild/`）
 
-- **概要（このフォルダで管理する文書）**: [docs/pokerguild/README.md](docs/pokerguild/README.md)
+このフォルダは、当社の選手契約（業務委託契約）および、それに付随する同意文書を管理します。
+
 - **選手契約（業務委託契約）**: [docs/pokerguild/player_agreement.md](docs/pokerguild/player_agreement.md)
 - **個人情報保護方針（プライバシーポリシー）同意**: [docs/pokerguild/privacy_agreement.md](docs/pokerguild/privacy_agreement.md)
 - **反社会的勢力でないことの表明・確約に関する同意**: [docs/pokerguild/antisocial_agreement.md](docs/pokerguild/antisocial_agreement.md)
+
+#### 運用ルール（`docs/pokerguild/`）
+
+- 上記ファイルは、**本文（契約内容）のみ**を保管し、注記（位置づけ・出典等）はファイル本文には記載しません。
 
 ### カスタマー対応（LINE QA）
 
@@ -77,7 +82,7 @@ POKERWEBおよびGameIDの利用規約・プライバシーポリシーの全文
 
 | 資料 | 概要 | 保管先 |
 |------|------|--------|
-| **POKERWEB 利用規約** | ウェブコイン（本サービス）の提供条件および当社と登録事業者との権利義務。適用・定義・登録・料金・禁止事項・ウェブコイン注意事項・停止・権利帰属・登録抹消・退会・免責・秘密保持・利用者情報・規約変更・管轄等（全22条）。 | [docs/pokerweb/pokerweb-terms.md](docs/pokerweb/pokerweb-terms.md) |
+| **POKERWEB 利用規約** | POKERWEB（本サービス）の提供条件および当社と登録事業者との権利義務。オプション機能（ウェブコイン等）は別紙等の個別規程に従う。 | [docs/pokerweb/pokerweb-terms.md](docs/pokerweb/pokerweb-terms.md) |
 | **POKERWEB プライバシーポリシー** | POKERWEB上で公開するポリシーに準拠し、情報の安全性とプライバシーを重視してデータを取り扱う。登録完了をもって同意とみなす。変更時は最新に準拠。 | [docs/pokerweb/pokerweb-privacy.md](docs/pokerweb/pokerweb-privacy.md) |
-| **GameID 利用規約** | ウェブコインの提供条件および当社と会員との権利義務。適用・定義・登録・運用（付与・送付時5%消費）・禁止事項・停止・権利帰属・登録抹消・退会・免責・秘密保持・利用者情報・規約変更・管轄等（全20条）。 | [docs/gameid/gameid_terms.md](docs/gameid/gameid_terms.md) |
+| **GameID 利用規約** | GameIDおよびこれに関連するウェブコインの提供条件および当社と会員との権利義務。 | [docs/gameid/gameid_terms.md](docs/gameid/gameid_terms.md) |
 | **GameID プライバシーポリシー** | GameIDアプリ上で公開するポリシーに準拠し、情報の安全性とプライバシーを重視してデータを取り扱う。アプリ登録完了をもって同意とみなす。変更時は最新に準拠。 | [docs/gameid/gameid_privacy.md](docs/gameid/gameid_privacy.md) |
