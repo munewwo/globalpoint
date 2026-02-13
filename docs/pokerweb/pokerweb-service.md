@@ -8,7 +8,7 @@
 
 **ポーカーを、もっと便利に楽しもう。**
 
-POKERWEBは、ブラジル・PWソフトウェア社が開発するポーカールーム向けのオペレーション＆マネジメントシステムです。
+POKERWEBは、ブラジル・PW SOFTWARES DE GESTAO LTDAが開発するポーカールーム向けのオペレーション＆マネジメントシステムです。
 
 - プレイヤーアプリ **GameID** と連動した顧客管理
 - トーナメント・リングゲームのオペレーション
@@ -72,7 +72,8 @@ POKERWEBの導入を検討される方は、**サポートデスク公式LINE**�
 
 POKERWEBおよびGameIDの利用規約・プライバシーポリシーの全文は、本リポジトリ内の以下のファイルに保管しています。
 
-- [POKERWEB 利用規約](pokerweb-terms.md) … ウェブコイン提供条件・登録事業者との権利義務（全22条）
+- [POKERWEB 利用規約](pokerweb-terms.md) … POKERWEB（本体）の提供条件・登録事業者との権利義務（オプション機能は別紙を参照）
+- [別紙1：ウェブコイン運用規程](pokerweb-webcoin-appendix.md) … ウェブコイン（オプション機能）の利用条件・運用ルール
 - [POKERWEB プライバシーポリシー](pokerweb-privacy.md) … 情報の安全性・プライバシーに準拠した取扱い
 - [GameID 利用規約](../gameid/gameid_terms.md) … ウェブコイン提供条件・会員との権利義務（全20条）
 - [GameID プライバシーポリシー](../gameid/gameid_privacy.md) … アプリ上ポリシーに準拠した取扱い
