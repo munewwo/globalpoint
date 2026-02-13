@@ -8,6 +8,7 @@
 
 - **リリースノート（対外発表の一覧）**: `docs/release/README.md`
 - **利用規約・プライバシーポリシー**: `docs/pokerweb/` / `docs/gameid/`
+- **選手契約（業務委託契約）・同意文書**: `docs/pokerguild/`
 - **サービス説明・運用ルール等**: `docs/pokerweb/`
 - **用語集（表記ゆれ・未定義語の解消）**: `docs/terms/README.md`
 
@@ -15,6 +16,7 @@
 
 - **リリースノート一覧**: [docs/release/README.md](docs/release/README.md)
 - **用語集**: [docs/terms/README.md](docs/terms/README.md)
+- **選手契約関連**: [docs/pokerguild/README.md](docs/pokerguild/README.md)
 
 ## 主要ドキュメント（参照先）
 
@@ -28,6 +30,13 @@
 
 - **GameID 利用規約**: [docs/gameid/gameid_terms.md](docs/gameid/gameid_terms.md)
 - **GameID プライバシーポリシー**: [docs/gameid/gameid_privacy.md](docs/gameid/gameid_privacy.md)
+
+### 選手契約（`docs/pokerguild/`）
+
+- **概要（このフォルダで管理する文書）**: [docs/pokerguild/README.md](docs/pokerguild/README.md)
+- **選手契約（業務委託契約）**: [docs/pokerguild/player_agreement.md](docs/pokerguild/player_agreement.md)
+- **個人情報保護方針（プライバシーポリシー）同意**: [docs/pokerguild/privacy_agreement.md](docs/pokerguild/privacy_agreement.md)
+- **反社会的勢力でないことの表明・確約に関する同意**: [docs/pokerguild/antisocial_agreement.md](docs/pokerguild/antisocial_agreement.md)
 
 ### カスタマー対応（LINE QA）
 
@@ -53,6 +62,7 @@
 | `docs/release/` | 対外発表したリリースノート（一覧は [docs/release/README.md](docs/release/README.md)） |
 | `docs/pokerweb/` | POKERWEB に関する規約・ポリシー・サービス説明・運用ルール |
 | `docs/gameid/` | GameID に関する規約・ポリシー |
+| `docs/pokerguild/` | 選手契約（業務委託契約）および付随する同意文書 |
 | `docs/terms/` | 用語集（正規表記、定義、注意点、表記ゆれの整理。入口は [docs/terms/README.md](docs/terms/README.md)） |
 
 ## 法人情報
