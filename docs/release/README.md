@@ -12,6 +12,7 @@
 
 | 日付 | タイトル | ファイル |
 |------|----------|----------|
+| 2026-02-12 | FSTからのウェブコインに関する問い合わせと回答 | [リリースノート](2026-02-12-fst-webcoin-inquiry-qa.md) |
 | 2026-02-05 | 規約改定および認定リングゲームに関する事業者向け説明会 | [リリースノート](2026-02-05-terms-update-certified-ring-briefing.md) / [資料（テキスト版）](2026-02-05-terms-update-certified-ring-briefing-material.md) |
 | 2026-02-03 | ウェブコインの利用に関する注意事項（利用規約改定のお知らせ） | [リリースノート](2026-02-03-webcoin-usage-notice-terms-update.md) |
 | 2026-02-02 | ウェブコインの利用に関する注意事項 | [リリースノート](2026-02-02-webcoin-usage-notice.md) |
