@@ -74,9 +74,8 @@ POKERWEBおよびGameIDの利用規約・プライバシーポリシーの全文
 
 - [POKERWEB 利用規約](pokerweb-terms.md) … POKERWEB（本体）の提供条件・登録事業者との権利義務（オプション機能は別紙を参照）
 - [別紙1：ウェブコイン運用規程](pokerweb-webcoin-appendix.md) … ウェブコイン（オプション機能）の利用条件・運用ルール
-- [POKERWEB プライバシーポリシー](pokerweb-privacy.md) … 情報の安全性・プライバシーに準拠した取扱い
+- [当社プライバシーポリシー（共通）](../globalpoint/privacy.md) … 全サービス共通の利用者情報取扱い方針
 - [GameID 利用規約](../gameid/gameid_terms.md) … ウェブコイン提供条件・会員との権利義務（全20条）
-- [GameID プライバシーポリシー](../gameid/gameid_privacy.md) … アプリ上ポリシーに準拠した取扱い
 
 概要は [README 利用規約・プライバシーポリシー](../../README.md#利用規約プライバシーポリシー参照) を参照。
 

@@ -6,11 +6,11 @@
 
 - **リリースノート一覧（対外発表の時系列）**: [docs/release/README.md](docs/release/README.md)
 - **POKERWEB 利用規約（本体）**: [docs/pokerweb/pokerweb-terms.md](docs/pokerweb/pokerweb-terms.md)
-- **POKERWEB プライバシーポリシー**: [docs/pokerweb/pokerweb-privacy.md](docs/pokerweb/pokerweb-privacy.md)
+- **当社プライバシーポリシー（共通）**: [docs/globalpoint/privacy.md](docs/globalpoint/privacy.md)
 - **ウェブコイン運用規程（別紙1 / 優先）**: [docs/pokerweb/pokerweb-webcoin-appendix.md](docs/pokerweb/pokerweb-webcoin-appendix.md)
 - **ウェブコイン（要約・案内）**: [docs/pokerweb/pokerweb-webcoin.md](docs/pokerweb/pokerweb-webcoin.md)
 - **GameID 利用規約**: [docs/gameid/gameid_terms.md](docs/gameid/gameid_terms.md)
-- **GameID プライバシーポリシー**: [docs/gameid/gameid_privacy.md](docs/gameid/gameid_privacy.md)
+- **反社会的勢力の排除に関する規程（共通）**: [docs/globalpoint/antisocial.md](docs/globalpoint/antisocial.md)
 - **用語集（表記・定義の統一）**: [docs/terms/README.md](docs/terms/README.md)
 - **LINE QA 運用**: [docs/support/line-qa/README.md](docs/support/line-qa/README.md)
 - **法人情報（集約）**: [docs/globalpoint-corporate.md](docs/globalpoint-corporate.md)
@@ -25,9 +25,9 @@
 | リリースノート | 対外発表の一次ソース（いつ・何を発表したか） | `docs/release/`（入口: [docs/release/README.md](docs/release/README.md)） |
 | 利用規約（本体） | 契約条件の正文 | `docs/pokerweb/pokerweb-terms.md` / `docs/gameid/gameid_terms.md` |
 | 個別規程（別紙・運用規程） | **本体規約より優先**する場合がある（オプション機能等） | `docs/pokerweb/pokerweb-webcoin-appendix.md` など |
-| プライバシーポリシー | 利用者情報の取扱いの正文 | `docs/pokerweb/pokerweb-privacy.md` / `docs/gameid/gameid_privacy.md` |
+| プライバシーポリシー | 利用者情報の取扱いの正文 | `docs/globalpoint/privacy.md` |
 | 説明資料・要約 | 概要把握・案内用（正文ではない） | `docs/pokerweb/pokerweb-service.md` / `docs/pokerweb/pokerweb-webcoin.md` / `docs/pokerweb/pokerweb-pricing.md` |
-| 選手契約・同意文書 | 会員（プレイヤー）との契約・同意に関する正文 | `docs/pokerguild/` |
+| 選手契約 | 会員（プレイヤー）との業務委託契約の正文 | `docs/pokerguild/` |
 | 顧客対応運用（LINE QA） | 返信品質・レビュー・アーカイブ運用 | `docs/support/line-qa/` |
 | 用語集 | 文書間の表記ゆれ・未定義語の解消（運用ルール） | `docs/terms/README.md` |
 | 法人情報 | 会社情報・関連サービスの集約 | `docs/globalpoint-corporate.md` |
@@ -55,6 +55,6 @@
 | `docs/release/` | 対外発表したリリースノート（入口: [docs/release/README.md](docs/release/README.md)） |
 | `docs/pokerweb/` | POKERWEB の規約・ポリシー・説明資料・運用ルール |
 | `docs/gameid/` | GameID の規約・ポリシー |
-| `docs/pokerguild/` | 選手契約（業務委託契約）および付随する同意文書 |
+| `docs/pokerguild/` | 選手契約（業務委託契約） |
 | `docs/support/` | 顧客対応の運用（LINE QA 等） |
 | `docs/terms/` | 用語集（入口: [docs/terms/README.md](docs/terms/README.md)） |
