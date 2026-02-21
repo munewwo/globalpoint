@@ -55,8 +55,8 @@
 ## 参照先（このリポジトリ内）
 
 - **リリースノート一覧**: `docs/release/README.md`
-- **POKERWEB主要ドキュメント**: `docs/pokerweb/`
-- **GameID主要ドキュメント**: `docs/gameid/`
+- **規約・ポリシー一覧**: `docs/globalpoint/terms/README.md`
+- **POKERWEB説明資料**: `docs/pokerweb/`
 - **用語集**: `docs/terms/README.md`
 
 ## エスカレーション（即対応の切り替え）

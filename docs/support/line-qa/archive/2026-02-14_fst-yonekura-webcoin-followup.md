@@ -8,7 +8,7 @@ created_at: "2026-02-14"
 updated_at: "2026-02-14"
 references:
   - path: "docs/release/2026-02-12-fst-webcoin-inquiry-qa.md"
-  - path: "docs/pokerweb/pokerweb-webcoin-appendix.md"
+  - path: "docs/globalpoint/terms/pokerweb-webcoin-appendix.md"
   - path: "docs/release/2025-06-17-legal-opinion-webcoin-gambling-law.md"
 glossary_updates: []
 ---
@@ -60,7 +60,7 @@ glossary_updates: []
 
 参照先（根拠）:
 - `docs/release/2026-02-12-fst-webcoin-inquiry-qa.md`
-- `docs/pokerweb/pokerweb-webcoin-appendix.md`
+- `docs/globalpoint/terms/pokerweb-webcoin-appendix.md`
 - `docs/release/2025-06-17-legal-opinion-webcoin-gambling-law.md`
 
 ## 追加メモ（社内用）
