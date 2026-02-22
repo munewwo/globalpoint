@@ -25,3 +25,10 @@
 |------|------|
 | [当社プライバシーポリシー（共通）](privacy.md) | 全サービス共通の利用者情報の取扱い方針 |
 | [反社会的勢力の排除に関する規程（共通）](antisocial.md) | 全サービス共通の反社会的勢力排除に関する基本方針 |
+
+## 参考（システム提供会社）
+
+| 文書 | 概要 |
+|------|------|
+| [GameID利用規約（システム提供会社）](gameid-terms-provider.md) | システム提供会社（GID - INTERMEDIATIONS AND RESERVATIONS LTDA）が定めるGameIDアプリの利用条件 |
+| [GameIDプライバシーポリシー（システム提供会社）](gameid-privacy-provider.md) | システム提供会社（GID - INTERMEDIATIONS AND RESERVATIONS LTDA）が定めるGameIDアプリのプライバシーポリシー |
