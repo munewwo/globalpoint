@@ -10,7 +10,7 @@
 |------|------|
 | [登録事業者向け共通規程](merchant-rules.md) | 法令遵守・苦情対応・調査協力・情報漏えい対応・掲示/表示・契約終了時措置等（全サービス共通） |
 | [POKERWEB 利用規約](pokerweb-terms.md) | POKERWEBシステムの利用条件・登録事業者との権利義務（本体） |
-| [ウェブコイン特約（別紙1）](pokerweb-webcoin-appendix.md) | ウェブコイン（オプション機能）の利用条件・運用ルール（POKERWEB利用規約を補完） |
+| [ウェブコイン特約](pokerweb-webcoin-appendix.md) | ウェブコイン（オプション機能）の利用条件・運用ルール（POKERWEB利用規約を補完） |
 
 ## 顧客（会員・選手）向け
 

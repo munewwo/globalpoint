@@ -4,7 +4,7 @@
 契約条件・正式な運用ルールは、以下の文書が優先します。
 
 - [POKERWEB 利用規約](../globalpoint/terms/pokerweb-terms.md)
-- [ウェブコイン特約（別紙1）](../globalpoint/terms/pokerweb-webcoin-appendix.md)
+- [ウェブコイン特約](../globalpoint/terms/pokerweb-webcoin-appendix.md)
 - [GameID 利用規約](../globalpoint/terms/gameid-terms.md)
 - [選手契約（業務委託契約）](../globalpoint/terms/player-agreement.md)
 

@@ -7,7 +7,7 @@
 - **リリースノート一覧（対外発表の時系列）**: [docs/release/README.md](docs/release/README.md)
 - **規約・ポリシー一覧**: [docs/globalpoint/terms/README.md](docs/globalpoint/terms/README.md)
 - **POKERWEB 利用規約（本体）**: [docs/globalpoint/terms/pokerweb-terms.md](docs/globalpoint/terms/pokerweb-terms.md)
-- **ウェブコイン特約（別紙1）**: [docs/globalpoint/terms/pokerweb-webcoin-appendix.md](docs/globalpoint/terms/pokerweb-webcoin-appendix.md)
+- **ウェブコイン特約**: [docs/globalpoint/terms/pokerweb-webcoin-appendix.md](docs/globalpoint/terms/pokerweb-webcoin-appendix.md)
 - **GameID 利用規約**: [docs/globalpoint/terms/gameid-terms.md](docs/globalpoint/terms/gameid-terms.md)
 - **選手契約（業務委託契約）**: [docs/globalpoint/terms/player-agreement.md](docs/globalpoint/terms/player-agreement.md)
 - **当社プライバシーポリシー（共通）**: [docs/globalpoint/terms/privacy.md](docs/globalpoint/terms/privacy.md)
