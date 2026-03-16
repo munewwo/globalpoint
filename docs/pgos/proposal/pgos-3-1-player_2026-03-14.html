@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>PGOS 3-1 プレイヤー向け — 店舗・イベントを探す</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 15mm 20mm 15mm;
+    @bottom-center {
+      content: counter(page) " / " counter(pages);
+      font-size: 8px; color: #999;
+      font-family: "Hiragino Sans", sans-serif;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    font-size: 9.5px; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0;
+  }
+
+  /* Cover */
+  .cover {
+    page-break-after: always;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    min-height: 88vh; text-align: center;
+  }
+  .cover h1 { font-size: 24px; font-weight: 800; letter-spacing: 3px; margin-bottom: 6px; color: #1565c0; }
+  .cover .subtitle { font-size: 14px; color: #333; margin-bottom: 4px; }
+  .cover .sub2 { font-size: 11px; color: #666; margin-bottom: 40px; }
+  .cover .meta { font-size: 10px; color: #999; line-height: 2; }
+  .cover .badge-player {
+    display: inline-block; background: #1565c0; color: #fff; font-size: 11px;
+    font-weight: 700; padding: 4px 16px; border-radius: 20px; margin-bottom: 20px;
+  }
+
+  /* Headings */
+  h2 {
+    font-size: 14px; font-weight: 700; color: #1565c0;
+    border-bottom: 2px solid #1565c0; padding-bottom: 3px;
+    margin-top: 26px; margin-bottom: 10px; page-break-after: avoid;
+  }
+  h3 {
+    font-size: 11.5px; font-weight: 700; color: #1565c0;
+    margin-top: 16px; margin-bottom: 6px; page-break-after: avoid;
+  }
+  h4 {
+    font-size: 10.5px; font-weight: 700; color: #333;
+    margin-top: 12px; margin-bottom: 4px; page-break-after: avoid;
+  }
+
+  p, li { margin: 2px 0; }
+  ul, ol { padding-left: 16px; margin: 3px 0; }
+  strong { color: #1565c0; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px 0; font-size: 9px; }
+  th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: left; vertical-align: top; }
+  th { background: #e3f2fd; font-weight: 700; color: #0d47a1; white-space: nowrap; }
+
+  /* Badges */
+  .badge {
+    display: inline-block; font-size: 7.5px; font-weight: 700;
+    padding: 1px 5px; border-radius: 3px; margin-left: 3px; vertical-align: middle;
+  }
+  .badge-must { background: #c62828; color: #fff; }
+  .badge-should { background: #f9a825; color: #fff; }
+  .badge-could { background: #bdbdbd; color: #fff; }
+  .badge-ph1 { background: #1565c0; color: #fff; }
+  .badge-ph2 { background: #6a1b9a; color: #fff; }
+  .badge-ph3 { background: #00838f; color: #fff; }
+
+  .req-id {
+    font-family: "SF Mono", "Menlo", monospace; font-size: 7.5px;
+    color: #888; margin-right: 2px;
+  }
+
+  /* Cards */
+  .card {
+    background: #f8f9fb; border: 1px solid #dde3ea; border-radius: 6px;
+    padding: 10px 12px; margin: 8px 0 14px 0; page-break-inside: avoid;
+  }
+  .card-blue { border-left: 3px solid #1565c0; }
+  .card-green { border-left: 3px solid #43a047; }
+  .card-amber { border-left: 3px solid #ff8f00; background: #fffde7; }
+  .card-red { border-left: 3px solid #c62828; background: #fff5f5; }
+
+  /* Wireframe */
+  .wireframe {
+    background: #fafafa; border: 1px solid #e0e0e0; border-radius: 4px;
+    padding: 8px 10px; margin: 6px 0 10px 0;
+    font-family: "SF Mono", "Menlo", "Courier New", monospace;
+    font-size: 8.5px; line-height: 1.45; white-space: pre; overflow: hidden;
+    page-break-inside: avoid;
+  }
+
+  /* Screen def */
+  .screen-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 18px; margin-bottom: 4px; page-break-after: avoid;
+  }
+  .screen-id {
+    background: #1565c0; color: #fff; font-size: 9px; font-weight: 700;
+    padding: 2px 8px; border-radius: 3px;
+  }
+  .screen-name { font-size: 12px; font-weight: 700; color: #1a1a1a; }
+
+  /* Flow */
+  .flow-box {
+    background: #e8eaf6; border-radius: 6px; padding: 10px 14px;
+    margin: 8px 0; font-size: 9.5px; line-height: 1.8;
+  }
+  .flow-box .arrow { color: #1565c0; font-weight: 700; }
+
+  .toc ul { list-style: none; padding-left: 0; }
+  .toc li { margin: 2px 0; font-size: 10px; }
+  .toc li::before { content: "— "; color: #1565c0; font-weight: 700; }
+
+  .footer-note {
+    text-align: center; color: #999; font-size: 8px; margin-top: 30px;
+    border-top: 1px solid #eee; padding-top: 8px;
+  }
+
+  .two-col { display: flex; gap: 10px; margin: 6px 0; }
+  .two-col > div { flex: 1; }
+</style>
+</head>
+<body>
+
+<!-- ========== COVER ========== -->
+<div class="cover">
+  <h1>PGOS</h1>
+  <div class="subtitle">3-1. 店舗・イベントを探す（来店前）</div>
+  <div class="sub2">シチュエーション別 機能マップ — 詳細編</div>
+  <div class="badge-player">プレイヤー向け</div>
+  <div class="meta">
+    対象コンポーネント: PGOS Player（モバイルアプリ）/ PGOS Portal（公開Web）<br>
+    合同会社グローバルポイント<br>
+    2026年3月14日（v3 — 状態モデル・大会階層・受付制御 追加）
+  </div>
+</div>
+
+<!-- ========== TOC ========== -->
+<h2>目次</h2>
+<div class="toc">
+<ul>
+  <li>1. このシチュエーションの概要</li>
+  <li>2. ユーザーストーリー</li>
+  <li>3. 機能要件一覧</li>
+  <li>&emsp;3-A. 店舗検索（A1-1）</li>
+  <li>&emsp;3-B. トーナメント状態モデル・受付制御</li>
+  <li>&emsp;3-C. イベント・スケジュール検索（A1-2）</li>
+  <li>&emsp;3-D. お気に入り・通知（A1-3）</li>
+  <li>&emsp;3-E. タグシステム（A1-4）</li>
+  <li>4. 画面定義</li>
+  <li>&emsp;4-1. P-HOME — ホーム</li>
+  <li>&emsp;4-2. P-SEARCH — 検索・マップ</li>
+  <li>&emsp;4-3. P-STORE-DETAIL — 店舗詳細</li>
+  <li>&emsp;4-4. P-EVENT-LIST — トーナメント一覧</li>
+  <li>&emsp;4-5. P-EVENT-DETAIL — イベント詳細</li>
+  <li>&emsp;4-6. P-NOTIF — 通知一覧</li>
+  <li>5. PGOS Portal（公開Web）との連携</li>
+  <li>6. 画面遷移フロー</li>
+  <li>7. 非機能要件</li>
+  <li>8. 検討事項・リスク</li>
+</ul>
+</div>
+
+<!-- ========== 1. 概要 ========== -->
+<h2>1. このシチュエーションの概要</h2>
+
+<div class="card card-blue">
+  <h4>プレイヤーの課題</h4>
+  <p>「今日ポーカーを遊びたい。でもどの店が開いていて、何のゲームがあるかわからない。」</p>
+  <p>PGOSは、プレイヤーが<strong>数タップで最適な店舗・イベントを発見</strong>し、来店前の情報収集からウェイティング登録・事前エントリーまでをシームレスに繋げます。</p>
+</div>
+
+<h4>v3 での主な追加・更新</h4>
+<div class="card card-blue">
+  <ul>
+    <li><strong>トーナメント状態モデルの明確化</strong> — レジストレーション済 → プレイイン → シートアウト（バスト）→ プレイアウト の状態遷移を定義</li>
+    <li><strong>優先表示の精緻化</strong> — プレイ中 → チェックイン待ち → 受付中（締切カウントダウン）→ 本日開催 の順</li>
+    <li><strong>受付タイミング制御</strong> — セルフレジストレーション（プレイヤー操作）とスタッフ操作を分離。受付終了後もスタッフは登録可能</li>
+    <li><strong>大会・シリーズの階層構造</strong> — シリーズ＞大会＞トーナメント。イベント型クラブが大会を管理</li>
+    <li><strong>クラブ種別</strong> — 店舗型（常設）とイベント型（場所なし）。店舗型で大会開催も可能</li>
+    <li><strong>タグシステム</strong> — 自動/手動/提案の3方式。運営側管理要件を追加</li>
+    <li><strong>バリュー指標のリスク注記</strong> — 風営法上の景品表示リスクを Should のまま要検討とする</li>
+  </ul>
+</div>
+
+<h4>対象フェーズと対象コンポーネント</h4>
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>主要フェーズ</td><td>Phase 1 (MVP)。一部 Phase 2〜3 機能を含む</td></tr>
+  <tr><td>PGOS Player</td><td>iOS / Android ネイティブ + PWA。モバイルファーストで設計</td></tr>
+  <tr><td>PGOS Portal</td><td>公開Webサイト（SSR/SSG）。SEO対策の要。アプリへの誘導導線</td></tr>
+</table>
+
+<h4>対応する機能領域</h4>
+<table>
+  <tr><th>機能領域</th><th>ID範囲</th><th>概要</th></tr>
+  <tr><td>A1-1. 店舗検索</td><td>A1-1-01〜09</td><td>地図ベース検索、条件フィルタ、営業ステータス、店舗詳細、<strong>クラブ種別区分、予算表示、新店タグ</strong></td></tr>
+  <tr><td>A1-2. イベント・スケジュール検索</td><td>A1-2-01〜11</td><td>トーナメント/リング分離、<strong>優先表示、締切カウントダウン、ホットバッジ、バリュー指標</strong></td></tr>
+  <tr><td>A1-3. お気に入り・通知</td><td>A1-3-01〜03</td><td>お気に入り登録、条件通知、フレンド動向</td></tr>
+  <tr><td>A1-4. タグシステム</td><td>A1-4-01〜06</td><td><strong>タグ絞り込み、カテゴリ分類、自動/手動/提案タグ</strong></td></tr>
+</table>
+
+<!-- ========== 2. ユーザーストーリー ========== -->
+<h2>2. ユーザーストーリー</h2>
+
+<div class="card card-amber">
+  <h4>ストーリー1: 「仕事帰りにポーカーを遊びたい」</h4>
+  <p>プレイヤーAは仕事帰りにポーカーを遊びたい。<strong>PGOS Player</strong>を開くと、ホーム画面のリングゲームセクションに近くの店舗のテーブル状況がリアルタイム表示されている。NLH 1-2のテーブルに空席3のある店舗を見つけ、<strong>予算めやす（R: NLH 1-2〜5-10）</strong>を確認してウェイティングリストに登録。電車で移動中に「あと2人です」の通知を受信。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>ストーリー2: 「受付中のトーナメントに今すぐエントリーしたい」</h4>
+  <p>プレイヤーBはホーム画面を開くと、<strong>受付中トーナメント</strong>セクションの最上部に「サンデー杯 🔥 HIGH VALUE」が表示されている。エントリー数が定員の70%を超え、<strong>締切まで 1:24</strong> のカウントダウンが出ている。タップして詳細を確認し、オッズが良いので事前エントリーを決めた。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>ストーリー3: 「初心者向けの店を探したい」</h4>
+  <p>ポーカーを始めたばかりのプレイヤーCは検索画面で<strong>「#初心者歓迎」「#新規プレイヤーに人気」</strong>タグをタップして絞り込み。<strong>NEWタグ</strong>の付いた開店3ヶ月以内の新店舗を発見。店舗詳細の<strong>予算めやす（T: ¥3,000〜）</strong>を見て安心し、今週末のフリーロールにエントリー。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>ストーリー4: 「大きな大会に参加したい」</h4>
+  <p>プレイヤーDはトーナメント一覧の<strong>「大会」タブ</strong>を開き、来月の「JAPAN OPEN 2026」を発見。全12イベント・総GTD ¥5,000,000のシリーズページでスケジュールとメインイベント情報を確認。サテライト開催店舗一覧からエントリー可能なサテライトを見つけた。</p>
+</div>
+
+<!-- ========== 3. 機能要件 ========== -->
+<h2>3. 機能要件一覧</h2>
+
+<h3>3-A. 店舗検索（A1-1）</h3>
+<p>プレイヤーが「今日どこでポーカーを遊べるか」を素早く見つける。</p>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr>
+    <td>A1-1-01</td>
+    <td>地図ベースで店舗を検索</td>
+    <td>現在地周辺の店舗をマップ上にピン表示。地図のドラッグ・ズームに応じてリアルタイムで結果を更新。エリア指定（都道府県 / 市区町村）による検索も可能</td>
+    <td><span class="badge badge-must">Must</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr>
+    <td>A1-1-02</td>
+    <td>条件フィルタ</td>
+    <td>ゲーム種別（NLH / PLO / PLO5 / Short Deck / Mixed）、レート帯（1-2, 2-5, 5-10等）、営業時間での絞り込み。タグチップ方式（Airbnb風）で横スクロール配置</td>
+    <td><span class="badge badge-must">Must</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr>
+    <td>A1-1-03</td>
+    <td>営業ステータスのリアルタイム表示</td>
+    <td>店舗の営業状態（営業中 / 準備中 / 休業）をリアルタイムで表示。マップピンと一覧の両方に反映</td>
+    <td><span class="badge badge-should">Should</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr>
+    <td>A1-1-04</td>
+    <td>店舗詳細ページ</td>
+    <td>住所・アクセス方法・営業時間・写真・設備情報（WiFi、喫煙、駐車場等）・SNSリンク。カバー画像＆ロゴの表示</td>
+    <td><span class="badge badge-must">Must</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr>
+    <td>A1-1-05</td>
+    <td>店舗評価・レビュー</td>
+    <td>プレイヤーが店舗を5段階で評価し、レビューを投稿。レビュー管理（不適切投稿の報告等）</td>
+    <td><span class="badge badge-could">Could</span></td>
+    <td><span class="badge badge-ph3">3</span></td>
+  </tr>
+  <tr>
+    <td>A1-1-06</td>
+    <td>検索履歴・最近訪問した店舗</td>
+    <td>過去の検索キーワード履歴と、チェックイン実績に基づく最近訪問した店舗の表示</td>
+    <td><span class="badge badge-should">Should</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-1-07</td>
+    <td>クラブ種別の区分表示 ★</td>
+    <td>常設店舗とイベント主催者（大会運営団体）を区別して表示。クラブ登録時に「店舗」「イベント主催者」の種別を選択し、それに応じたページフォーマットで表示する。検索結果では統合表示し、フィルタで絞り込み可能（発見性を損なわない）</td>
+    <td><span class="badge badge-must">Must</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-1-08</td>
+    <td>予算表示 ★</td>
+    <td>店舗詳細ページに「遊ぶのにいくらかかるか」を表示。トーナメントの参加費帯（例: ¥3,000〜¥10,000）とリングゲームのレート帯（例: NLH 1-2〜5-10）を過去の開催実績から自動算出して表示</td>
+    <td><span class="badge badge-should">Should</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-1-09</td>
+    <td>新店タグ ★</td>
+    <td>開店から3ヶ月間「NEW」タグを自動付与。検索結果・店舗一覧・マップピンで視覚的に目立つ表示</td>
+    <td><span class="badge badge-should">Should</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+</table>
+
+<h3>3-B. トーナメント状態モデル・受付制御</h3>
+
+<h4>プレイヤーのトーナメント状態</h4>
+<p>あいまいな「参加中」を避け、プレイヤーとトーナメントの関係を4状態で管理する。</p>
+<table>
+  <tr><th>状態</th><th>英語</th><th>意味</th><th>アプリ表示</th></tr>
+  <tr><td><strong>レジストレーション済</strong></td><td>Registered</td><td>エントリー登録済みだが、まだチェックイン（着席）していない</td><td>「登録済み — チェックイン待ち」</td></tr>
+  <tr><td><strong>プレイイン</strong></td><td>Play-in</td><td>チェックイン済み、テーブルに着席してプレイ中</td><td>「プレイ中」（リアルタイム情報表示）</td></tr>
+  <tr><td><strong>シートアウト（バスト）</strong></td><td>Seat-out</td><td>バストによりテーブルから離れた状態。受付中であれば保留され、リエントリ可能</td><td>「バスト — リエントリ可能」</td></tr>
+  <tr><td><strong>プレイアウト</strong></td><td>Play-out</td><td>トーナメントから完全に退出。受付終了後のバストではシートアウトと同時に発生</td><td>「終了」（結果表示）</td></tr>
+</table>
+
+<div class="wireframe">レジストレーション済 → [チェックイン] → プレイイン
+                                           ↓ [バスト]
+                                      シートアウト（バスト）
+                                      ├ 受付中 → [リエントリ] → プレイイン
+                                      └ 受付終了 → プレイアウト</div>
+
+<h4>トーナメントの受付状態と制御</h4>
+<table>
+  <tr><th>状態</th><th>トリガー</th><th>セルフレジストレーション（アプリ）</th><th>スタッフ操作（Manager）</th></tr>
+  <tr><td>受付前</td><td>トーナメント作成時</td><td>不可</td><td>不可</td></tr>
+  <tr><td><strong>受付中</strong></td><td>指定時刻で自動 or スタッフ手動</td><td>可能</td><td>可能</td></tr>
+  <tr><td><strong>受付終了</strong></td><td>クローズ時刻で自動 or スタッフ手動</td><td><strong>不可</strong>（ブロック）</td><td><strong>可能</strong>（アラート付き）</td></tr>
+  <tr><td>進行中</td><td>トーナメント開始</td><td>不可</td><td>アラート付きで可能</td></tr>
+  <tr><td>終了</td><td>全プレイヤーがプレイアウト</td><td>不可</td><td>不可</td></tr>
+</table>
+<div class="card card-blue">
+  <p><strong>セルフ vs スタッフの分離</strong>: 受付終了後、プレイヤーアプリからのセルフレジストレーションはシステム的にブロック。一方、スタッフによるPGOS Manager上での登録操作は時間外でも可能（「受付終了後のエントリーです。続行しますか？」アラート表示）。テーブルにチップを置いて後から来店する想定に対応する。</p>
+</div>
+
+<h4>大会・シリーズの階層構造</h4>
+<table>
+  <tr><th>階層</th><th>定義</th><th>作成主体</th><th>例</th></tr>
+  <tr><td><strong>シリーズ</strong></td><td>複数の大会をまとめるグループ</td><td>PGOS管理者 / イベント型クラブ</td><td>JAPAN POKER TOUR 2026</td></tr>
+  <tr><td><strong>大会</strong></td><td>実施場所・期間を持つトーナメントグループ</td><td>イベント型クラブ</td><td>JPT 東京大会（3/20-3/25、ホテルX）</td></tr>
+  <tr><td><strong>トーナメント</strong></td><td>個別のトーナメント</td><td>店舗型 / イベント型</td><td>NLH メインイベント</td></tr>
+</table>
+<div class="card card-blue">
+  <ul>
+    <li>店舗型クラブが直接主催するトーナメントは大会に属さない（<strong>ハウストーナメント</strong>）</li>
+    <li>イベント型クラブが大会を作成し、その中に複数のトーナメントをグルーピング</li>
+    <li>店舗型クラブも大会主催は可能（常設店舗で大きなシリーズを開催するケース）</li>
+    <li>店舗以外の場所でイベントを開催する場合は、イベント型クラブを別途立てる</li>
+  </ul>
+</div>
+
+<h3>3-C. イベント・スケジュール検索（A1-2）</h3>
+<p>トーナメントとリングゲームを分離し、プレイヤーに今必要な情報を優先的に表示する。</p>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-2-01</td>
+    <td>トーナメント/リングゲーム分離表示 ★</td>
+    <td>ホーム画面・検索結果ともにトーナメントとリングゲームをセクション分離。それぞれの文脈に適した情報表示（トーナメント: エントリー費/定員/締切、リングゲーム: レート/空席/待ち人数）</td>
+    <td><span class="badge badge-must">Must</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr>
+    <td>A1-2-02</td>
+    <td>日付・エリア・種別・費用帯・タグでフィルタ</td>
+    <td>日付範囲指定、エリア（都道府県/市区町村）、ゲーム種別、エントリー費用帯、タグでの絞り込み</td>
+    <td><span class="badge badge-must">Must</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr>
+    <td>A1-2-03</td>
+    <td>トーナメント詳細表示</td>
+    <td>ストラクチャー（ブラインドレベル・時間）、エントリー費、ギャランティー額、開始時刻、定員・残り枠、レイトレジストレーション可否</td>
+    <td><span class="badge badge-must">Must</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr>
+    <td>A1-2-04</td>
+    <td>リングゲーム開催状況リアルタイム表示</td>
+    <td>現在オープン中のテーブル数、各テーブルのゲーム種別・レート、空席数・待ち人数をリアルタイム反映（WebSocket）</td>
+    <td><span class="badge badge-should">Should</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-2-05</td>
+    <td>大会・シリーズとハウストーナメントの区分表示 ★</td>
+    <td>シリーズ＞大会＞トーナメントの階層構造で表示。大会はまとまった情報ページ（実施場所・期間・トーナメント一覧・総GTD）を持ち、ハウストーナメントとは専用セクションまたはタブで分けて表示。統合検索でも発見できるようフィルタ対応</td>
+    <td><span class="badge badge-should">Should</span></td>
+    <td><span class="badge badge-ph2">2</span></td>
+  </tr>
+  <tr>
+    <td>A1-2-06</td>
+    <td>外部カレンダー連携</td>
+    <td>iCal / Google Calendar にイベントを登録。リマインダーとしても機能</td>
+    <td><span class="badge badge-could">Could</span></td>
+    <td><span class="badge badge-ph2">2</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-2-07</td>
+    <td>優先表示順序 ★</td>
+    <td>表示順: ① プレイイン中のトーナメント（最優先で最上部にリアルタイム進行情報を表示）→ ② レジストレーション済（チェックイン待ち。開始時刻・会場を強調）→ ③ 受付中（締切カウントダウン表示）→ ④ 本日開催予定 → ⑤ 今後の予定</td>
+    <td><span class="badge badge-must">Must</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-2-08</td>
+    <td>エントリー締切カウントダウン ★</td>
+    <td>受付中のトーナメントにはエントリー締切までの残り時間をカウントダウン表示（例: 「締切まで 2:34:00」）。締切30分前にはハイライト（赤色）表示。受付開始はクラブが指定した時刻またはスタッフの手動操作。受付終了後のセルフレジストレーションはブロック（スタッフ操作は引き続き可能）</td>
+    <td><span class="badge badge-must">Must</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-2-09</td>
+    <td>ホットトーナメント表示 ★</td>
+    <td>エントリー数が定員の70%以上に達したトーナメントに🔥アイコンを表示。90%以上では「残りわずか」バッジも併せて表示。ただしクラブがエントリー数を非公開設定にしている場合は、🔥バッジもエントリー数も非表示</td>
+    <td><span class="badge badge-should">Should</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-2-10</td>
+    <td>バリュー指標表示 ★</td>
+    <td>プライズプール（GTD含む）÷ エントリー費のオッズ（バリュー）を算出し表示。バリューが高いトーナメントには「HIGH VALUE」バッジを付与（例: GTD ¥100,000 / エントリー ¥3,000 → 33.3x）。<strong>⚠ 景品表示による集客が風営法上の問題となる可能性があるため、コンプライアンス確認の結果によっては本機能を提供しない判断もありうる</strong></td>
+    <td><span class="badge badge-should">Should</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-2-11</td>
+    <td>エントリー数予想・オッズ予想の表示 ★</td>
+    <td>過去の同種トーナメントの実績データに基づき、予想エントリー数と期待値を表示。<strong>⚠ 風営法上の表示リスクを要検討</strong>。法務確認後に表示可否を最終決定。非表示の場合はデータを内部分析用に留める</td>
+    <td><span class="badge badge-could">Could</span></td>
+    <td><span class="badge badge-ph3">3</span></td>
+  </tr>
+</table>
+
+<h3>3-D. お気に入り・通知（A1-3）</h3>
+<p>お気に入り店舗からの情報を逃さず受け取る。</p>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr>
+    <td>A1-3-01</td>
+    <td>店舗お気に入り登録＆プッシュ通知</td>
+    <td>店舗をお気に入りに登録すると、新しいイベント追加・スケジュール変更・特別告知をプッシュ通知で受信。ホーム画面にもお気に入り店舗セクションを表示</td>
+    <td><span class="badge badge-must">Must</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr>
+    <td>A1-3-02</td>
+    <td>条件マッチ通知</td>
+    <td>特定の条件（エリア・レート帯・ゲーム種別等）を事前設定しておくと、条件に合うイベントが新規登録されたときに自動通知</td>
+    <td><span class="badge badge-should">Should</span></td>
+    <td><span class="badge badge-ph2">2</span></td>
+  </tr>
+  <tr>
+    <td>A1-3-03</td>
+    <td>フレンド動向通知</td>
+    <td>フォロー中のプレイヤーがイベントにエントリーしたときの通知。「友達も参加するなら行こう」の動機付け</td>
+    <td><span class="badge badge-could">Could</span></td>
+    <td><span class="badge badge-ph3">3</span></td>
+  </tr>
+</table>
+
+<h3>3-E. タグシステム（A1-4）</h3>
+<p>店舗・トーナメント・リングゲームにタグを付与し、プレイヤーが直感的に絞り込み検索できる仕組み。</p>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-4-01</td>
+    <td>タグ絞り込み検索 ★</td>
+    <td>検索画面でタグチップをタップして結果をフィルタ。複数タグの組み合わせ（AND/OR）に対応。タグチップは横スクロールで配置（Airbnb方式）</td>
+    <td><span class="badge badge-must">Must</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-4-02</td>
+    <td>タグカテゴリの分類 ★</td>
+    <td>4カテゴリに分類して表示: <strong>エリアタグ</strong>（地域・最寄り駅）、<strong>ジャンルタグ</strong>（ゲーム種別・形式: NLH/PLO/ディープスタック/ターボ/フリーロール等）、<strong>プライズタグ</strong>（GTD帯・賞品あり）、<strong>雰囲気タグ</strong>（初心者歓迎・ガチ勢向け等）</td>
+    <td><span class="badge badge-must">Must</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-4-03</td>
+    <td>自動付与タグ ★</td>
+    <td>システムが条件に基づき自動でタグを付与。例: 地域タグ（住所から自動）、新店タグ（開店3ヶ月以内）、人気店タグ（来店数上位）、高GTDタグ（GTD一定額以上）、ハイバリュータグ（オッズ一定以上）</td>
+    <td><span class="badge badge-should">Should</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-4-04</td>
+    <td>手動付与タグ ★</td>
+    <td>事業者（クラブ）が自店のトーナメント・店舗に任意のタグを設定可能。例: 「初心者歓迎」「ディープスタック」「フリーロール」「ライブ配信あり」。設定できるタグはシステムが提供する<strong>選択肢から選ぶ方式</strong>（自由入力ではない）</td>
+    <td><span class="badge badge-should">Should</span></td>
+    <td><span class="badge badge-ph1">1</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-4-05</td>
+    <td>システム提案タグ ★</td>
+    <td>データに基づきシステムが事業者にタグの付与を提案。例: 新規プレイヤー率が高い店舗には「新規プレイヤーに人気」、リピーター率が高い店舗には「常連が集まる」等のタグを提案し、事業者が承認して付与</td>
+    <td><span class="badge badge-could">Could</span></td>
+    <td><span class="badge badge-ph2">2</span></td>
+  </tr>
+  <tr style="background: #e8f5e9;">
+    <td>A1-4-06</td>
+    <td>タグの表示優先度 ★</td>
+    <td>検索画面ではよく使われるタグ・人気のタグを上位に表示。プレイヤーの過去の検索・チェックイン履歴に基づくパーソナライズも検討</td>
+    <td><span class="badge badge-should">Should</span></td>
+    <td><span class="badge badge-ph2">2</span></td>
+  </tr>
+</table>
+
+<h4>タグの付与フロー</h4>
+<div class="card card-blue">
+  <table>
+    <tr><th>付与方式</th><th>主体</th><th>タグ例</th><th>更新タイミング</th></tr>
+    <tr><td>自動付与</td><td>システム</td><td>地域タグ、NEW（3ヶ月）、人気店、高GTD</td><td>データ変更時に自動</td></tr>
+    <tr><td>手動付与</td><td>事業者</td><td>初心者歓迎、ディープスタック、フリーロール</td><td>事業者がManager画面から設定</td></tr>
+    <tr><td>提案付与</td><td>システム→事業者承認</td><td>新規プレイヤーに人気、常連が集まる</td><td>月次分析後にシステムが提案</td></tr>
+  </table>
+</div>
+
+<!-- ========== 4. 画面定義 ========== -->
+<h2>4. 画面定義（PGOS Player）</h2>
+
+<!-- P-HOME -->
+<div class="screen-header">
+  <span class="screen-id">P-HOME</span>
+  <span class="screen-name">ホーム ★ Updated</span>
+</div>
+
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>A1-1-01, A1-2-01, A1-2-07, A1-2-08, A1-3-01</td></tr>
+  <tr><td>目的</td><td>アプリの起点。プレイイン中・レジストレーション済・受付中のトーナメントを優先表示し、リングゲーム・お気に入り店舗を分離表示</td></tr>
+  <tr><td>フェーズ</td><td>Phase 1</td></tr>
+</table>
+
+<div class="wireframe">┌───────────────────────┐
+│  PGOS    📍東京  🔔2    │
+├───────────────────────┤
+│                       │
+│  こんにちは、○○さん      │
+│                       │
+│ ┌─ 🎮 プレイ中 ─────────┐│
+│ │ 🏆 デイリーNLH        ││
+│ │ 店舗A  Lv4 残り18人   ││
+│ │ T3/S5  ⏱ 1:34        ││
+│ └────────────────────┘│
+│ ┌─ ✅ チェックイン待ち ──┐│
+│ │ 🏆 ナイトPLO  店舗C   ││
+│ │ 20:00  登録済み       ││
+│ └────────────────────┘│
+│                       │
+│ ┌─ 🏆 受付中トーナメント ──┐│
+│ │ デイリーPLO   NEW      ││
+│ │ 店舗C  20:00 ¥5,000   ││
+│ │ 🔥8/12名 締切 1:24     ││
+│ │ サンデー杯  HIGH VALUE  ││
+│ │ 店舗B  13:00 ¥8,000   ││
+│ │ 4/36名   締切 2日      ││
+│ │           すべて見る > ││
+│ └────────────────────┘│
+│                       │
+│ ┌─ 🃏 リングゲーム ─────┐│
+│ │ [マップサムネイル]      ││
+│ │ 店舗A  営業中 0.5km   ││
+│ │ NLH 1-2  空席3       ││
+│ │ 店舗B  営業中 1.2km   ││
+│ │ NLH 2-5  待ち2人     ││
+│ │           すべて見る > ││
+│ └────────────────────┘│
+│                       │
+│ ┌─ お気に入り店舗 ──────┐│
+│ │ 店舗D  本日休業        ││
+│ │ 店舗E  営業中 NEW     ││
+│ └────────────────────┘│
+│                       │
+├────────┬────┬───┬──┬──┤
+│ホーム  │検索│My │通知│≡ │
+└────────┴────┴───┴──┴──┘</div>
+
+<h4>セクションの表示順序（優先度順）</h4>
+<table>
+  <tr><th>#</th><th>セクション</th><th>表示内容</th><th>更新タイミング</th></tr>
+  <tr><td>①</td><td><strong>プレイ中</strong></td><td>プレイイン中のトーナメント。進行状況（レベル・残り人数・テーブル/シート）をリアルタイム表示。シートアウト（バスト）でリエントリ可能な場合も表示。なければ非表示</td><td>WebSocket リアルタイム</td></tr>
+  <tr><td>②</td><td><strong>チェックイン待ち</strong></td><td>レジストレーション済（エントリー登録済み）だがまだチェックインしていないトーナメント。開始時刻・会場情報を強調表示。なければ非表示</td><td>画面表示時</td></tr>
+  <tr><td>③</td><td><strong>受付中トーナメント</strong></td><td>エントリー受付中のトーナメント。締切カウントダウン・エントリー数/定員を表示（非公開設定時は非表示）。🔥ホットバッジ（70%超）・HIGH VALUEバッジ対応</td><td>画面表示時 + 1分ポーリング</td></tr>
+  <tr><td>④</td><td><strong>リングゲーム</strong></td><td>近くの店舗で現在オープン中のテーブル。空席数・待ち人数。マップサムネイル。距離順ソート</td><td>位置情報更新時 + 30秒ポーリング</td></tr>
+  <tr><td>⑤</td><td><strong>お気に入り店舗</strong></td><td>登録済み店舗の営業ステータス。NEWタグ（開業日から3ヶ月以内）表示</td><td>画面表示時</td></tr>
+</table>
+
+<h4>状態バリエーション</h4>
+<ul>
+  <li><strong>位置情報未許可</strong>: 「位置情報を許可すると近くの店舗を表示できます」バナー</li>
+  <li><strong>プレイイン中なし</strong>: 「プレイ中」セクション非表示</li>
+  <li><strong>チェックイン待ちなし</strong>: 「チェックイン待ち」セクション非表示</li>
+  <li><strong>受付中トーナメントなし</strong>: 「今後のトーナメント」に切替表示</li>
+  <li><strong>シートアウト（リエントリ可能）</strong>: 「プレイ中」セクションに「バスト — リエントリ可能」として表示</li>
+</ul>
+
+<!-- P-SEARCH -->
+<div class="screen-header">
+  <span class="screen-id">P-SEARCH</span>
+  <span class="screen-name">検索・マップ ★ Updated</span>
+</div>
+
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>A1-1-01〜A1-1-09, A1-2-01〜A1-2-11, A1-4-01〜A1-4-06</td></tr>
+  <tr><td>目的</td><td>マップまたはリストで店舗・トーナメント・リングゲームを検索。タグで直感的に絞り込み</td></tr>
+  <tr><td>フェーズ</td><td>Phase 1</td></tr>
+</table>
+
+<div class="wireframe">┌─────────────────────────┐
+│  🔍 店舗・イベントを検索     │
+├─────────────────────────┤
+│ [店舗] [トーナメント] [リング]│
+├─────────────────────────┤
+│ タグ:                     │
+│ [エリア▼][NLH][PLO][初心者] │
+│ [GTD10万+][NEW][ﾌﾘｰﾛｰﾙ]..│
+├─────────────────────────┤
+│                           │
+│  ┌───────────────────┐  │
+│  │                   │  │
+│  │    マップ表示       │  │
+│  │  📍📍 📍NEW       │  │
+│  │     📍🔥          │  │
+│  │                   │  │
+│  └───────────────────┘  │
+│  [マップ] / [リスト] 切替    │
+│                           │
+│ ── 店舗タブ ──              │
+│  店舗A ── 営業中 ──── NEW ─│
+│  NLH 1-2, PLO 2-5         │
+│  💰 予算: T ¥3K〜  R 1-2〜  │
+│  空席: 3 / 待ち: 0          │
+│  ──────────────────────── │
+│  店舗B ── 営業中 ────       │
+│  NLH 1-2                   │
+│  💰 予算: T ¥5K〜  R 1-2    │
+│  空席: 0 / 待ち: 2          │
+│                           │
+│ ── トーナメントタブ ──        │
+│  🎮 プレイ中                │
+│  🏆 デイリーNLH 店舗A        │
+│     Lv4  残り18人 T3/S5     │
+│  ✅ チェックイン待ち          │
+│  🏆 ナイトPLO 店舗C 20:00    │
+│  ── 受付中 ──              │
+│  🏆 サンデー杯    HIGH VALUE│
+│  店舗B 13:00 ¥8K  8/36名    │
+│  🔥 締切まで 1:24           │
+│                           │
+│ ── 大会・シリーズ ──         │
+│  🏅 JAPAN OPEN 2026         │
+│     3/20-3/25 全12イベント   │
+│     総GTD ¥5,000,000       │
+│                           │
+├────────┬────┬───┬──┬──┤
+│ホーム  │検索│My │通知│≡ │
+└────────┴────┴───┴──┴──┘</div>
+
+<h4>3タブ構成</h4>
+<table>
+  <tr><th>タブ</th><th>内容</th><th>バッジ/インジケーター</th></tr>
+  <tr><td><strong>店舗</strong></td><td>マップ/リスト表示。常設店舗とイベント主催者をフィルタで切替可能。予算めやす表示</td><td>NEW（開店3ヶ月以内）、営業ステータスバッジ</td></tr>
+  <tr><td><strong>トーナメント</strong></td><td>表示順: プレイ中→チェックイン待ち→受付中（締切カウントダウン）→本日開催→今後。ハウストーナメントと大会（シリーズ＞大会＞トーナメント）を区分して表示</td><td>🔥ホット（70%超）、HIGH VALUE、残りわずか（90%超）</td></tr>
+  <tr><td><strong>リング</strong></td><td>現在開催中のリングゲームテーブル一覧。空席数・待ち人数のリアルタイム表示</td><td>空席あり、待ちなし</td></tr>
+</table>
+
+<h4>タグシステム — 検索画面での実装</h4>
+<div class="card card-blue">
+  <ul>
+    <li>検索バー下に<strong>タグチップを横スクロール</strong>で配置（Airbnb方式）</li>
+    <li><strong>タグカテゴリ</strong>: エリアタグ（ドロップダウン）/ ジャンルタグ / プライズタグ / 雰囲気タグ / ステータスタグ</li>
+    <li>タグ例: <code>#NLH</code> <code>#PLO</code> <code>#初心者歓迎</code> <code>#新規プレイヤーに人気</code> <code>#ディープスタック</code> <code>#GTD10万+</code> <code>#フリーロール</code> <code>#NEW</code> <code>#空席あり</code></li>
+    <li>タグをタップするとフィルタ適用、再タップで解除。複数タグのAND組み合わせ</li>
+    <li>よく使われるタグ・人気のタグを先頭に表示（将来的にパーソナライズ）</li>
+  </ul>
+</div>
+
+<h4>マップ表示の仕様</h4>
+<table>
+  <tr><th>項目</th><th>仕様</th></tr>
+  <tr><td>ピン表示</td><td>営業中: 青ピン、準備中: グレーピン、休業: 非表示（フィルタ切替で表示可）。NEWの店舗はピンに「NEW」ラベル付き</td></tr>
+  <tr><td>ホットイベント</td><td>🔥のあるイベントがある店舗はピンが赤く強調表示</td></tr>
+  <tr><td>クラスタリング</td><td>ズームアウト時にピンを自動クラスタリング。件数バッジ表示</td></tr>
+  <tr><td>ピンタップ</td><td>店舗サマリーカード（名前・ゲーム種別・空席数・予算めやす）をポップアップ → タップでP-STORE-DETAIL</td></tr>
+  <tr><td>リスト連動</td><td>マップの表示範囲に応じてリスト側の結果も自動更新</td></tr>
+</table>
+
+<!-- P-STORE-DETAIL -->
+<div class="screen-header">
+  <span class="screen-id">P-STORE-DETAIL</span>
+  <span class="screen-name">店舗詳細 ★ Updated</span>
+</div>
+
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>A1-1-04, A1-1-07, A1-1-08, A1-1-09, A1-2-04, A1-2-08, A1-2-09, A1-4-01〜05</td></tr>
+  <tr><td>目的</td><td>店舗の詳細情報・予算めやす・タグを表示し、テーブル状況とトーナメントを分離表示</td></tr>
+  <tr><td>フェーズ</td><td>Phase 1</td></tr>
+</table>
+
+<div class="wireframe">┌─────────────────────────┐
+│  ← 戻る           ♡ 📤  │
+├─────────────────────────┤
+│  [店舗カバー画像]          │
+│                         │
+│  店舗A            NEW    │
+│  ⭐ 4.5  営業中  [店舗]   │
+│  📍 東京都渋谷区...        │
+│  🕐 14:00-翌2:00         │
+│                         │
+│  💰 予算めやす            │
+│  トーナメント ¥3,000〜¥8,000│
+│  リングゲーム  NLH 1-2〜5-10│
+│                         │
+│  #初心者歓迎 #NLH #PLO    │
+│  #新規プレイヤーに人気      │
+├─────────────────────────┤
+│ [テーブル] [トーナメント] [情報]│
+├─────────────────────────┤
+│                         │
+│  ── 現在のテーブル ──      │
+│  NLH 1-2 (T1)           │
+│  着席 8/9  空席1          │
+│  [ウェイティング登録]        │
+│                         │
+│  NLH 2-5 (T2)           │
+│  着席 6/9  空席3          │
+│  [ウェイティング登録]        │
+│                         │
+│  ── トーナメント ──        │
+│  🏆 19:00 デイリーNLH     │
+│  ¥3,000  8/36名 🔥       │
+│  締切まで 1:24            │
+│  [エントリー]              │
+│                         │
+│  🏆 22:00 ナイトPLO       │
+│  ¥5,000  2/24名          │
+│  締切まで 5:00            │
+│  [エントリー]              │
+│                         │
+└─────────────────────────┘</div>
+
+<h4>ヘッダー情報（v2 追加要素）</h4>
+<table>
+  <tr><th>要素</th><th>内容</th><th>要件ID</th></tr>
+  <tr><td><strong>クラブ種別バッジ</strong></td><td>[店舗] または [イベント主催者] を表示。クラブ登録時の種別に基づく</td><td>A1-1-07</td></tr>
+  <tr><td><strong>NEW タグ</strong></td><td>開店3ヶ月以内の店舗に自動表示</td><td>A1-1-09</td></tr>
+  <tr><td><strong>予算めやす</strong></td><td>過去の開催実績から算出したトーナメント参加費帯とリングゲームレート帯。「この店で遊ぶのにいくらかかるか」を来店前に把握可能</td><td>A1-1-08</td></tr>
+  <tr><td><strong>タグ一覧</strong></td><td>自動付与タグ + 事業者設定タグ + システム提案タグを表示。タップで当該タグの検索結果へ遷移</td><td>A1-4-01〜05</td></tr>
+</table>
+
+<h4>タブ構成</h4>
+<table>
+  <tr><th>タブ</th><th>内容</th></tr>
+  <tr><td>テーブル</td><td>現在オープン中のリングゲームテーブル。ゲーム種別・レート・着席数/空席数・待ち人数をリアルタイム表示（WebSocket）。ウェイティング登録ボタン</td></tr>
+  <tr><td>トーナメント</td><td>今日以降のトーナメント。受付中→本日開催→今後の順。締切カウントダウン・🔥バッジ・HIGH VALUEバッジ表示。事前エントリーボタン（セルフレジストレーション可能なトーナメントのみ）</td></tr>
+  <tr><td>情報</td><td>住所・アクセス方法・営業時間・写真ギャラリー・設備（WiFi/喫煙/駐車場等）・SNSリンク。Google Maps埋め込み</td></tr>
+</table>
+
+<h4>アクション</h4>
+<ul>
+  <li><strong>♡</strong> → お気に入り登録/解除（登録するとA1-3-01の通知対象に）</li>
+  <li><strong>📤</strong> → 共有（SNS / メッセージ / URL）。ディープリンク付き</li>
+  <li><strong>ウェイティング登録</strong> → P-WAIT-REG（シチュエーション3-2で詳述）</li>
+  <li><strong>エントリー</strong> → P-ENTRY（シチュエーション3-2で詳述）</li>
+  <li>タグをタップ → P-SEARCH（当該タグで絞り込み）</li>
+  <li>トーナメントカード → <strong>P-EVENT-DETAIL</strong></li>
+</ul>
+
+<!-- P-EVENT-LIST -->
+<div class="screen-header">
+  <span class="screen-id">P-EVENT-LIST</span>
+  <span class="screen-name">トーナメント一覧 ★ Updated</span>
+</div>
+
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>A1-2-01, A1-2-02, A1-2-05, A1-2-07〜A1-2-11, A1-4-01</td></tr>
+  <tr><td>目的</td><td>トーナメントをタイムライン形式で一覧表示。優先表示・バッジ・タグ絞り込み対応</td></tr>
+  <tr><td>フェーズ</td><td>Phase 1</td></tr>
+</table>
+
+<div class="wireframe">┌─────────────────────────┐
+│  ← トーナメント  🔍 フィルタ │
+├─────────────────────────┤
+│ [ハウストーナメント] [大会]   │
+│ タグ: [#NLH] [#GTD10万+].. │
+├─────────────────────────┤
+│  [カレンダー] / [リスト]     │
+│                           │
+│  🎮 プレイ中                │
+│  🏆 デイリーNLH  店舗A      │
+│     Lv4  残り18人 T3/S5    │
+│  ✅ チェックイン待ち          │
+│  🏆 ナイトPLO  店舗C        │
+│     20:00  登録済み         │
+│                           │
+│  ── 受付中 ──              │
+│  🏆 サンデー杯   HIGH VALUE │
+│     店舗B 13:00 ¥8,000     │
+│     🔥 8/36名  締切 1:24   │
+│  🏆 PLOスペシャル            │
+│     店舗C 20:00 ¥5,000     │
+│     3/24名    締切 4:30    │
+│                           │
+│  ── 3/14 (土) ─────        │
+│  🏆 19:00 デイリーNLH       │
+│     店舗A ¥3,000  12/36名  │
+│  🏆 22:00 ナイトPLO         │
+│     店舗D ¥5,000  4/24名   │
+│                           │
+│  ── 3/15 (日) ─────        │
+│  🏆 13:00 サンデー杯        │
+│     店舗B ¥8,000  受付前    │
+│                           │
+│  ── 大会・シリーズ ──        │
+│  🏅 JAPAN OPEN 2026        │
+│     3/20-3/25 全12イベント   │
+│     総GTD ¥5,000,000       │
+│     [詳細を見る >]           │
+│                           │
+└─────────────────────────┘</div>
+
+<h4>表示構成</h4>
+<table>
+  <tr><th>要素</th><th>詳細</th></tr>
+  <tr><td><strong>タブ切替</strong></td><td>ハウストーナメント（日常開催）と大会（シリーズ/フェスティバル）をタブで分離表示</td></tr>
+  <tr><td><strong>表示順序</strong></td><td>① プレイ中（最上部固定）→ ② チェックイン待ち → ③ 受付中（締切カウントダウン付き）→ ④ 日付順（時刻順）</td></tr>
+  <tr><td><strong>バッジ</strong></td><td>🔥ホット（定員70%以上）、HIGH VALUE（バリュー指標が高い）、残りわずか（90%以上）</td></tr>
+  <tr><td><strong>タグ絞り込み</strong></td><td>ジャンル・エリア・GTD帯等のタグで絞り込み可能</td></tr>
+  <tr><td><strong>大会セクション</strong></td><td>ハウストーナメントとは区分して表示。シリーズ全体の情報を集約。大会詳細ページへの導線</td></tr>
+</table>
+
+<h4>トーナメントカードの表示項目</h4>
+<ul>
+  <li>トーナメント名 / 開催店舗 / 開始時刻 / エントリー費 / ゲーム種別</li>
+  <li>エントリー数 / 定員（例: 8/36名）</li>
+  <li>締切カウントダウン（受付中のみ。30分前はハイライト）</li>
+  <li>🔥ホットバッジ / HIGH VALUE バッジ</li>
+  <li>セルフレジストレーション可否のアイコン</li>
+  <li>ポイント利用可否のアイコン</li>
+</ul>
+
+<!-- P-EVENT-DETAIL -->
+<div class="screen-header">
+  <span class="screen-id">P-EVENT-DETAIL</span>
+  <span class="screen-name">イベント / トーナメント詳細</span>
+</div>
+
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>A1-2-03, A1-2-08〜A1-2-10, A2-3-01〜A2-3-05</td></tr>
+  <tr><td>目的</td><td>トーナメントのストラクチャー・ペイアウト・参加者情報を表示し、エントリーへの導線を提供。締切カウントダウンとバッジも表示</td></tr>
+  <tr><td>フェーズ</td><td>Phase 1</td></tr>
+</table>
+
+<div class="wireframe">┌───────────────────────────┐
+│  ← 戻る             📤    │
+├───────────────────────────┤
+│  🏆 サンデー杯  HIGH VALUE  │
+│  店舗B                     │
+│  3/15(日) 13:00            │
+│  🔥 人気  #NLH #ディープスタック│
+├───────────────────────────┤
+│  エントリー  ¥8,000         │
+│  リバイ     ¥5,000         │
+│  参加者     8 / 36名  🔥    │
+│  ギャランティ ¥200,000       │
+│  バリュー   25.0x           │
+│                           │
+│  ⏱ 締切まで 1:24:00        │
+│                           │
+│  [エントリーする]             │
+│                           │
+├───────────────────────────┤
+│ [ストラクチャー] [ペイアウト] [参加者] │
+├───────────────────────────┤
+│  Lv1  100/200   20分       │
+│  Lv2  200/400   20分       │
+│  -- Break --    10分       │
+│  Lv3  300/600   20分       │
+│  ...                      │
+└───────────────────────────┘</div>
+
+<h4>v2 追加要素</h4>
+<table>
+  <tr><th>要素</th><th>内容</th></tr>
+  <tr><td><strong>締切カウントダウン</strong></td><td>エントリー締切までの残り時間をリアルタイム表示。30分前にはハイライト（赤色）</td></tr>
+  <tr><td><strong>バリュー指標</strong></td><td>GTD ÷ エントリー費 のオッズを表示（例: 25.0x）。HIGH VALUEバッジと連動</td></tr>
+  <tr><td><strong>🔥ホットバッジ</strong></td><td>エントリー数/定員が70%超で表示。集客状況を可視化</td></tr>
+  <tr><td><strong>タグ表示</strong></td><td>トーナメントに付与されたジャンルタグを表示（#NLH #ディープスタック 等）</td></tr>
+</table>
+
+<h4>タブ構成</h4>
+<table>
+  <tr><th>タブ</th><th>内容</th></tr>
+  <tr><td>ストラクチャー</td><td>ブラインドレベル表（Lv / SB / BB / Ante / 時間）。現在進行中のレベルをハイライト。ブレイクも表示</td></tr>
+  <tr><td>ペイアウト</td><td>入賞枠数と配分割合（%）。ポイント配分額も併記（Phase 2）。参加者数に応じた動的計算</td></tr>
+  <tr><td>参加者</td><td>エントリー済みプレイヤー一覧（プロフィールリンク付き）。公開設定に基づき非公開にも可能</td></tr>
+</table>
+
+<h4>状態バリエーション</h4>
+<table>
+  <tr><th>状態</th><th>表示</th></tr>
+  <tr><td>セルフレジストレーション可能</td><td>「エントリーする」ボタンを表示 → P-ENTRY へ</td></tr>
+  <tr><td>セルフレジストレーション不可</td><td>「当日会場にてエントリー」案内テキスト。ボタンなし</td></tr>
+  <tr><td>登録済み</td><td>登録状態カード（QR表示ボタン・キャンセルボタン・アドオン追加ボタン）</td></tr>
+  <tr><td>定員到達</td><td>「定員に達しました」表示。キャンセル待ち登録への導線</td></tr>
+  <tr><td>エントリー締切済み</td><td>「エントリーは締め切りました」表示</td></tr>
+</table>
+
+<!-- P-NOTIF -->
+<div class="screen-header">
+  <span class="screen-id">P-NOTIF</span>
+  <span class="screen-name">通知一覧</span>
+</div>
+
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>A1-3-01, A1-3-02</td></tr>
+  <tr><td>目的</td><td>プッシュ通知の履歴を一覧表示。お気に入り店舗の新イベントや条件マッチ通知を含む</td></tr>
+  <tr><td>フェーズ</td><td>Phase 1</td></tr>
+</table>
+
+<h4>通知種別（店舗・イベント発見に関連するもの）</h4>
+<table>
+  <tr><th>種別</th><th>トリガー</th><th>内容例</th><th>タップ先</th></tr>
+  <tr><td>お気に入り新イベント</td><td>お気に入り店舗にイベント追加</td><td>「店舗A: 3/20 特別トーナメント追加」</td><td>P-EVENT-DETAIL</td></tr>
+  <tr><td>条件マッチ通知</td><td>設定条件に合うイベントが登録</td><td>「NLH ¥3,000以下 のイベントが見つかりました」</td><td>P-EVENT-DETAIL</td></tr>
+  <tr><td>締切間近通知</td><td>エントリー済みでないトーナメントが締切30分前</td><td>「サンデー杯 🔥 残りわずか！締切まで30分」</td><td>P-EVENT-DETAIL</td></tr>
+  <tr><td>ウェイティング順番</td><td>順番が近づいたとき</td><td>「店舗A NLH 1-2: あと2人です」</td><td>P-WAIT-STATUS</td></tr>
+  <tr><td>イベントリマインダー</td><td>エントリー済みイベント開始前</td><td>「デイリーNLH まもなく開始（30分後）」</td><td>P-EVENT-DETAIL</td></tr>
+  <tr><td>店舗からのお知らせ</td><td>店舗がプッシュ配信</td><td>「本日20時〜 PLOテーブルオープン！」</td><td>P-STORE-DETAIL</td></tr>
+</table>
+
+<!-- ========== 5. Portal ========== -->
+<h2>5. PGOS Portal（公開Web）との連携</h2>
+
+<p>PGOS Portal はログイン不要で閲覧できる公開Webサイトです。<strong>SEO対策の要</strong>であり、Google検索から店舗・イベント情報へ到達するプレイヤーの受け皿になります。各ページからPGOS Playerアプリへのダウンロード導線を設置します。</p>
+
+<div class="card card-blue">
+  <h4>設計原則</h4>
+  <ul>
+    <li><strong>SEOファースト</strong>: SSR / SSG で検索エンジンにインデックスされやすい構造</li>
+    <li><strong>構造化データ</strong>: Schema.org マークアップ（LocalBusiness, Event）でリッチスニペット対応</li>
+    <li><strong>高速表示</strong>: LCP (Largest Contentful Paint) 2.5秒以内</li>
+    <li><strong>アプリ誘導</strong>: 各ページにApp Store / Google Play へのダウンロードボタン</li>
+  </ul>
+</div>
+
+<h3>5-1. W-TOP — トップページ</h3>
+<table>
+  <tr><th>URL</th><th>主な構成要素</th></tr>
+  <tr><td><code>/</code></td><td>ヒーローセクション（検索バー＋キャッチコピー＋アプリDLボタン）、今日のイベント横スクロールカード、エリアから探す（都市タグ）、PGOSでできること（3カラム紹介）、店舗オーナー向けCTA</td></tr>
+</table>
+
+<h3>5-2. W-STORE-DIR — 店舗ディレクトリ</h3>
+<table>
+  <tr><th>URL</th><th>主な構成要素</th></tr>
+  <tr><td><code>/stores</code>, <code>/stores?area=tokyo</code></td><td>マップ＋店舗リストの2カラムレイアウト。エリア/ゲーム種別/営業中フィルタ。予算めやす表示。エリアごとの静的ページ生成。構造化データ: <code>LocalBusiness</code></td></tr>
+</table>
+
+<h3>5-3. W-STORE-DETAIL — 店舗詳細（Web）</h3>
+<table>
+  <tr><th>URL</th><th>主な構成要素</th></tr>
+  <tr><td><code>/stores/:slug</code></td><td>店舗カバー画像、クラブ種別バッジ、基本情報、予算めやす、タグ一覧、今週のスケジュール、設備、Google Maps。OGP: 店舗カバー画像</td></tr>
+</table>
+
+<h3>5-4. W-EVENT-LIST / W-EVENT-DETAIL — イベント</h3>
+<table>
+  <tr><th>URL</th><th>主な構成要素</th></tr>
+  <tr><td><code>/events</code></td><td>カレンダー/リスト切替、タグフィルタ対応、ハウストーナメント/大会切替。🔥・HIGH VALUEバッジ表示</td></tr>
+  <tr><td><code>/events/:id</code></td><td>トーナメント詳細（ストラクチャー・ペイアウト・バリュー指標・タグ）。「アプリでエントリー」ボタン + カレンダー追加。構造化データ: <code>Event</code></td></tr>
+  <tr><td><code>/series/:id</code></td><td>大会（シリーズ）詳細ページ。シリーズ全体のスケジュール・総GTD・メインイベント情報・会場情報</td></tr>
+</table>
+
+<!-- ========== 6. 画面遷移 ========== -->
+<h2>6. 画面遷移フロー</h2>
+
+<div class="flow-box">
+  <strong>店舗発見フロー:</strong><br>
+  P-HOME（リングゲームセクション）<span class="arrow">→</span> P-SEARCH（店舗タブ/マップ）<span class="arrow">→</span> P-STORE-DETAIL <span class="arrow">→</span> P-WAIT-REG（ウェイティング登録 = 3-2へ）<br><br>
+
+  <strong>トーナメント発見フロー:</strong><br>
+  P-HOME（受付中トーナメント）<span class="arrow">→</span> P-EVENT-LIST（トーナメントタブ）<span class="arrow">→</span> P-EVENT-DETAIL <span class="arrow">→</span> P-ENTRY（事前エントリー = 3-2へ）<br><br>
+
+  <strong>大会発見フロー:</strong><br>
+  P-SEARCH（トーナメントタブ → 大会セクション）<span class="arrow">→</span> P-SERIES-DETAIL <span class="arrow">→</span> P-EVENT-DETAIL <span class="arrow">→</span> P-ENTRY<br><br>
+
+  <strong>タグ起点フロー:</strong><br>
+  P-STORE-DETAIL（タグタップ）<span class="arrow">→</span> P-SEARCH（当該タグで絞り込み）<span class="arrow">→</span> 別のP-STORE-DETAIL<br><br>
+
+  <strong>通知起点フロー:</strong><br>
+  プッシュ通知（締切間近🔥） <span class="arrow">→</span> P-EVENT-DETAIL <span class="arrow">→</span> P-ENTRY<br><br>
+
+  <strong>Portal起点フロー（Web）:</strong><br>
+  Google検索 <span class="arrow">→</span> W-STORE-DETAIL / W-EVENT-DETAIL <span class="arrow">→</span> 「アプリで開く」<span class="arrow">→</span> PGOS Player（ディープリンク）<br><br>
+
+  <strong>SNS起点フロー:</strong><br>
+  LINE/X/Instagramの告知リンク <span class="arrow">→</span> ディープリンク <span class="arrow">→</span> P-EVENT-DETAIL（直接遷移）
+</div>
+
+<!-- ========== 7. 非機能要件 ========== -->
+<h2>7. 非機能要件</h2>
+
+<table>
+  <tr><th>項目</th><th>要件</th><th>備考</th></tr>
+  <tr><td>アプリ起動時間</td><td>3秒以内（コールドスタート）</td><td>スプラッシュ画面を含む</td></tr>
+  <tr><td>検索レスポンス</td><td>店舗/イベント検索結果の表示まで1秒以内</td><td>API応答 + レンダリング</td></tr>
+  <tr><td>リアルタイム更新</td><td>テーブル状況・ウェイティング数・エントリー数の更新は5秒以内に反映</td><td>WebSocket使用</td></tr>
+  <tr><td>カウントダウン精度</td><td>エントリー締切カウントダウンは秒単位で同期</td><td>サーバー時刻ベース</td></tr>
+  <tr><td>オフライン対応</td><td>直近の検索結果・お気に入り店舗情報はオフラインでも閲覧可能</td><td>ローカルキャッシュ</td></tr>
+  <tr><td>Portal LCP</td><td>2.5秒以内（Largest Contentful Paint）</td><td>SSR/SSG + CDN</td></tr>
+  <tr><td>対応OS</td><td>iOS 16以降、Android 10以降</td><td>—</td></tr>
+  <tr><td>ブラウザ対応（Portal）</td><td>Chrome / Safari / Edge 最新2バージョン</td><td>—</td></tr>
+  <tr><td>アクセシビリティ</td><td>WCAG 2.1 AA 準拠</td><td>—</td></tr>
+</table>
+
+<!-- ========== 8. 検討事項 ========== -->
+<h2>8. 検討事項・リスク</h2>
+
+<div class="card card-red">
+  <h4>⚠ 風営法関連リスク: エントリー数予想・オッズ予想（A1-2-11）</h4>
+  <p>過去のデータに基づく予想エントリー数やオッズ予想の表示は、風営法上の「賭博の期待値を煽る」表現に該当する可能性がある。法務確認を経て表示可否を最終判断する。表示を見送る場合でも、データ自体は内部分析用として蓄積する方針。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>💡 店舗/イベント主催者の区分（A1-1-07）</h4>
+  <p>クラブ登録時に種別選択を必須とすることで、店舗ページとイベント主催者ページのフォーマットを出し分ける。ただし、プレイヤーの検索・発見性を損なわないよう、デフォルトの検索結果では両方を統合表示し、フィルタで絞り込む設計とする。「区分する」ことと「見つけやすさ」のバランスが重要。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>💡 大会とハウストーナメントの区分（A1-2-05）</h4>
+  <p>大会（フェスティバル/シリーズ）は専用のシリーズ詳細ページを持ち、ハウストーナメントとは異なるフォーマットで表示する。トーナメント一覧ではタブで分離しつつ、統合検索でも発見可能にする。大会と認定する基準（複数日 / GTD一定額以上 / 事業者申請 等）を別途定義する必要がある。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>💡 タグの管理・品質維持（A1-4-04, A1-4-05）</h4>
+  <p>手動付与タグは「システムが提供する選択肢から選ぶ」方式で品質を担保する。自由入力は初期段階では見送り、利用状況を見て検討。システム提案タグ（「新規プレイヤーに人気」等）の判定ロジックと閾値は、十分なデータが蓄積されてから定義する（Phase 2以降）。</p>
+</div>
+
+<div class="footer-note">
+  PGOS — 3-1. 店舗・イベントを探す（来店前）プレイヤー向け詳細 v3<br>
+  合同会社グローバルポイント — Confidential<br>
+  参照: docs/pgos/requirements/player-features.md, docs/pgos/ux/player-app.md, docs/pgos/ux/portal-web.md
+</div>
+
+</body>
+</html>

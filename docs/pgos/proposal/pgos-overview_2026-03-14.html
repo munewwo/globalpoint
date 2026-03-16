@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>PGOS プロジェクト概要</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 16mm 20mm 16mm;
+    @bottom-center {
+      content: counter(page) " / " counter(pages);
+      font-size: 9px;
+      color: #999;
+      font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    font-size: 10px;
+    line-height: 1.65;
+    color: #1a1a1a;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ── Cover ── */
+  .cover {
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    text-align: center;
+  }
+  .cover h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+    color: #0d47a1;
+  }
+  .cover .subtitle {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 40px;
+  }
+  .cover .meta {
+    font-size: 11px;
+    color: #888;
+    line-height: 2;
+  }
+
+  /* ── Headings ── */
+  h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0d47a1;
+    border-bottom: 2px solid #0d47a1;
+    padding-bottom: 4px;
+    margin-top: 28px;
+    margin-bottom: 12px;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #1565c0;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+  }
+  h4 {
+    font-size: 11px;
+    font-weight: 700;
+    color: #333;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    page-break-after: avoid;
+  }
+
+  p, li { margin: 3px 0; }
+  ul, ol { padding-left: 18px; margin: 4px 0; }
+  li { margin-bottom: 2px; }
+  strong { color: #0d47a1; }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 14px 0;
+    font-size: 9.5px;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 5px 7px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #e3f2fd;
+    font-weight: 700;
+    color: #0d47a1;
+    white-space: nowrap;
+  }
+  td:first-child { font-weight: 600; }
+
+  /* ── Section Cards ── */
+  .scenario-section {
+    background: #f8f9fb;
+    border: 1px solid #dde3ea;
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin: 10px 0 16px 0;
+    page-break-inside: avoid;
+  }
+  .scenario-section h3 {
+    margin-top: 0;
+    font-size: 13px;
+  }
+
+  /* ── Two-col layout ── */
+  .two-col {
+    display: flex;
+    gap: 12px;
+    margin: 8px 0 14px 0;
+  }
+  .two-col > div {
+    flex: 1;
+    background: #f8f9fb;
+    border: 1px solid #dde3ea;
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .two-col h4 { margin-top: 0; }
+
+  .col-player { border-left: 3px solid #1e88e5; }
+  .col-operator { border-left: 3px solid #43a047; }
+  .col-player h4 { color: #1565c0; }
+  .col-operator h4 { color: #2e7d32; }
+
+  .badge {
+    display: inline-block;
+    font-size: 8px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .badge-must { background: #c62828; color: #fff; }
+  .badge-should { background: #f9a825; color: #fff; }
+  .badge-could { background: #bdbdbd; color: #fff; }
+  .badge-ph1 { background: #1565c0; color: #fff; }
+  .badge-ph2 { background: #6a1b9a; color: #fff; }
+  .badge-ph3 { background: #00838f; color: #fff; }
+
+  .req-id {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 8px;
+    color: #888;
+    margin-right: 3px;
+  }
+
+  .point-flow {
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin: 10px 0 16px 0;
+    font-size: 10px;
+    line-height: 1.8;
+  }
+  .point-flow ol { padding-left: 18px; }
+
+  .roadmap-table td:nth-child(1) { white-space: nowrap; }
+
+  .avoid-break { page-break-inside: avoid; }
+
+  .toc { margin: 20px 0; }
+  .toc ul { list-style: none; padding-left: 0; }
+  .toc li { margin: 3px 0; font-size: 11px; }
+  .toc li::before { content: "— "; color: #0d47a1; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- ========== COVER ========== -->
+<div class="cover">
+  <h1>PGOS</h1>
+  <div class="subtitle">Poker Global Operating System — プロジェクト概要</div>
+  <div class="meta">
+    合同会社グローバルポイント<br>
+    2026年3月14日 作成<br>
+    ステータス: 要件定義 進行中
+  </div>
+</div>
+
+<!-- ========== TOC ========== -->
+<h2>目次</h2>
+<div class="toc">
+<ul>
+  <li>1. プロジェクト概要と背景</li>
+  <li>2. アプリケーション構成</li>
+  <li>3. シチュエーション別 機能マップ</li>
+  <li>&emsp;3-1. 店舗・イベントを探す（来店前）</li>
+  <li>&emsp;3-2. 事前手続き（エントリー・ウェイティング登録）</li>
+  <li>&emsp;3-3. 来店時（チェックイン・受付）</li>
+  <li>&emsp;3-4. プレイ中 — トーナメント</li>
+  <li>&emsp;3-5. プレイ中 — リングゲーム</li>
+  <li>&emsp;3-6. プレイ終了・退店時</li>
+  <li>&emsp;3-7. 来店後・日常（戦績・ポイント・コミュニティ）</li>
+  <li>&emsp;3-8. 会員登録・本人確認（横断フロー）</li>
+  <li>4. ポイントシステム（ウェブコイン後継）</li>
+  <li>5. 開発ロードマップ</li>
+  <li>6. 料金プラン案</li>
+  <li>7. 競合との差別化</li>
+</ul>
+</div>
+
+<!-- ========== 1. 概要 ========== -->
+<h2>1. プロジェクト概要と背景</h2>
+
+<p><strong>PGOS</strong> は、全国および海外のポーカー店舗・大会運営に必要な機能を統合的に提供するプラットフォームです。現行の <strong>POKERWEB</strong>（店舗オペレーション＆マネジメント）、<strong>GameID</strong>（プレイヤー向け会員アプリ）、<strong>POKERGUILD</strong>（スケジュールサイト）を統合し、自社開発の新システムとして構築します。</p>
+
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>企画・運営</td><td>合同会社グローバルポイント</td></tr>
+  <tr><td>対象ユーザー</td><td>ポーカー店舗・大会主催者（運営側）、ポーカープレイヤー（利用者側）</td></tr>
+  <tr><td>置き換え対象</td><td>POKERWEB (247クラブ) / GameID / POKERGUILD (306クラブ)</td></tr>
+  <tr><td>展開スコープ</td><td>初期からグローバル対応（多言語・多通貨）</td></tr>
+</table>
+
+<h3>現行サービスの課題</h3>
+<ul>
+  <li>POKERWEB / GameID はブラジル開発元への依存度が高く、日本市場向けの機能追加・改善の自由度が低い</li>
+  <li>POKERGUILD は情報掲載サイトにとどまり、店舗オペレーションとの連携が限定的</li>
+  <li>競合（Poker Fans 450店舗超、Waitinglist 230店舗超）が急速にシェアを伸ばしている</li>
+</ul>
+
+<h3>PGOS が目指す 5つの柱</h3>
+<ol>
+  <li><strong>店舗運営の一元管理</strong> — トーナメント・リングゲーム・会員・売上を一つのシステムで</li>
+  <li><strong>プレイヤー体験の向上</strong> — 店舗発見〜ウェイティング〜戦績追跡〜ポイント管理をアプリで完結</li>
+  <li><strong>ポイントエコシステムの進化</strong> — ウェブコインを発展させたコンプライアンス対応済みのポイントシステム</li>
+  <li><strong>グローバル展開</strong> — 多言語・多通貨対応を初期設計に組み込む</li>
+  <li><strong>データ活用</strong> — 戦績データベースの構築によるランキング・分析基盤（Hendon Mob / GPI 対抗）</li>
+</ol>
+
+<!-- ========== 2. 構成 ========== -->
+<h2>2. アプリケーション構成</h2>
+
+<table>
+  <tr><th>コンポーネント</th><th>対象ユーザー</th><th>形態</th></tr>
+  <tr><td>PGOS Player</td><td>プレイヤー</td><td>iOS / Android ネイティブ + PWA</td></tr>
+  <tr><td>PGOS Manager</td><td>店舗オペレーター / イベント主催者</td><td>Webアプリ（レスポンシブ）+ タブレット最適化</td></tr>
+  <tr><td>PGOS Floor</td><td>店舗スタッフ（フロア / ディーラー）</td><td>iOS / Android。未導入でもManagerで代替可能</td></tr>
+  <tr><td>PGOS Clock</td><td>店舗オペレーター</td><td>スマートTV / Fire TV / ブラウザ向けタイマー</td></tr>
+  <tr><td>PGOS Portal</td><td>一般公開</td><td>Webサイト（店舗・イベント検索、ランキング）</td></tr>
+  <tr><td>PGOS Admin</td><td>PGOS管理者</td><td>管理用Webダッシュボード</td></tr>
+  <tr><td>PGOS API</td><td>外部開発者 / 連携先</td><td>RESTful API / GraphQL</td></tr>
+</table>
+
+<!-- ========== 3. シチュエーション別 ========== -->
+<h2>3. シチュエーション別 機能マップ</h2>
+<p>プレイヤーの行動の流れに沿って、プレイヤー向け／店舗・イベント運営向けの機能をまとめます。各機能には要件IDと優先度を付記しています。</p>
+
+<!-- ── 3-1 ── -->
+<h3>3-1. 店舗・イベントを探す（来店前）</h3>
+<div class="two-col">
+  <div class="col-player">
+    <h4>プレイヤー向け（PGOS Player）</h4>
+    <ul>
+      <li><span class="req-id">A1-1-01</span><strong>地図ベースの店舗検索</strong> — 現在地周辺の店舗をマップ上に表示。ゲーム種別・レート帯・営業時間でフィルタ <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">A1-1-04</span><strong>店舗詳細ページ</strong> — 住所・アクセス・営業時間・写真・設備・SNSリンク <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">A1-2-01</span><strong>イベント・スケジュール検索</strong> — カレンダー/リストでトーナメントを一覧表示。日付・エリア・エントリー費でフィルタ <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">A1-2-04</span><strong>リングゲーム開催状況</strong> — 開いているテーブル・レート・待ち人数をリアルタイム表示 <span class="badge badge-should">Should</span></li>
+      <li><span class="req-id">A1-3-01</span><strong>お気に入り＆通知</strong> — よく行く店舗を登録し、新イベント情報をプッシュ通知で受信 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">A5-1-02</span><strong>フレンドの来店状況</strong> — 友人が今どの店にいるか確認 <span class="badge badge-should">Should</span><span class="badge badge-ph3">Ph3</span></li>
+    </ul>
+  </div>
+  <div class="col-operator">
+    <h4>店舗・イベント運営向け（PGOS Manager）</h4>
+    <ul>
+      <li><span class="req-id">B7-1-01</span><strong>店舗ページの自動生成</strong> — PGOS Portal 上に店舗情報を公開 <span class="badge badge-must">Must</span><span class="badge badge-ph2">Ph2</span></li>
+      <li><span class="req-id">B7-1-02</span><strong>店舗情報の編集</strong> — 住所・営業時間・写真・設備・SNSリンク <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B7-2-01</span><strong>スケジュール自動掲載</strong> — トーナメント/リングゲームのスケジュールをポータルに自動反映 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B7-2-02</span><strong>定期スケジュール設定</strong> — 毎週○曜日の△△トーナメント等の繰り返し登録 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B3-4-01</span><strong>プッシュ通知配信</strong> — 会員全体/特定グループへのイベント告知 <span class="badge badge-should">Should</span></li>
+      <li><span class="req-id">B3-4-04</span><strong>アプリ内メッセージ</strong> — プレイヤーへの個別・グループ連絡 <span class="badge badge-must">Must</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── 3-2 ── -->
+<h3>3-2. 事前手続き（エントリー・ウェイティング登録）</h3>
+<div class="two-col">
+  <div class="col-player">
+    <h4>プレイヤー向け</h4>
+    <ul>
+      <li><span class="req-id">A2-3-01</span><strong>トーナメント事前エントリー</strong> — アプリからエントリー。ポイントまたは現金払いを選択 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">A2-1-01</span><strong>ウェイティングリスト登録</strong> — 移動中にアプリで順番待ちに参加。複数テーブル同時登録も可能 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">A2-1-03</span><strong>順番接近プッシュ通知</strong> — 「あと2人です」等の通知で到着タイミングを調整 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">A2-3-05</span><strong>チケット管理</strong> — サテライト通過のチケットを保持し、本戦エントリーに利用 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">A2-3-06</span><strong>参加予定一覧＆リマインダー</strong> — エントリー済みトーナメントの確認と開催前通知 <span class="badge badge-should">Should</span></li>
+    </ul>
+  </div>
+  <div class="col-operator">
+    <h4>店舗・イベント運営向け</h4>
+    <ul>
+      <li><span class="req-id">B1-3-02</span><strong>事前エントリー管理</strong> — 事前エントリー済みプレイヤー一覧の確認 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">B1-3-01</span><strong>ゲスト登録対応</strong> — PGOS未登録者もゲストとして参加可能 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B2-2-01</span><strong>ウェイティングリスト管理</strong> — リモート登録の受付・承認 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">B2-2-03</span><strong>順番到来時の自動通知</strong> — オペレーター画面＋プレイヤーアプリに通知 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B1-6-02</span><strong>サテライト → 本戦自動引き継ぎ</strong> — 通過者の参加権を自動移管 <span class="badge badge-should">Should</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── 3-3 ── -->
+<h3>3-3. 来店時（チェックイン・受付）</h3>
+<div class="two-col">
+  <div class="col-player">
+    <h4>プレイヤー向け</h4>
+    <ul>
+      <li><span class="req-id">A2-2-01</span><strong>QRコード / NFCでチェックイン</strong> — 店頭でスマホをかざして入店登録 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">A6-3-01</span><strong>仮会員QRの即時発行</strong> — ユーザーID＋生年月日だけで即座にQR発行。後から正式登録可能 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">A2-3-02</span><strong>支払い方法の選択</strong> — 現金 / ポイント / クレジットカードから選択 <span class="badge badge-must">Must</span></li>
+    </ul>
+  </div>
+  <div class="col-operator">
+    <h4>店舗・イベント運営向け</h4>
+    <ul>
+      <li><span class="req-id">B3-1-02</span><strong>QRスキャンによる会員認識</strong> — 年代タグ・eKYCステータスを自動表示 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">B3-2-04</span><strong>顧客アラート</strong> — 注意人物のチェックイン時に警告表示 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B1-3-09</span><strong>チェックイン＋エントリー同時処理</strong> — 1操作で完了 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B1-3-10</span><strong>カウンターフリー設計</strong> — どの端末からでも任意のトーナメントへの処理が可能 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B4-1-06</span><strong>前払い/後払い対応</strong> — 来店時支払い or 退店時一括を選択・記録 <span class="badge badge-must">Must</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── 3-4 ── -->
+<h3>3-4. プレイ中 — トーナメント</h3>
+<div class="two-col">
+  <div class="col-player">
+    <h4>プレイヤー向け</h4>
+    <ul>
+      <li><span class="req-id">A2-3-04</span><strong>リアルタイム進行状況</strong> — 残り人数・平均スタック・賞金情報をアプリで閲覧 <span class="badge badge-should">Should</span></li>
+      <li><span class="req-id">—</span><strong>テーブル・シート確認</strong> — 自分の割り当てテーブル・シート番号をアプリで受信 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">A2-3-03</span><strong>リバイ/アドオン申請</strong> — アプリ内からリクエスト <span class="badge badge-should">Should</span></li>
+      <li><span class="req-id">—</span><strong>バランシング移動通知</strong> — テーブル移動が発生した場合、新テーブル・シートを通知 <span class="badge badge-should">Should</span></li>
+      <li><span class="req-id">A2-4-01</span><strong>飲食オーダー</strong> — テーブルを離れずアプリからフード・ドリンクを注文 <span class="badge badge-should">Should</span><span class="badge badge-ph3">Ph3</span></li>
+    </ul>
+  </div>
+  <div class="col-operator">
+    <h4>店舗・イベント運営向け</h4>
+    <ul>
+      <li><span class="req-id">B1-2-01</span><strong>トーナメントクロック</strong> — ブラインド・レベル・残り時間を大画面表示 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">B1-2-02</span><strong>マルチデバイス同期</strong> — TV・タブレット・スマホでクロックを同期 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B1-1-01</span><strong>ストラクチャー管理</strong> — ブラインドレベル・時間設定。テンプレート保存・再利用 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B1-4-02</span><strong>ランダムシート抽選</strong> — テーブル・シートの自動抽選 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B1-3-04</span><strong>エリミネーション記録</strong> — 脱落記録で順位を自動確定 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B1-4-08</span><strong>オートバランシング</strong> — テーブル間の人数差を検知し移動対象者を選出・通知 <span class="badge badge-should">Should</span></li>
+      <li><span class="req-id">B1-4-06</span><strong>オートテーブルブレイク</strong> — 事前スケジュールに基づき自動でテーブル統合 <span class="badge badge-should">Should</span></li>
+      <li><span class="req-id">B1-2-09</span><strong>オフライン動作保証</strong> — ネットワーク切断時もクロック継続 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B6-4-02</span><strong>PGOS Floor ディーラーモード</strong> — テーブルQR＋パスワードでログイン。ショットクロック・ニュープレイヤー通知 <span class="badge badge-should">Should</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── 3-5 ── -->
+<h3>3-5. プレイ中 — リングゲーム</h3>
+<div class="two-col">
+  <div class="col-player">
+    <h4>プレイヤー向け</h4>
+    <ul>
+      <li><span class="req-id">A2-2-02</span><strong>プレイ時間の自動記録</strong> — チェックイン〜チェックアウトのセッション記録 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">A2-1-02</span><strong>ウェイティング状況確認</strong> — 待ち人数・推定待ち時間のリアルタイム表示 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">A2-4-01</span><strong>飲食オーダー</strong> — アプリ内からフード・ドリンクを注文 <span class="badge badge-should">Should</span><span class="badge badge-ph3">Ph3</span></li>
+    </ul>
+  </div>
+  <div class="col-operator">
+    <h4>店舗・イベント運営向け</h4>
+    <ul>
+      <li><span class="req-id">B2-3-01</span><strong>チップイン/チップアウト記録</strong> — 着席・離席時にチップ量を記録。増減を自動計算 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">B2-1-01</span><strong>テーブル管理</strong> — ゲーム種別・ステークス・バイイン設定。オープン/クローズ操作 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B2-1-03</span><strong>テーブル状況リアルタイム表示</strong> — 着席者数/空席数を公開 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B2-5-01</span><strong>チップリミット自動チェック</strong> — 最大バイイン等を自動検証 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B2-3-06</span><strong>チップ追加（リバイ）記録</strong> — セッション中の追加バイイン <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B2-4-01</span><strong>ジャックポット管理</strong> — 積立・残高表示・発生時の配分 <span class="badge badge-should">Should</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── 3-6 ── -->
+<h3>3-6. プレイ終了・退店時</h3>
+<div class="two-col">
+  <div class="col-player">
+    <h4>プレイヤー向け</h4>
+    <ul>
+      <li><span class="req-id">A2-2-02</span><strong>チェックアウト＆プレイ時間集計</strong> — 退店時にプレイ時間を自動記録 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">—</span><strong>トーナメント結果通知</strong> — 入賞時はポイント付与をプッシュ通知 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">A3-2-01</span><strong>戦績への自動反映</strong> — 順位・参加者数・獲得ポイントをプロフィールに即時記録 <span class="badge badge-must">Must</span><span class="badge badge-ph2">Ph2</span></li>
+    </ul>
+  </div>
+  <div class="col-operator">
+    <h4>店舗・イベント運営向け</h4>
+    <ul>
+      <li><span class="req-id">B1-5-01</span><strong>ペイアウト自動計算</strong> — 参加者数に応じた入賞枠・配分。ICMチョップ対応 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">B1-5-05</span><strong>ポイント付与リクエスト自動生成</strong> — ペイアウト確定後にバッチ送信 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B4-1-07</span><strong>後払い精算</strong> — 退店時一括支払い。未精算時は次回来店時通知 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B4-1-05</span><strong>日次精算（日締め処理）</strong> — キャッシュレジスター的な日次の締め作業 <span class="badge badge-must">Must</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── 3-7 ── -->
+<h3>3-7. 来店後・日常（戦績・ポイント・コミュニティ）</h3>
+<div class="two-col">
+  <div class="col-player">
+    <h4>プレイヤー向け</h4>
+    <ul>
+      <li><span class="req-id">A3-2-02</span><strong>トーナメント戦績一覧</strong> — 時系列・フィルタ対応。獲得ポイント推移グラフ <span class="badge badge-must">Must</span><span class="badge badge-ph2">Ph2</span></li>
+      <li><span class="req-id">A3-3-01</span><strong>リングゲーム戦績</strong> — セッションごとのプレイ時間自動記録 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">A3-4-01</span><strong>ポイントランキング</strong> — 月別・年別・累計。地域別・店舗別 <span class="badge badge-must">Must</span><span class="badge badge-ph2">Ph2</span></li>
+      <li><span class="req-id">A3-5-01</span><strong>経験値（XP）＆レベルアップ</strong> — エントリー費×プレイ時間で算出。ゲーミフィケーション <span class="badge badge-should">Should</span></li>
+      <li><span class="req-id">A4-1-01</span><strong>ポイント残高・履歴確認</strong> — 取得・利用・トランスファーの全履歴 <span class="badge badge-must">Must</span><span class="badge badge-ph2">Ph2</span></li>
+      <li><span class="req-id">A4-1-04</span><strong>プレイヤー間ポイントトランスファー</strong> — eKYC完了者間で送受信（日次/月次上限あり） <span class="badge badge-should">Should</span></li>
+      <li><span class="req-id">A4-3-01</span><strong>大会補助申請</strong> — 宿泊・渡航費用の補助をアプリ内申請 <span class="badge badge-should">Should</span></li>
+      <li><span class="req-id">A5-1-01</span><strong>フレンド機能</strong> — QRコードで申請・承認。来店状況をリアルタイム表示 <span class="badge badge-should">Should</span><span class="badge badge-ph3">Ph3</span></li>
+      <li><span class="req-id">A5-3-01</span><strong>アクティビティフィード</strong> — フレンドの入賞や店舗からのお知らせ <span class="badge badge-could">Could</span><span class="badge badge-ph3">Ph3</span></li>
+    </ul>
+  </div>
+  <div class="col-operator">
+    <h4>店舗・イベント運営向け</h4>
+    <ul>
+      <li><span class="req-id">B4-2-01</span><strong>売上レポート</strong> — 日次/週次/月次サマリー。遊技料/飲食/ポイント利用区分 <span class="badge badge-must">Must</span><span class="badge badge-ph2">Ph2</span></li>
+      <li><span class="req-id">B4-2-04</span><strong>トーナメント別・リング別収支</strong> — 参加者数・エントリー収入・レイク <span class="badge badge-should">Should</span></li>
+      <li><span class="req-id">B3-3-01</span><strong>来店分析</strong> — 来店頻度・曜日別パターン・新規/リピーター比率 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B4-3-01</span><strong>ポイント精算</strong> — プレイヤー利用分を当社から受取（広告料範囲内） <span class="badge badge-must">Must</span><span class="badge badge-ph2">Ph2</span></li>
+      <li><span class="req-id">B4-4-01</span><strong>広告料・付与枠管理</strong> — 支払い状況、付与枠残高のリアルタイム確認 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B5-3-01</span><strong>コンプライアンス自動チェック</strong> — 等価禁止・高額サービス制限・未成年ブロック <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B6-3-01</span><strong>操作ログ・監査証跡</strong> — 全操作を記録。ポイント関連は詳細ログ <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B4-2-06</span><strong>CSV/PDFエクスポート</strong> — 各種レポートの出力 <span class="badge badge-should">Should</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── 3-8 ── -->
+<h3>3-8. 会員登録・本人確認（横断フロー）</h3>
+<div class="two-col">
+  <div class="col-player">
+    <h4>プレイヤー向け</h4>
+    <ul>
+      <li><span class="req-id">A6-3-01</span><strong>仮会員登録</strong> — ユーザーID＋生年月日のみでQR即時発行 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">A6-3-02</span><strong>正式登録</strong> — メール認証 or ソーシャルログイン（Google/Apple/LINE等） <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">A6-1-01</span><strong>eKYC（本人確認）</strong> — 身分証撮影＋顔照合（ライブネス検出）。IC認証（NFC）対応 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">A4-2-01</span><strong>選手契約オンライン締結</strong> — アプリ内で業務委託契約を完結 <span class="badge badge-must">Must</span><span class="badge badge-ph2">Ph2</span></li>
+      <li><span class="req-id">A6-3-06</span><strong>生体認証</strong> — Face ID / Touch ID で2回目以降のログイン＆決済確認 <span class="badge badge-should">Should</span></li>
+    </ul>
+  </div>
+  <div class="col-operator">
+    <h4>店舗・イベント運営向け</h4>
+    <ul>
+      <li><span class="req-id">B3-1-03</span><strong>ゲスト登録</strong> — 未登録者を氏名・連絡先の手動入力で管理 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+      <li><span class="req-id">B3-1-04</span><strong>ゲスト → 会員への移行促進</strong> — QRコード発行で正式登録を誘導 <span class="badge badge-should">Should</span></li>
+      <li><span class="req-id">B3-2-01</span><strong>会員情報管理</strong> — 一覧・検索、VIP/常連等のグループ分け <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B3-2-05</span><strong>eKYCステータス確認</strong> — ポイント利用資格の判定 <span class="badge badge-must">Must</span></li>
+      <li><span class="req-id">B6-2-01</span><strong>スタッフ権限管理</strong> — オーナー/マネージャー/ディーラー/レジ等のロール設定 <span class="badge badge-must">Must</span><span class="badge badge-ph1">Ph1</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========== 4. ポイントシステム ========== -->
+<h2>4. ポイントシステム（ウェブコイン後継）</h2>
+
+<p>PGOSの最大の差別化要素。競合（Poker Fans / Waitinglist）にはない<strong>加盟店共通ポイントエコシステム</strong>を構築する。</p>
+
+<div class="point-flow">
+  <h4>ポイントのライフサイクル</h4>
+  <ol>
+    <li><strong>クラブ → 当社に広告料を支払い</strong> → ポイント付与枠（付与可能額）が設定される <span class="req-id">WC-1-01</span></li>
+    <li><strong>プレイヤーがトーナメント入賞 or リングゲームで成果</strong> → クラブが付与リクエストを送信 <span class="req-id">WC-2-01</span></li>
+    <li><strong>当社が自動バリデーション後に承認</strong> → プレイヤーにポイント付与（選手契約 + eKYC + 18歳以上が前提） <span class="req-id">WC-2-03〜06</span></li>
+    <li><strong>プレイヤーが加盟店でポイント利用</strong> → エントリー費・遊技料・飲食に使える（利用時 5% 手数料） <span class="req-id">WC-4-01〜04</span></li>
+    <li><strong>クラブが当社に精算申請</strong> → 広告料の範囲内で精算される（勘定科目: 両替、消費税なし） <span class="req-id">WC-6-01〜03</span></li>
+  </ol>
+</div>
+
+<h4>法的設計の原則</h4>
+<table>
+  <tr><th>原則</th><th>内容</th></tr>
+  <tr><td>販売しない</td><td>対価を受け取らないため、資金決済法上の「前払式支払手段」に該当しない</td></tr>
+  <tr><td>付与の主体は当社</td><td>店舗が直接付与することはできない。当社が承認して付与する</td></tr>
+  <tr><td>景品ではない</td><td>選手契約（業務委託契約）に基づく報酬として位置づけ</td></tr>
+  <tr><td>等価禁止</td><td>遊技チップとポイントを等価にする構造は禁止（システムで自動検証）</td></tr>
+</table>
+
+<h4>システム的に強制する禁止事項</h4>
+<table>
+  <tr><th>チェック内容</th><th>実装</th></tr>
+  <tr><td>登録事業者によるプレイヤーへの直接付与</td><td>付与フローに当社承認を必須化</td></tr>
+  <tr><td>遊技チップ＝ポイントの等価構造</td><td>変換率テーブルで自動チェック</td></tr>
+  <tr><td>高額サービス（トーナメント税別10万円超等）</td><td>設定時に自動ブロック</td></tr>
+  <tr><td>未成年者のポイント利用</td><td>eKYCの年齢確認と連動</td></tr>
+</table>
+
+<!-- ========== 5. ロードマップ ========== -->
+<h2>5. 開発ロードマップ</h2>
+
+<table class="roadmap-table">
+  <tr><th>フェーズ</th><th>時期</th><th>テーマ</th><th>主な成果物</th></tr>
+  <tr>
+    <td><span class="badge badge-ph1" style="margin:0">Phase 1</span> MVP</td>
+    <td>2026 Q2〜Q3<br>(6ヶ月)</td>
+    <td>店舗運営の核＋プレイヤー基盤</td>
+    <td>Manager (トーナメント/リング管理、会員管理)、Clock (マルチデバイス同期)、Player (店舗検索、ウェイティング、チェックイン、eKYC)、Portal (検索ページ)</td>
+  </tr>
+  <tr>
+    <td><span class="badge badge-ph2" style="margin:0">Phase 2</span> 拡張</td>
+    <td>2026 Q4〜2027 Q1<br>(4ヶ月)</td>
+    <td>ポイントシステム＋戦績DB</td>
+    <td>ポイント付与・利用・精算の全フロー、戦績DB・ランキング、売上レポート、店舗プレゼンス、Admin (コンプラ管理)</td>
+  </tr>
+  <tr>
+    <td><span class="badge badge-ph3" style="margin:0">Phase 3</span> 差別化</td>
+    <td>2027 Q1〜Q2<br>(3ヶ月)</td>
+    <td>ソーシャル＋高度分析</td>
+    <td>フレンド機能、飲食オーダー、高度アナリティクス、Public API / Webhook</td>
+  </tr>
+  <tr>
+    <td><span class="badge" style="margin:0;background:#e65100;color:#fff">Phase 4</span> 移行</td>
+    <td>2027 Q2〜Q3<br>(4ヶ月)</td>
+    <td>既存移行＋グローバル展開</td>
+    <td>POKERWEB/GameID/POKERGUILDからの全データ移行、多言語展開、旧サービス停止</td>
+  </tr>
+</table>
+
+<!-- ========== 6. 料金 ========== -->
+<h2>6. 料金プラン案</h2>
+
+<table>
+  <tr><th>プラン</th><th>月額（税込）</th><th>主な制限</th><th>対象</th></tr>
+  <tr><td>Free</td><td>¥0</td><td>トーナメント月10回、会員100人、タイマー1台、ポイント非対応</td><td>小規模店舗・試用</td></tr>
+  <tr><td>Standard</td><td>¥9,900</td><td>トーナメント月40回、会員1,000人、タイマー3台、ポイント対応</td><td>標準的な店舗</td></tr>
+  <tr><td>Professional</td><td>¥19,800</td><td>トーナメント月100回、会員5,000人、タイマー10台、高度レポート</td><td>中〜大規模店舗</td></tr>
+  <tr><td>Enterprise</td><td>¥33,000</td><td>無制限、API利用、カスタムブランディング、優先サポート</td><td>大規模店舗・チェーン</td></tr>
+  <tr><td>Event</td><td>個別見積</td><td>大規模大会・フェスティバル向けの一時利用</td><td>イベント主催者</td></tr>
+</table>
+
+<!-- ========== 7. 差別化 ========== -->
+<h2>7. 競合との差別化</h2>
+
+<table>
+  <tr><th>機能カテゴリ</th><th>PGOS (目標)</th><th>Poker Fans<br>(450店舗超)</th><th>Waitinglist<br>(230店舗超)</th><th>POKERWEB<br>(247クラブ)</th></tr>
+  <tr><td>トーナメント管理</td><td style="text-align:center;color:#1565c0;font-weight:700">◎</td><td style="text-align:center">○</td><td style="text-align:center">△</td><td style="text-align:center">○</td></tr>
+  <tr><td>リングゲーム管理</td><td style="text-align:center;color:#1565c0;font-weight:700">◎</td><td style="text-align:center">△</td><td style="text-align:center;color:#1565c0;font-weight:700">◎</td><td style="text-align:center">○</td></tr>
+  <tr><td>マルチデバイスタイマー</td><td style="text-align:center;color:#1565c0;font-weight:700">◎</td><td style="text-align:center;color:#1565c0;font-weight:700">◎</td><td style="text-align:center">△</td><td style="text-align:center">○</td></tr>
+  <tr><td>ポイントシステム</td><td style="text-align:center;color:#1565c0;font-weight:700">◎</td><td style="text-align:center">—</td><td style="text-align:center">△</td><td style="text-align:center;color:#1565c0;font-weight:700">◎</td></tr>
+  <tr><td>戦績データベース</td><td style="text-align:center;color:#1565c0;font-weight:700">◎</td><td style="text-align:center">△</td><td style="text-align:center">○</td><td style="text-align:center">△</td></tr>
+  <tr><td>eKYC</td><td style="text-align:center;color:#1565c0;font-weight:700">◎</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">○</td></tr>
+  <tr><td>フレンド/ソーシャル</td><td style="text-align:center;color:#1565c0;font-weight:700">◎</td><td style="text-align:center">△</td><td style="text-align:center;color:#1565c0;font-weight:700">◎</td><td style="text-align:center">—</td></tr>
+  <tr><td>グローバル対応</td><td style="text-align:center;color:#1565c0;font-weight:700">◎</td><td style="text-align:center">△</td><td style="text-align:center">—</td><td style="text-align:center">○</td></tr>
+  <tr><td>無料プラン</td><td style="text-align:center">○</td><td style="text-align:center;color:#1565c0;font-weight:700">◎</td><td style="text-align:center">—</td><td style="text-align:center">—</td></tr>
+</table>
+
+<div class="scenario-section">
+  <h4>PGOS の差別化ポイント</h4>
+  <ol>
+    <li><strong>全方位型の統合力</strong> — Poker Fans はトーナメント、Waitinglist はリングゲームに強い。PGOS は両方を高水準で統合し、さらにポイントシステムを掛け合わせる</li>
+    <li><strong>ポイントエコシステム</strong> — 加盟店共通のポイントシステムは PGOS 独自の優位性。コンプライアンス対応済みの設計で風営法・資金決済法をクリア</li>
+    <li><strong>戦績データベース</strong> — Hendon Mob がカバーしきれないアジア圏のライブポーカー戦績を網羅</li>
+    <li><strong>グローバルファースト設計</strong> — 多言語・多通貨対応を初期設計に組み込み、国内競合と差別化</li>
+    <li><strong>フリーミアムモデル</strong> — 基本機能を無料提供し導入障壁を下げ、ポイント・高度分析を有料化</li>
+  </ol>
+</div>
+
+<p style="text-align:center;color:#999;font-size:9px;margin-top:40px;">
+  PGOS Project — 合同会社グローバルポイント — Confidential<br>
+  参照: docs/pgos/README.md, docs/pgos/requirements/overview.md
+</p>
+
+</body>
+</html>

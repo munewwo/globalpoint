@@ -21,14 +21,16 @@
 
 同じテーマでも「要約」や「案内」と「規約（正文）」が混在すると、参照先がブレやすくなります。顧客対応では、次の位置づけを基準に参照します。
 
-| 種別 | 位置づけ | 主な保管先 |
-|------|----------|------------|
-| リリースノート | 対外発表の一次ソース（いつ・何を発表したか） | `docs/release/`（入口: [docs/release/README.md](docs/release/README.md)） |
-| 規約・ポリシー（正文） | 利用規約・特約・プライバシーポリシー・反社排除規程等 | `docs/globalpoint/terms/`（入口: [README.md](docs/globalpoint/terms/README.md)） |
-| 説明資料・要約 | 概要把握・案内用（正文ではない） | `docs/pokerweb/pokerweb-service.md` / `docs/pokerweb/pokerweb-webcoin.md` / `docs/pokerweb/pokerweb-pricing.md` |
-| 顧客対応運用（LINE QA） | 返信品質・レビュー・アーカイブ運用 | `docs/support/line-qa/` |
-| 用語集 | 文書間の表記ゆれ・未定義語の解消（運用ルール） | `docs/terms/README.md` |
-| 法人情報 | 会社情報・関連サービスの集約 | `docs/globalpoint-corporate.md` |
+
+| 種別              | 位置づけ                       | 主な保管先                                                                                                           |
+| --------------- | -------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| リリースノート         | 対外発表の一次ソース（いつ・何を発表したか）     | `docs/release/`（入口: [docs/release/README.md](docs/release/README.md)）                                           |
+| 規約・ポリシー（正文）     | 利用規約・特約・プライバシーポリシー・反社排除規程等 | `docs/globalpoint/terms/`（入口: [README.md](docs/globalpoint/terms/README.md)）                                    |
+| 説明資料・要約         | 概要把握・案内用（正文ではない）           | `docs/pokerweb/pokerweb-service.md` / `docs/pokerweb/pokerweb-webcoin.md` / `docs/pokerweb/pokerweb-pricing.md` |
+| 顧客対応運用（LINE QA） | 返信品質・レビュー・アーカイブ運用          | `docs/support/line-qa/`                                                                                         |
+| 用語集             | 文書間の表記ゆれ・未定義語の解消（運用ルール）    | `docs/terms/README.md`                                                                                          |
+| 法人情報            | 会社情報・関連サービスの集約             | `docs/globalpoint-corporate.md`                                                                                 |
+
 
 ## 顧客対応の参照導線（よくある目的別）
 
@@ -48,10 +50,13 @@
 
 ## フォルダ構成
 
-| パス | 内容 |
-|------|------|
-| `docs/release/` | 対外発表したリリースノート（入口: [docs/release/README.md](docs/release/README.md)） |
+
+| パス                        | 内容                                                                             |
+| ------------------------- | ------------------------------------------------------------------------------ |
+| `docs/release/`           | 対外発表したリリースノート（入口: [docs/release/README.md](docs/release/README.md)）            |
 | `docs/globalpoint/terms/` | 規約・特約・プライバシーポリシー・反社排除規程等の正文（入口: [README.md](docs/globalpoint/terms/README.md)） |
-| `docs/pokerweb/` | POKERWEB の説明資料・料金・ライセンス契約等 |
-| `docs/support/` | 顧客対応の運用（LINE QA 等） |
-| `docs/terms/` | 用語集（入口: [docs/terms/README.md](docs/terms/README.md)） |
+| `docs/pokerweb/`          | POKERWEB の説明資料・料金・ライセンス契約等                                                     |
+| `docs/support/`           | 顧客対応の運用（LINE QA 等）                                                             |
+| `docs/terms/`             | 用語集（入口: [docs/terms/README.md](docs/terms/README.md)）                          |
+
+

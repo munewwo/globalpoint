@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>PGOS 3-1 店舗・イベント運営向け — 店舗プレゼンス・集客 v2</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 15mm 20mm 15mm;
+    @bottom-center {
+      content: counter(page) " / " counter(pages);
+      font-size: 8px; color: #999;
+      font-family: "Hiragino Sans", sans-serif;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    font-size: 9.5px; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0;
+  }
+
+  .cover {
+    page-break-after: always;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    min-height: 88vh; text-align: center;
+  }
+  .cover h1 { font-size: 24px; font-weight: 800; letter-spacing: 3px; margin-bottom: 6px; color: #2e7d32; }
+  .cover .subtitle { font-size: 14px; color: #333; margin-bottom: 4px; }
+  .cover .sub2 { font-size: 11px; color: #666; margin-bottom: 40px; }
+  .cover .meta { font-size: 10px; color: #999; line-height: 2; }
+  .cover .badge-operator {
+    display: inline-block; background: #2e7d32; color: #fff; font-size: 11px;
+    font-weight: 700; padding: 4px 16px; border-radius: 20px; margin-bottom: 20px;
+  }
+  .cover .version { font-size: 9px; color: #bbb; margin-top: 16px; }
+
+  h2 {
+    font-size: 14px; font-weight: 700; color: #2e7d32;
+    border-bottom: 2px solid #2e7d32; padding-bottom: 3px;
+    margin-top: 26px; margin-bottom: 10px; page-break-after: avoid;
+  }
+  h3 {
+    font-size: 11.5px; font-weight: 700; color: #2e7d32;
+    margin-top: 16px; margin-bottom: 6px; page-break-after: avoid;
+  }
+  h4 {
+    font-size: 10.5px; font-weight: 700; color: #333;
+    margin-top: 12px; margin-bottom: 4px; page-break-after: avoid;
+  }
+
+  p, li { margin: 2px 0; }
+  ul, ol { padding-left: 16px; margin: 3px 0; }
+  strong { color: #2e7d32; }
+
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px 0; font-size: 9px; }
+  th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: left; vertical-align: top; }
+  th { background: #e8f5e9; font-weight: 700; color: #1b5e20; white-space: nowrap; }
+
+  .badge {
+    display: inline-block; font-size: 7.5px; font-weight: 700;
+    padding: 1px 5px; border-radius: 3px; margin-left: 3px; vertical-align: middle;
+  }
+  .badge-must { background: #c62828; color: #fff; }
+  .badge-should { background: #f9a825; color: #fff; }
+  .badge-could { background: #bdbdbd; color: #fff; }
+  .badge-ph1 { background: #1565c0; color: #fff; }
+  .badge-ph2 { background: #6a1b9a; color: #fff; }
+  .badge-ph3 { background: #00838f; color: #fff; }
+
+  .req-id {
+    font-family: "SF Mono", "Menlo", monospace; font-size: 7.5px;
+    color: #888; margin-right: 2px;
+  }
+
+  .card {
+    background: #f8fbf8; border: 1px solid #d5e8d4; border-radius: 6px;
+    padding: 10px 12px; margin: 8px 0 14px 0; page-break-inside: avoid;
+  }
+  .card-green { border-left: 3px solid #43a047; }
+  .card-amber { border-left: 3px solid #ff8f00; background: #fffde7; }
+
+  .wireframe {
+    background: #fafafa; border: 1px solid #e0e0e0; border-radius: 4px;
+    padding: 8px 10px; margin: 6px 0 10px 0;
+    font-family: "SF Mono", "Menlo", "Courier New", monospace;
+    font-size: 8px; line-height: 1.4; white-space: pre; overflow: hidden;
+    page-break-inside: avoid;
+  }
+
+  .screen-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 18px; margin-bottom: 4px; page-break-after: avoid;
+  }
+  .screen-id {
+    background: #2e7d32; color: #fff; font-size: 9px; font-weight: 700;
+    padding: 2px 8px; border-radius: 3px;
+  }
+  .screen-name { font-size: 12px; font-weight: 700; color: #1a1a1a; }
+
+  .flow-box {
+    background: #e8f5e9; border-radius: 6px; padding: 10px 14px;
+    margin: 8px 0; font-size: 9.5px; line-height: 1.8;
+  }
+  .flow-box .arrow { color: #2e7d32; font-weight: 700; }
+
+  .toc ul { list-style: none; padding-left: 0; }
+  .toc li { margin: 2px 0; font-size: 10px; }
+  .toc li::before { content: "— "; color: #2e7d32; font-weight: 700; }
+
+  .footer-note {
+    text-align: center; color: #999; font-size: 8px; margin-top: 30px;
+    border-top: 1px solid #eee; padding-top: 8px;
+  }
+
+  .relation-box {
+    background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 6px;
+    padding: 10px 14px; margin: 8px 0; font-size: 9.5px;
+  }
+
+  .new-badge {
+    display: inline-block; background: #e65100; color: #fff; font-size: 7px;
+    font-weight: 700; padding: 1px 4px; border-radius: 3px; margin-left: 4px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== COVER ========== -->
+<div class="cover">
+  <h1>PGOS</h1>
+  <div class="subtitle">3-1. 店舗・イベントを探す（来店前）</div>
+  <div class="sub2">シチュエーション別 機能マップ — 詳細編</div>
+  <div class="badge-operator">店舗・イベント運営向け</div>
+  <div class="meta">
+    対象コンポーネント: PGOS Manager（Web管理画面）/ PGOS Portal（公開Web — 運営側設定）<br>
+    合同会社グローバルポイント<br>
+    2026年3月14日
+  </div>
+  <div class="version">v2 — 広告・タグ・ニュース・レビュー・SNS連携・クーポン・テンプレート・カレンダー操作・領収書印刷を追加</div>
+</div>
+
+<!-- ========== TOC ========== -->
+<h2>目次</h2>
+<div class="toc">
+<ul>
+  <li>1. このシチュエーションの概要</li>
+  <li>2. ユーザーストーリー</li>
+  <li>3. 機能要件一覧</li>
+  <li>&emsp;3-A. 店舗ページ（B7-1）</li>
+  <li>&emsp;3-B. スケジュール公開（B7-2）</li>
+  <li>&emsp;3-C. マーケティング支援・広告（B7-3）<span class="new-badge">更新</span></li>
+  <li>&emsp;3-D. タグ管理（B7-4）<span class="new-badge">更新</span></li>
+  <li>&emsp;3-E. 予算めやす管理（B7-5）</li>
+  <li>&emsp;3-F. ニュース・記事掲載（B7-6）<span class="new-badge">新規</span></li>
+  <li>&emsp;3-G. レビュー管理（B7-7）<span class="new-badge">新規</span></li>
+  <li>&emsp;3-H. SNS連携（B7-8）<span class="new-badge">新規</span></li>
+  <li>&emsp;3-I. クーポン・割引管理（B7-9）<span class="new-badge">新規</span></li>
+  <li>&emsp;3-J. スケジュール作成効率化（B1-7）<span class="new-badge">新規</span></li>
+  <li>&emsp;3-K. 領収書・サーマルプリンタ（B4-1）<span class="new-badge">新規</span></li>
+  <li>&emsp;3-L. コミュニケーション（B3-4）</li>
+  <li>4. 画面定義</li>
+  <li>&emsp;4-1. M-STORE-EDIT — 店舗ページ編集<span class="new-badge">更新</span></li>
+  <li>&emsp;4-2. M-CALENDAR — カレンダー管理<span class="new-badge">新規</span></li>
+  <li>&emsp;4-3. M-TN-TEMPLATE — テンプレート管理<span class="new-badge">新規</span></li>
+  <li>&emsp;4-4. M-TN-CREATE — トーナメント作成<span class="new-badge">更新</span></li>
+  <li>&emsp;4-5. M-NEWS — ニュース記事管理<span class="new-badge">新規</span></li>
+  <li>&emsp;4-6. M-REVIEW — レビュー管理<span class="new-badge">新規</span></li>
+  <li>&emsp;4-7. M-AD-PROMO — 広告・プロモーション管理<span class="new-badge">新規</span></li>
+  <li>&emsp;4-8. M-COUPON — クーポン管理<span class="new-badge">新規</span></li>
+  <li>&emsp;4-9. M-PRINTER — プリンタ設定<span class="new-badge">新規</span></li>
+  <li>&emsp;4-10. M-DASH — ダッシュボード（関連部分）</li>
+  <li>5. PGOS Portal への反映フロー</li>
+  <li>6. プレイヤー側への連携（相互参照）<span class="new-badge">更新</span></li>
+  <li>7. 運用シナリオ<span class="new-badge">更新</span></li>
+  <li>8. 検討事項・リスク<span class="new-badge">新規</span></li>
+  <li>9. 非機能要件</li>
+</ul>
+</div>
+
+<!-- ========== 1. 概要 ========== -->
+<h2>1. このシチュエーションの概要</h2>
+
+<div class="card card-green">
+  <h4>店舗の課題</h4>
+  <p>「イベント情報を効率よく公開し、プレイヤーに来てもらいたい。スケジュール作成の手間を省きたい。SNSやクーポンで集客を強化したい。プレイヤーの声に対応したい。」</p>
+  <p>PGOSでは、<strong>PGOS Managerで情報を1回登録すれば、PGOS Portal（公開Web）とPGOS Player（アプリ）の両方に自動反映</strong>。さらにテンプレート・カレンダー操作でスケジュール作成を効率化し、広告・ニュース・クーポン・レビュー返信で集客と顧客満足度を向上させます。</p>
+</div>
+
+<h4>対象フェーズと対象コンポーネント</h4>
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>主要フェーズ</td><td>Phase 2（拡張）。一部 Phase 1 で基盤を構築</td></tr>
+  <tr><td>PGOS Manager</td><td>Webアプリ（レスポンシブ）+ タブレット最適化。店舗情報・スケジュール・マーケティングの管理画面</td></tr>
+  <tr><td>PGOS Portal</td><td>公開Webサイト。店舗ページの自動生成・SEO対策</td></tr>
+  <tr><td>PGOS Player</td><td>プレイヤーアプリ。店舗情報・スケジュール・ニュース・クーポンの閲覧先。プッシュ通知の受信先</td></tr>
+</table>
+
+<h4>対応する機能領域</h4>
+<table>
+  <tr><th>機能領域</th><th>ID範囲</th><th>概要</th></tr>
+  <tr><td>B7-1. 店舗ページ</td><td>B7-1-01〜04</td><td>店舗ページの自動生成、情報編集、ブランディング</td></tr>
+  <tr><td>B7-2. スケジュール公開</td><td>B7-2-01〜04</td><td>スケジュール自動掲載、定期スケジュール、お知らせ、埋め込みウィジェット</td></tr>
+  <tr><td>B7-3. マーケティング支援・広告</td><td>B7-3-01〜06</td><td>SNS自動投稿、バナー・トーナメント広告、ターゲティング配信、ディープリンク</td></tr>
+  <tr><td>B7-4. タグ管理</td><td>B7-4-01〜05</td><td>クラブタグ・トーナメントタグの付与、自動・提案タグの管理</td></tr>
+  <tr><td>B7-5. 予算めやす管理</td><td>B7-5-01〜02</td><td>予算めやすの自動算出・手動設定</td></tr>
+  <tr><td>B7-6. ニュース・記事掲載</td><td>B7-6-01〜05</td><td>ニュース記事の作成・公開・プッシュ通知連携</td></tr>
+  <tr><td>B7-7. レビュー管理</td><td>B7-7-01〜04</td><td>レビュー確認・返信・非表示リクエスト</td></tr>
+  <tr><td>B7-8. SNS連携</td><td>B7-8-01〜03</td><td>SNSアカウントリンク、フォロー導線、API連携</td></tr>
+  <tr><td>B7-9. クーポン・割引管理</td><td>B7-9-01〜06</td><td>クーポン作成・配布・QR利用制御・会計連動</td></tr>
+  <tr><td>B1-7. スケジュール作成効率化</td><td>B1-7-01〜05</td><td>テンプレート、カレンダー複製・D&D、定期自動生成</td></tr>
+  <tr><td>B4-1. POS/レジ（領収書）</td><td>B4-1-04, B4-1-09</td><td>サーマルプリンタ対応の領収書発行</td></tr>
+  <tr><td>B3-4. コミュニケーション</td><td>B3-4-01〜06</td><td>プッシュ通知、アプリ内メッセージ、テンプレート</td></tr>
+</table>
+
+<!-- ========== 2. ユーザーストーリー ========== -->
+<h2>2. ユーザーストーリー</h2>
+
+<div class="card card-amber">
+  <h4>ストーリー1: 「今週のスケジュールをテンプレートから素早く作りたい」</h4>
+  <p>店舗オーナーAは PGOS Manager のカレンダー画面を開き、先週のデイリーNLHを<strong>複製</strong>して来週分を一括作成。特別トーナメントは<strong>テンプレート「ディープスタックNLH」</strong>から新規作成し、日時だけ変更。<strong>ドラッグ＆ドロップ</strong>で土曜を日曜に移動して確定。プレイヤーアプリに自動反映。各トーナメントの<strong>共有URLをコピー</strong>してXに投稿。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>ストーリー2: 「ニュースとクーポンで来店を促進したい」</h4>
+  <p>店舗Bのマネージャーは<strong>ニュース記事</strong>で「3月限定キャンペーン」を投稿し、お気に入り登録プレイヤーにプッシュ通知。同時に<strong>クーポン「エントリー¥500引」</strong>を作成し、クラブ登録者全員にメッセージで配布。プレイヤーはメッセージを開いてクーポンを取得し、来店時にQRコードで利用。マネージャーはクーポンの利用率をレポートで確認。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>ストーリー3: 「レビューに返信し、タグとSNSで新規プレイヤーを獲得したい」</h4>
+  <p>新規開店した店舗Cのオーナーは、店舗ページに<strong>#初心者歓迎 #NLH</strong>のタグを設定。レビューが投稿されると通知が届き、<strong>返信コメント</strong>で感謝を伝える。SNS連携でLINE公式アカウント・X・Instagramを登録し、プレイヤーがお気に入り登録すると<strong>SNSフォローポップアップ</strong>が表示。<strong>ターゲティング広告</strong>で渋谷エリアのNLHプレイヤーに新店オープンを告知。</p>
+</div>
+
+<!-- ========== 3. 機能要件 ========== -->
+<h2>3. 機能要件一覧</h2>
+
+<h3>3-A. 店舗ページ（B7-1）</h3>
+<p>PGOS Portal 上で店舗の情報を公開し、集客を支援する。</p>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B7-1-01</td><td>店舗ページの自動生成</td><td>PGOS Portal 上に店舗ページを自動生成。SEO対応の構造化データ（LocalBusiness）を自動出力</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-1-02</td><td>店舗情報の編集</td><td>住所・営業時間・電話番号・写真ギャラリー・設備情報・SNSリンクをManagerから編集。即時反映</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-1-03</td><td>店舗ロゴ・カバー画像の設定</td><td>ロゴ・カバー画像をアップロード。Portal・Player・Clockに反映。自動リサイズ・圧縮</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-1-04</td><td>カスタムドメイン</td><td>独自ドメインでPGOS店舗ページを公開。CNAME設定。SSL自動発行</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph3">3</span></td></tr>
+</table>
+
+<h3>3-B. スケジュール公開（B7-2）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B7-2-01</td><td>スケジュール自動掲載</td><td>Manager でトーナメント/リングゲームを作成すると Portal・Player に自動掲載</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-2-02</td><td>定期スケジュールの設定</td><td>繰り返しスケジュール設定。2週間〜1ヶ月先のイベント自動生成。テンプレート連動（B1-7-05）</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-2-03</td><td>臨時イベント・お知らせ</td><td>定期スケジュール以外の臨時イベントやお知らせの掲載</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-2-04</td><td>外部埋め込みウィジェット</td><td>iframe / JS ウィジェットで自店Webサイトにスケジュール埋め込み</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<h3>3-C. マーケティング支援・広告（B7-3）<span class="new-badge">更新</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B7-3-01</td><td>SNS 自動投稿連携</td><td>トーナメント情報の作成・更新時にSNSに自動投稿。テンプレートカスタマイズ可能</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph3">3</span></td></tr>
+  <tr><td>B7-3-02</td><td>PGOS Portal バナー広告</td><td>有料プラン特典としてPortalにバナー広告掲載</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph3">3</span></td></tr>
+  <tr><td>B7-3-03</td><td>SEO 最適化</td><td>構造化データ（Schema.org）自動出力。メタタグ・OGP画像の自動生成</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-3-04</td><td>トーナメント広告（プロモーション枠）</td><td>トーナメントリスト上でプロモーション対象を目立たせる広告機能。画像付きカード（通常より表示面積が大きい）、ハイライト表示（背景色変更）、リスト上部の広告枠への表示。有料プラン特典</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-3-05</td><td>ターゲティング広告配信</td><td>配信先のユーザー属性（エリア・来店歴・プレイ頻度・ゲーム種別の嗜好等）を指定して広告配信。新店オープン、キャンペーン告知等。プレイヤーアプリのフィードやプッシュ通知として配信</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph3">3</span></td></tr>
+  <tr><td>B7-3-06</td><td>トーナメント個別URL・ディープリンク</td><td>トーナメントごとに共有用URLを発行。URLコピーボタン設置。スマートフォンでアクセスするとPGOS Playerアプリが起動し、当該トーナメントページを直接表示。セルフレジストレーション導線</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>3-D. タグ管理（B7-4）<span class="new-badge">更新</span></h3>
+<p>プレイヤーがタグで店舗・トーナメントを絞り込めるよう、クラブがタグを管理する仕組み。</p>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B7-4-01</td><td>クラブタグ付与</td><td>PGOS Manager から自クラブにタグを付与。タグはシステム提供の選択肢から選択する方式（自由入力不可）</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-4-02</td><td>トーナメントタグ付与</td><td>トーナメント作成・編集時にトーナメント個別のタグを付与。ゲーム種別（NLH/PLO等）は自動付与、それ以外（ディープスタック/ターボ/フリーロール/初心者向け等）は手動選択</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-4-03</td><td>タグ選択肢の管理</td><td>タグマスター一覧をPGOS Adminで管理。カテゴリ（エリア / ジャンル / プライズ / 雰囲気）ごとに整理</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-4-04</td><td>システム提案タグの承認</td><td>データに基づきシステムが提案するタグ（例:「新規プレイヤーに人気」）をクラブが承認/却下</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph3">3</span></td></tr>
+  <tr><td>B7-4-05</td><td>自動タグの表示</td><td>自動付与タグ（地域・新店・人気店等）を確認可能。クラブによる削除不可</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<h3>3-E. 予算めやす管理（B7-5）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B7-5-01</td><td>予算めやすの自動算出</td><td>過去の開催実績からトーナメント参加費帯・リングゲームレート帯を自動算出し表示</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-5-02</td><td>予算めやすの手動設定</td><td>新規店舗等のためにクラブが手動入力・上書き可能</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<h3>3-F. ニュース・記事掲載（B7-6）<span class="new-badge">新規</span></h3>
+<p>クラブが自店舗の情報発信を行い、プレイヤーの来店きっかけを作る仕組み。</p>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B7-6-01</td><td>ニュース記事の作成・編集</td><td>リッチテキストエディタで店舗やスタッフの紹介、お知らせ、キャンペーン情報を作成。画像挿入対応</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-6-02</td><td>公開・非公開・予約投稿</td><td>即時公開 / 非公開 / 公開日時を指定した予約投稿に対応</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-6-03</td><td>カテゴリ分類</td><td>「お知らせ」「キャンペーン」「スタッフ紹介」「コラム」等のカテゴリを設定可能</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-6-04</td><td>店舗ページ表示</td><td>公開記事は店舗詳細ページの「ニュース」タブに掲載。プレイヤーアプリ・Portal 両方に表示</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-6-05</td><td>プッシュ通知連携</td><td>記事公開時にお気に入り登録済みプレイヤーにプッシュ通知で配信（オプション）</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<h3>3-G. レビュー管理（B7-7）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B7-7-01</td><td>レビュー一覧表示</td><td>プレイヤーが投稿したレビュー（評価・テキスト）をPGOS Managerで確認</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-7-02</td><td>レビューへの返信</td><td>クラブがレビューに返信コメントを投稿。プレイヤーアプリ上でレビューの下に表示</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-7-03</td><td>非表示リクエスト</td><td>不適切なレビューに対してクラブが非表示リクエストを送信。PGOS管理者が審査し決定。クラブが一方的に非表示にすることはできない（透明性確保）</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-7-04</td><td>レビュー通知</td><td>新しいレビュー投稿時にクラブに通知</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<h3>3-H. SNS連携（B7-8）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B7-8-01</td><td>SNSアカウントリンク設定</td><td>クラブが自店のSNSアカウント（X / Instagram / LINE公式等）をManagerで登録。店舗ページにリンクボタン表示</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-8-02</td><td>クラブ登録時のSNSフォロー導線</td><td>プレイヤーがお気に入り登録したとき、ポップアップでSNSアカウントへのフォローボタンを表示。有効/無効はクラブ設定</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-8-03</td><td>SNSフォロー状況のAPI連携</td><td>クラブ指定SNSのフォロワー数等を取得するAPI連携。各プラットフォームのAPI仕様に基づき対応範囲を決定</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph3">3</span></td></tr>
+</table>
+
+<h3>3-I. クーポン・割引管理（B7-9）<span class="new-badge">新規</span></h3>
+<p>プレイヤーにクーポンや割引券を配布し、来店・リピートを促進する仕組み。</p>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B7-9-01</td><td>クーポン作成</td><td>割引内容（金額割引/%割引/無料サービス等）、利用条件（対象サービス、有効期限、1回限り/複数回）を設定</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-9-02</td><td>クーポン配布</td><td>クラブ登録者全員、または属性で絞り込んだプレイヤーに配布。アプリ内メッセージとして送信し、プレイヤーがメッセージを開くとクーポン取得</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-9-03</td><td>トーナメント結果連動クーポン</td><td>入賞・参加等に応じて自動でクーポンを付与するルール設定</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph3">3</span></td></tr>
+  <tr><td>B7-9-04</td><td>クーポンQR・利用制御</td><td>クーポンごとに一意のQRコードを生成。スタッフがスキャンして利用処理。1回限りの利用制限（使い回し不可）対応</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-9-05</td><td>クーポン利用実績</td><td>クーポン別の配布数・取得数・利用数・利用率のレポート</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-9-06</td><td>クーポンの会計連動</td><td>クーポン利用時に売上記録（B4-1）と連動し割引額を自動計上</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<h3>3-J. スケジュール作成効率化（B1-7）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-7-01</td><td>トーナメントテンプレート</td><td>トーナメント詳細（名称パターン・ゲーム種別・バイイン・GTD等）、ブラインドストラクチャー、ペイアウト/プライズ設定をテンプレートとして保存。新規作成時にテンプレートから一括反映</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B1-7-02</td><td>テンプレートライブラリ管理</td><td>テンプレートの一覧表示・編集・削除・複製。クラブ内共有</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B1-7-03</td><td>カレンダー上のトーナメント複製</td><td>カレンダーから既存トーナメントを「複製」し、日時のみ変更して新規作成</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B1-7-04</td><td>カレンダーのドラッグ＆ドロップ</td><td>カレンダー上でトーナメントをD&Dして日時変更。週表示・月表示の両方に対応</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B1-7-05</td><td>定期スケジュールの自動生成</td><td>テンプレート + 繰り返しルール（毎週○曜日○時）で定期トーナメントを一括作成</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<h3>3-K. 領収書・サーマルプリンタ（B4-1）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B4-1-04</td><td>レシート/領収書の発行</td><td>デジタル（アプリ内表示 + ダウンロード + メール送信）および紙（サーマルプリンタ出力）対応</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B4-1-09</td><td>サーマルプリンタ連携</td><td>Bluetooth / USB / ネットワーク接続のサーマルプリンタからレシート・領収書を直接印刷。プリンタ設定画面で接続プリンタを管理</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<h3>3-L. コミュニケーション（B3-4）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B3-4-01</td><td>プッシュ通知配信</td><td>会員全体または特定グループにプッシュ通知を配信。日時予約・セグメント別配信</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B3-4-02</td><td>イベント告知テンプレート</td><td>プッシュ通知のテンプレート。テンプレート変数で動的挿入</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B3-4-03</td><td>配信履歴・開封率</td><td>配信数・開封数・開封率、通知経由のエントリー数（コンバージョン）</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph3">3</span></td></tr>
+  <tr><td>B3-4-04</td><td>アプリ内メッセージ</td><td>クラブからプレイヤーへの個別・グループメッセージ。個人連絡先不要</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B3-4-05</td><td>プレイヤーからの返信</td><td>簡易チャット形式で返信を受付</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B3-4-06</td><td>メッセージテンプレート</td><td>予約確認、遅刻連絡、忘れ物等のテンプレート</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<!-- ========== 4. 画面定義 ========== -->
+<h2>4. 画面定義（PGOS Manager）</h2>
+
+<!-- M-STORE-EDIT -->
+<div class="screen-header">
+  <span class="screen-id">M-STORE-EDIT</span>
+  <span class="screen-name">店舗ページ編集<span class="new-badge">更新</span></span>
+</div>
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>B7-1-01〜03, B7-4-01, B7-4-03〜05, B7-8-01〜02</td></tr>
+  <tr><td>目的</td><td>店舗ページの全情報をManagerから一元編集。タグ管理・SNS連携設定を含む</td></tr>
+</table>
+
+<div class="wireframe">┌──────────┬──────────────────────────────────────┐
+│          │  店舗ページ編集      [プレビュー] [保存]  │
+│ Store    ├──────────────────────────────────────┤
+│          │  ── 基本情報 ────────────────────────  │
+│          │  店舗名 / 住所 / 営業時間 / ...        │
+│          │  ── ブランディング ──────────────────  │
+│          │  ロゴ: [画像UP]  カバー: [画像UP]       │
+│          │                                      │
+│          │  ── タグ管理 ─────────────────────── │
+│          │  クラブタグ:                            │
+│          │  [#初心者歓迎][#NLH][#PLO][+タグ追加]   │
+│          │  自動タグ: [#渋谷][#NEW] (変更不可)     │
+│          │  提案タグ: [#新規プレイヤーに人気]        │
+│          │            [承認] [却下]               │
+│          │                                      │
+│          │  ── SNSアカウント連携 ────────────────  │
+│          │  X:         [@store_a       ] [リンク]  │
+│          │  Instagram: [@store_a_poker ] [リンク]  │
+│          │  LINE公式:  [@123abc       ] [リンク]   │
+│          │                                      │
+│          │  ── SNSフォロー導線設定 ────────────── │
+│          │  ☑ お気に入り登録時にSNSフォロー          │
+│          │    ポップアップを表示する                 │
+│          │                                      │
+│          │  ── 定期スケジュール / 埋め込み ─────── │
+│          │  [定期スケジュール一覧] [コードをコピー]   │
+└──────────┴──────────────────────────────────────┘</div>
+
+<!-- M-CALENDAR -->
+<div class="screen-header">
+  <span class="screen-id">M-CALENDAR</span>
+  <span class="screen-name">カレンダー管理<span class="new-badge">新規</span></span>
+</div>
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>B1-7-03〜05, B7-2-01〜02</td></tr>
+  <tr><td>目的</td><td>カレンダー形式でスケジュールを一覧管理。複製・ドラッグ＆ドロップに対応</td></tr>
+</table>
+
+<div class="wireframe">┌──────────┬──────────────────────────────────────┐
+│          │  スケジュールカレンダー   [月表示][週表示] │
+│ Calendar ├──────────────────────────────────────┤
+│          │  ◁ 2026年3月                    ▷    │
+│          │  ┌────┬────┬────┬────┬────┬────┬────┐│
+│          │  │ 月  │ 火  │ 水  │ 木  │ 金  │ 土  │ 日 ││
+│          │  ├────┼────┼────┼────┼────┼────┼────┤│
+│          │  │ 9  │ 10 │ 11 │ 12 │ 13 │ 14 │ 15 ││
+│          │  │    │    │NLH │NLH │NLH │NLH │サン ││
+│          │  │    │    │19:00│19:00│19:00│19:00│デー ││
+│          │  │    │    │    │PLO │    │DS  │杯  ││
+│          │  │    │    │    │21:00│    │21:00│13:00││
+│          │  └────┴────┴────┴────┴────┴────┴────┘│
+│          │                                      │
+│          │  [+ 新規トーナメント] [定期スケジュール]   │
+│          │  ※ ドラッグ＆ドロップで日時変更            │
+│          │  ※ 右クリック → [複製] [編集] [削除]     │
+└──────────┴──────────────────────────────────────┘</div>
+<h4>操作</h4>
+<ul>
+  <li>トーナメントカードをD&Dで別の日/時間帯に移動 → 日時変更確認ダイアログ</li>
+  <li>右クリック →「複製」で同じ設定のトーナメントを作成（日時のみ変更）</li>
+  <li>「定期スケジュール」→ テンプレート + 繰り返しルールで一括生成</li>
+</ul>
+
+<!-- M-TN-TEMPLATE -->
+<div class="screen-header">
+  <span class="screen-id">M-TN-TEMPLATE</span>
+  <span class="screen-name">トーナメントテンプレート管理<span class="new-badge">新規</span></span>
+</div>
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>B1-7-01〜02</td></tr>
+  <tr><td>目的</td><td>テンプレートの一覧管理・作成・編集</td></tr>
+</table>
+
+<div class="wireframe">┌──────────┬──────────────────────────────────────┐
+│          │  テンプレート管理        [+ 新規作成]    │
+│          ├──────────────────────────────────────┤
+│          │  ┌──────────┬──────┬──────┬──────┐   │
+│          │  │テンプレート名│種別  │エントリー│操作 │   │
+│          │  ├──────────┼──────┼──────┼──────┤   │
+│          │  │デイリーNLH │NLH  │¥3,000│編集 複製│  │
+│          │  │DS NLH    │NLH  │¥5,000│編集 複製│  │
+│          │  │PLOナイト  │PLO  │¥5,000│編集 複製│  │
+│          │  │フリーロール │NLH  │無料   │編集 複製│  │
+│          │  └──────────┴──────┴──────┴──────┘   │
+│          │                                      │
+│          │  テンプレートに含まれる設定:              │
+│          │  ✅ 基本情報  ✅ ストラクチャー           │
+│          │  ✅ ペイアウト ✅ タグ設定               │
+└──────────┴──────────────────────────────────────┘</div>
+
+<!-- M-TN-CREATE (updated) -->
+<div class="screen-header">
+  <span class="screen-id">M-TN-CREATE</span>
+  <span class="screen-name">トーナメント作成/編集<span class="new-badge">更新</span></span>
+</div>
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>B1-1-01〜06, B1-7-01〜02, B7-3-06, B7-4-02</td></tr>
+  <tr><td>目的</td><td>テンプレートからの一括反映、タグ設定、URL共有を含むトーナメント作成・編集</td></tr>
+</table>
+
+<h4>追加された要素</h4>
+<ul>
+  <li><strong>テンプレート選択</strong>: 画面上部に「テンプレートから作成」ドロップダウン。選択するとストラクチャー・ペイアウト・タグが一括反映</li>
+  <li><strong>タグセクション</strong>: トーナメント個別のタグを手動選択（ゲーム種別は自動付与）</li>
+  <li><strong>URL共有</strong>: 公開後のトーナメントに共有用ディープリンクURLが自動生成。「URLをコピー」ボタン</li>
+  <li><strong>テンプレート保存</strong>: 現在の設定をテンプレートとして保存するボタン</li>
+</ul>
+
+<!-- M-NEWS -->
+<div class="screen-header">
+  <span class="screen-id">M-NEWS</span>
+  <span class="screen-name">ニュース記事管理<span class="new-badge">新規</span></span>
+</div>
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>B7-6-01〜05</td></tr>
+  <tr><td>目的</td><td>クラブのニュース記事の作成・管理・公開</td></tr>
+</table>
+
+<div class="wireframe">┌──────────┬──────────────────────────────────────┐
+│          │  ニュース管理           [+ 新規作成]    │
+│ Marketing├──────────────────────────────────────┤
+│          │  [公開中] [下書き] [予約投稿]             │
+│          │                                      │
+│          │  ┌────────────────────────────────┐  │
+│          │  │ 🆕 3月キャンペーンのお知らせ       │  │
+│          │  │ カテゴリ: キャンペーン             │  │
+│          │  │ 公開日: 3/1  閲覧数: 142          │  │
+│          │  │           [編集] [非公開にする]     │  │
+│          │  ├────────────────────────────────┤  │
+│          │  │ スタッフ紹介: 新ディーラーの佐藤です│  │
+│          │  │ カテゴリ: スタッフ紹介             │  │
+│          │  │ 公開日: 2/28  閲覧数: 89          │  │
+│          │  │           [編集] [非公開にする]     │  │
+│          │  └────────────────────────────────┘  │
+└──────────┴──────────────────────────────────────┘</div>
+<h4>記事作成画面の機能</h4>
+<ul>
+  <li>リッチテキストエディタ（太字 / リスト / 画像挿入 / リンク）</li>
+  <li>カテゴリ選択（お知らせ / キャンペーン / スタッフ紹介 / コラム）</li>
+  <li>公開設定: 即時公開 / 非公開 / 予約投稿（日時指定）</li>
+  <li>プッシュ通知オプション: 公開時にお気に入りプレイヤーに通知</li>
+</ul>
+
+<!-- M-REVIEW -->
+<div class="screen-header">
+  <span class="screen-id">M-REVIEW</span>
+  <span class="screen-name">レビュー管理<span class="new-badge">新規</span></span>
+</div>
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>B7-7-01〜04</td></tr>
+  <tr><td>目的</td><td>レビューの確認・返信・管理</td></tr>
+</table>
+
+<div class="wireframe">┌──────────┬──────────────────────────────────────┐
+│          │  レビュー管理                          │
+│ Marketing├──────────────────────────────────────┤
+│          │  [すべて] [未返信] [返信済み]             │
+│          │  平均評価: ⭐ 4.5 (48件)               │
+│          │                                      │
+│          │  ┌────────────────────────────────┐  │
+│          │  │ ⭐⭐⭐⭐⭐ プレイヤーA  3/13      │  │
+│          │  │ 初めて行きましたが雰囲気が良く...    │  │
+│          │  │ 💬 店舗からの返信:               │  │
+│          │  │ ご来店ありがとうございます！        │  │
+│          │  │        [返信を編集]              │  │
+│          │  ├────────────────────────────────┤  │
+│          │  │ ⭐⭐⭐ プレイヤーB  3/10          │  │
+│          │  │ テーブル数がもう少し多いと嬉しい。   │  │
+│          │  │ [返信する] [⚠ 非表示リクエスト]    │  │
+│          │  └────────────────────────────────┘  │
+└──────────┴──────────────────────────────────────┘</div>
+
+<!-- M-AD-PROMO -->
+<div class="screen-header">
+  <span class="screen-id">M-AD-PROMO</span>
+  <span class="screen-name">広告・プロモーション管理<span class="new-badge">新規</span></span>
+</div>
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>B7-3-04〜05</td></tr>
+  <tr><td>目的</td><td>トーナメント広告の設定・ターゲティング広告の配信管理</td></tr>
+</table>
+
+<div class="wireframe">┌──────────┬──────────────────────────────────────┐
+│          │  広告・プロモーション    [+ 新規作成]     │
+│ Marketing├──────────────────────────────────────┤
+│          │  [トーナメント広告] [ターゲティング広告]   │
+│          │                                      │
+│          │  ── トーナメント広告 ─────────────────  │
+│          │  ┌────────────────────────────────┐  │
+│          │  │ 🏆 サンデー杯                    │  │
+│          │  │ 広告タイプ: ハイライト + 画像      │  │
+│          │  │ 期間: 3/10〜3/15                │  │
+│          │  │ インプレッション: 1,240            │  │
+│          │  │       [編集] [停止]              │  │
+│          │  └────────────────────────────────┘  │
+│          │  ── ターゲティング広告 ────────────── │
+│          │  ┌────────────────────────────────┐  │
+│          │  │ 📣 新店舗オープン告知             │  │
+│          │  │ 配信先: 渋谷区 / NLHプレイヤー    │  │
+│          │  │ 送信数: 320 / 開封率: 45%        │  │
+│          │  │       [レポート] [複製]           │  │
+│          │  └────────────────────────────────┘  │
+└──────────┴──────────────────────────────────────┘</div>
+
+<!-- M-COUPON -->
+<div class="screen-header">
+  <span class="screen-id">M-COUPON</span>
+  <span class="screen-name">クーポン管理<span class="new-badge">新規</span></span>
+</div>
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>B7-9-01〜06</td></tr>
+  <tr><td>目的</td><td>クーポンの作成・配布・利用実績管理</td></tr>
+</table>
+
+<div class="wireframe">┌──────────┬──────────────────────────────────────┐
+│          │  クーポン管理           [+ 新規作成]    │
+│ Marketing├──────────────────────────────────────┤
+│          │  [有効] [終了] [下書き]                  │
+│          │                                      │
+│          │  ┌────────────────────────────────┐  │
+│          │  │ 🎫 エントリー¥500引              │  │
+│          │  │ 有効期限: 3/31                   │  │
+│          │  │ 配布: 120  取得: 85  利用: 32    │  │
+│          │  │ 利用率: 37.6%                    │  │
+│          │  │      [詳細] [配布] [停止]         │  │
+│          │  ├────────────────────────────────┤  │
+│          │  │ 🎫 ドリンク1杯無料               │  │
+│          │  │ 有効期限: 4/15                   │  │
+│          │  │ 配布: 200  取得: 145  利用: 68   │  │
+│          │  │ 利用率: 46.9%                    │  │
+│          │  │      [詳細] [配布] [停止]         │  │
+│          │  └────────────────────────────────┘  │
+└──────────┴──────────────────────────────────────┘</div>
+<h4>クーポン作成フロー</h4>
+<ul>
+  <li>割引内容: 金額割引 / %割引 / 無料サービス</li>
+  <li>利用条件: 対象サービス / 有効期限 / 1回限り or 複数回</li>
+  <li>配布方法: クラブ登録者全員 / 属性絞り込み / 手動選択</li>
+  <li>トーナメント結果連動: 入賞ルールに基づく自動付与</li>
+  <li>QRコード: クーポンごとに一意のQR生成。スタッフスキャンで利用処理</li>
+</ul>
+
+<!-- M-PRINTER -->
+<div class="screen-header">
+  <span class="screen-id">M-PRINTER</span>
+  <span class="screen-name">プリンタ設定<span class="new-badge">新規</span></span>
+</div>
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>要件ID</td><td>B4-1-09</td></tr>
+  <tr><td>目的</td><td>サーマルプリンタの接続設定・管理</td></tr>
+</table>
+<div class="wireframe">┌──────────┬──────────────────────────────────────┐
+│          │  プリンタ設定                          │
+│ Settings ├──────────────────────────────────────┤
+│          │  ── 接続済みプリンタ ─────────────────  │
+│          │  🖨 EPSON TM-T88VII                   │
+│          │  接続: Bluetooth  ステータス: 接続中    │
+│          │  [テスト印刷] [削除]                    │
+│          │                                      │
+│          │  ── 新しいプリンタを追加 ────────────── │
+│          │  接続方法: ○Bluetooth ○USB ○ネットワーク│
+│          │  [プリンタを検索]                       │
+└──────────┴──────────────────────────────────────┘</div>
+
+<!-- M-DASH -->
+<div class="screen-header">
+  <span class="screen-id">M-DASH</span>
+  <span class="screen-name">ダッシュボード（関連部分）</span>
+</div>
+<h4>ダッシュボードに表示される店舗プレゼンス関連情報</h4>
+<table>
+  <tr><th>ウィジェット</th><th>表示内容</th></tr>
+  <tr><td>今日のスケジュール</td><td>本日予定のトーナメント・リングゲーム。ステータス。事前エントリー数</td></tr>
+  <tr><td>店舗ページステータス</td><td>最終更新日。写真枚数。入力率</td></tr>
+  <tr><td>直近のプッシュ通知</td><td>最後の配信概要と反応（開封率・エントリー数）</td></tr>
+  <tr><td>レビュー概要</td><td>未返信レビュー数。平均評価</td></tr>
+  <tr><td>クーポン概要</td><td>有効なクーポン数。本日の利用件数</td></tr>
+</table>
+
+<!-- ========== 5. Portal反映 ========== -->
+<h2>5. PGOS Portal への反映フロー</h2>
+
+<div class="flow-box">
+  <strong>情報の流れ（1回登録で全チャネルに反映）:</strong><br><br>
+  PGOS Manager（店舗が情報を入力）<br>
+  <span class="arrow">↓</span> 即時反映（API経由）<br>
+  PGOS Portal（公開Webサイト）+ PGOS Player（アプリ検索結果・詳細・フィード）<br>
+  <span class="arrow">↓</span> 自動トリガー<br>
+  プッシュ通知（お気に入りプレイヤーへ通知） + クーポン配信（メッセージ経由）<br>
+  <span class="arrow">↓</span> オプション<br>
+  SNS 自動投稿 + ターゲティング広告（フィード / プッシュ通知）
+</div>
+
+<h4>反映されるデータと反映先</h4>
+<table>
+  <tr><th>データ</th><th>Portal</th><th>Player アプリ</th><th>プッシュ通知</th></tr>
+  <tr><td>店舗基本情報</td><td>店舗詳細ページ</td><td>P-STORE-DETAIL 情報タブ</td><td>—</td></tr>
+  <tr><td>トーナメント情報</td><td>イベント一覧・詳細</td><td>P-EVENT-DETAIL + ディープリンク</td><td>自動通知</td></tr>
+  <tr><td>ニュース記事</td><td>店舗ページ内ニュース</td><td>P-STORE-DETAIL ニュースタブ</td><td>オプション通知</td></tr>
+  <tr><td>レビュー返信</td><td>店舗ページ内レビュー</td><td>P-STORE-DETAIL レビュータブ</td><td>—</td></tr>
+  <tr><td>タグ</td><td>店舗・イベント検索フィルタ</td><td>P-SEARCH タグ絞り込み</td><td>—</td></tr>
+  <tr><td>クーポン</td><td>—</td><td>P-COUPON-LIST</td><td>メッセージ配信</td></tr>
+  <tr><td>広告</td><td>バナー枠</td><td>リスト内プロモーション枠 + フィード</td><td>ターゲティング配信</td></tr>
+</table>
+
+<!-- ========== 6. プレイヤー連携 ========== -->
+<h2>6. プレイヤー側への連携（相互参照）<span class="new-badge">更新</span></h2>
+
+<div class="relation-box">
+  <h4>この運営側機能が影響するプレイヤー側の画面</h4>
+  <table>
+    <tr><th>運営側の操作</th><th>プレイヤー側への影響</th><th>プレイヤー側画面</th></tr>
+    <tr><td>店舗情報を編集・保存</td><td>店舗検索結果・詳細の内容が更新</td><td>P-SEARCH, P-STORE-DETAIL</td></tr>
+    <tr><td>タグを設定</td><td>検索時のタグ絞り込みに反映</td><td>P-SEARCH</td></tr>
+    <tr><td>トーナメントを作成・公開</td><td>イベント検索結果に表示。ディープリンクでアプリ起動</td><td>P-EVENT-LIST, P-EVENT-DETAIL</td></tr>
+    <tr><td>ニュース記事を公開</td><td>店舗詳細のニュースタブに表示</td><td>P-STORE-DETAIL</td></tr>
+    <tr><td>レビューに返信</td><td>レビューの下に返信コメント表示</td><td>P-STORE-DETAIL</td></tr>
+    <tr><td>SNSフォロー導線を有効化</td><td>お気に入り登録時にポップアップ表示</td><td>P-STORE-DETAIL</td></tr>
+    <tr><td>クーポンを配布</td><td>メッセージで受信 → 取得 → QR表示で利用</td><td>P-COUPON-LIST, P-COUPON-QR</td></tr>
+    <tr><td>プロモーション広告を設定</td><td>リスト上でハイライト表示 / フィード配信</td><td>P-SEARCH, P-HOME</td></tr>
+    <tr><td>領収書を発行</td><td>アプリ内でデジタルレシート確認</td><td>P-RECEIPT-LIST</td></tr>
+  </table>
+  <p style="font-size:8.5px;color:#666;margin-top:6px;">詳細は「3-1 プレイヤー向け」PDFを参照</p>
+</div>
+
+<!-- ========== 7. 運用シナリオ ========== -->
+<h2>7. 運用シナリオ<span class="new-badge">更新</span></h2>
+
+<h3>シナリオ A: 新規開店時の初期設定</h3>
+<div class="card card-green">
+<ol>
+  <li>PGOS Manager にクラブ登録 → <strong>M-STORE-EDIT</strong> で基本情報入力</li>
+  <li>ロゴ・カバー画像・写真ギャラリーをアップロード</li>
+  <li><strong>タグ管理</strong>: #初心者歓迎 #NLH 等のクラブタグを設定。自動タグ（地域・NEW）を確認</li>
+  <li><strong>SNS連携</strong>: LINE公式 / X / Instagram のアカウントを登録。フォロー導線を有効化</li>
+  <li><strong>テンプレート作成</strong>: デイリーNLH用のテンプレート（ストラクチャー・ペイアウト含む）を保存</li>
+  <li><strong>定期スケジュール</strong>を設定 → 2週間分のイベント自動生成</li>
+  <li><strong>ニュース</strong>で「オープンのご挨拶」記事を投稿、プッシュ通知で配信</li>
+  <li><strong>ターゲティング広告</strong>で近隣エリアのプレイヤーに新店オープンを告知</li>
+</ol>
+</div>
+
+<h3>シナリオ B: 週次の通常運用</h3>
+<div class="card card-green">
+<ol>
+  <li><strong>M-CALENDAR</strong> で来週のカレンダーを確認。定期イベントは自動生成済み</li>
+  <li>特別トーナメントはテンプレートから新規作成、または既存トーナメントを複製</li>
+  <li>トーナメントの<strong>共有URL</strong>をコピーしてXに投稿</li>
+  <li><strong>レビュー管理</strong>で新着レビューに返信</li>
+  <li>会計時に<strong>サーマルプリンタ</strong>でレシートを発行（デジタルレシートは自動でアプリに配信）</li>
+</ol>
+</div>
+
+<h3>シナリオ C: 集客キャンペーン</h3>
+<div class="card card-green">
+<ol>
+  <li><strong>クーポン</strong>「エントリー¥500引」を作成し、クラブ登録者全員にメッセージで配布</li>
+  <li>トーナメント結果連動で「入賞者にドリンク1杯無料クーポン」を自動付与</li>
+  <li><strong>ニュース</strong>でキャンペーン記事を投稿し、プッシュ通知で配信</li>
+  <li><strong>プロモーション広告</strong>で対象トーナメントをリスト上部にハイライト表示</li>
+  <li>クーポンの利用率・広告の開封率をレポートで確認し、次回施策を改善</li>
+</ol>
+</div>
+
+<!-- ========== 8. 検討事項 ========== -->
+<h2>8. 検討事項・リスク<span class="new-badge">新規</span></h2>
+
+<table>
+  <tr><th>項目</th><th>内容</th><th>対応方針</th></tr>
+  <tr><td>SNS API制限</td><td>X / Instagram / LINE のAPI仕様変更やレート制限により、フォロー状況取得や自動投稿に制約が生じる可能性</td><td>各APIの仕様を調査し、対応可能な範囲で実装。API変更時に影響範囲を最小化する設計</td></tr>
+  <tr><td>クーポン不正利用</td><td>QRコードのスクリーンショット共有、クーポンの不正取得</td><td>1回限り利用制御（スキャン後に即無効化）、デバイスバインド、QRの有効期限（表示から○分間）を検討</td></tr>
+  <tr><td>レビューの透明性</td><td>クラブによる不当なレビュー非表示のリスク</td><td>非表示はPGOS管理者の審査を必須とする。非表示率が高い店舗にはアラート</td></tr>
+  <tr><td>広告の表示品質</td><td>プロモーション広告がユーザー体験を損なう可能性</td><td>広告枠数の上限設定、「PR」ラベルの明示、ユーザーの非表示設定を提供</td></tr>
+  <tr><td>サーマルプリンタ互換性</td><td>プリンタメーカー・機種による接続互換性の問題</td><td>主要メーカー（EPSON / Star Micronics等）を優先対応。Web Bluetooth APIの対応状況に依存</td></tr>
+</table>
+
+<!-- ========== 9. 非機能要件 ========== -->
+<h2>9. 非機能要件</h2>
+
+<table>
+  <tr><th>項目</th><th>要件</th><th>備考</th></tr>
+  <tr><td>管理画面応答時間</td><td>操作レスポンス2秒以内</td><td>ニュースエディタ・カレンダー操作を含む</td></tr>
+  <tr><td>Portal への反映時間</td><td>保存から反映まで30秒以内</td><td>CDNキャッシュパージ含む</td></tr>
+  <tr><td>画像処理</td><td>アップロードから最適化・CDN配信まで10秒以内</td><td>ニュース記事内画像を含む</td></tr>
+  <tr><td>プッシュ通知配信</td><td>トリガーから端末到達まで60秒以内（95%タイル）</td><td>FCM / APNs 経由</td></tr>
+  <tr><td>クーポンQRスキャン</td><td>スキャンから利用処理完了まで3秒以内</td><td>利用済みフラグの即時反映</td></tr>
+  <tr><td>カレンダー操作</td><td>D&D・複製操作のレスポンス1秒以内</td><td>WebSocket リアルタイム更新</td></tr>
+  <tr><td>サーマルプリンタ</td><td>印刷指示から出力完了まで5秒以内</td><td>Bluetooth接続の場合</td></tr>
+  <tr><td>ブラウザ対応</td><td>Chrome / Safari / Edge 最新2バージョン</td><td>管理画面</td></tr>
+  <tr><td>データ保存</td><td>スケジュール・記事・クーポン・レビューデータは最低5年間保存</td><td>—</td></tr>
+</table>
+
+<div class="footer-note">
+  PGOS — 3-1. 店舗・イベントを探す（来店前）店舗・イベント運営向け詳細 v2<br>
+  合同会社グローバルポイント — Confidential<br>
+  参照: docs/pgos/requirements/operator-features.md, docs/pgos/ux/manager-web.md, docs/pgos/ux/portal-web.md
+</div>
+
+</body>
+</html>

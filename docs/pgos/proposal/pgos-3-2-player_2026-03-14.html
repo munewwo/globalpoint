@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>PGOS 3-2 プレイヤー向け — 事前手続き（エントリー・ウェイティング登録）v2</title>
+<style>
+  @page { size: A4; margin: 18mm 15mm 20mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif; font-size: 9.5px; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; }
+  .cover { page-break-after: always; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 88vh; text-align: center; }
+  .cover h1 { font-size: 24px; font-weight: 800; letter-spacing: 3px; margin-bottom: 6px; color: #1565c0; }
+  .cover .subtitle { font-size: 14px; color: #333; margin-bottom: 4px; }
+  .cover .sub2 { font-size: 11px; color: #666; margin-bottom: 40px; }
+  .cover .meta { font-size: 10px; color: #999; line-height: 2; }
+  .cover .badge-player { display: inline-block; background: #1565c0; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 16px; border-radius: 20px; margin-bottom: 20px; }
+  .cover .version { font-size: 9px; color: #bbb; margin-top: 16px; }
+  h2 { font-size: 14px; font-weight: 700; color: #1565c0; border-bottom: 2px solid #1565c0; padding-bottom: 3px; margin-top: 26px; margin-bottom: 10px; page-break-after: avoid; }
+  h3 { font-size: 11.5px; font-weight: 700; color: #1565c0; margin-top: 16px; margin-bottom: 6px; page-break-after: avoid; }
+  h4 { font-size: 10.5px; font-weight: 700; color: #333; margin-top: 12px; margin-bottom: 4px; page-break-after: avoid; }
+  p, li { margin: 2px 0; } ul, ol { padding-left: 16px; margin: 3px 0; } strong { color: #1565c0; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px 0; font-size: 9px; }
+  th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: left; vertical-align: top; }
+  th { background: #e3f2fd; font-weight: 700; color: #0d47a1; white-space: nowrap; }
+  .badge { display: inline-block; font-size: 7.5px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 3px; vertical-align: middle; }
+  .badge-must { background: #c62828; color: #fff; } .badge-should { background: #f9a825; color: #fff; } .badge-could { background: #bdbdbd; color: #fff; }
+  .badge-ph1 { background: #1565c0; color: #fff; } .badge-ph2 { background: #6a1b9a; color: #fff; }
+  .card { background: #f5f9ff; border: 1px solid #bbdefb; border-radius: 6px; padding: 10px 12px; margin: 8px 0 14px 0; page-break-inside: avoid; }
+  .card-blue { border-left: 3px solid #1976d2; }
+  .card-amber { border-left: 3px solid #ff8f00; background: #fffde7; }
+  .card-red { border-left: 3px solid #c62828; background: #fef2f2; }
+  .flow-box { background: #e3f2fd; border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 9.5px; line-height: 1.8; page-break-inside: avoid; }
+  .flow-box .arrow { color: #1565c0; font-weight: 700; }
+  .toc ul { list-style: none; padding-left: 0; } .toc li { margin: 2px 0; font-size: 10px; } .toc li::before { content: "— "; color: #1565c0; font-weight: 700; }
+  .footer-note { text-align: center; color: #999; font-size: 8px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 8px; }
+  .section-badge { display: inline-block; font-size: 8px; font-weight: 700; padding: 2px 8px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+  .section-t { background: #0d47a1; color: #fff; }
+  .section-r { background: #e65100; color: #fff; }
+  .section-c { background: #4a148c; color: #fff; }
+  .new-badge { display: inline-block; background: #e65100; color: #fff; font-size: 7px; font-weight: 700; padding: 1px 4px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <h1>PGOS</h1>
+  <div class="subtitle">3-2. 事前手続き（エントリー・ウェイティング登録）</div>
+  <div class="sub2">シチュエーション別 機能マップ — 詳細編</div>
+  <div class="badge-player">プレイヤー向け</div>
+  <div class="meta">
+    対象コンポーネント: PGOS Player（iOS / Android アプリ）<br>
+    合同会社グローバルポイント<br>
+    2026年3月14日
+  </div>
+  <div class="version">v2 — トーナメント(3-2T)/リングゲーム(3-2R)分離、オルタネイト・匿名・デポジット・呼び出しルール・領収書・スケジュール等を追加</div>
+</div>
+
+<!-- TOC -->
+<h2>目次</h2>
+<div class="toc"><ul>
+  <li>1. このシチュエーションの概要</li>
+  <li>2. ユーザーストーリー</li>
+  <li>3. <span class="section-badge section-c">共通</span> 共通設定</li>
+  <li>&emsp;3-1. 匿名モード</li>
+  <li>&emsp;3-2. 支払い方法</li>
+  <li>&emsp;3-3. 支払いタイミング・デポジット</li>
+  <li>&emsp;3-4. チケット・クーポン</li>
+  <li>&emsp;3-5. 会計・領収書</li>
+  <li>4. <span class="section-badge section-t">3-2T</span> トーナメント参加</li>
+  <li>&emsp;4-1. トーナメント状態モデル（拡張版）</li>
+  <li>&emsp;4-2. セルフレジストレーション</li>
+  <li>&emsp;4-3. チェックイン</li>
+  <li>&emsp;4-4. オルタネイト<span class="new-badge">新規</span></li>
+  <li>&emsp;4-5. リエントリ・アドオン</li>
+  <li>&emsp;4-6. セルフバスト・チェックアウト</li>
+  <li>&emsp;4-7. 再エントリー制限<span class="new-badge">新規</span></li>
+  <li>&emsp;4-8. iCal・参加予定共有<span class="new-badge">新規</span></li>
+  <li>&emsp;4-9. ディープリンク</li>
+  <li>5. <span class="section-badge section-r">3-2R</span> リングゲーム参加</li>
+  <li>&emsp;5-1. リングゲームスケジュール<span class="new-badge">新規</span></li>
+  <li>&emsp;5-2. ウェイティング登録</li>
+  <li>&emsp;5-3. 呼び出しルール<span class="new-badge">新規</span></li>
+  <li>&emsp;5-4. チェックイン</li>
+  <li>&emsp;5-5. リバイ（チップ追加）</li>
+  <li>&emsp;5-6. チェックアウト</li>
+  <li>6. 店舗・運営側への連携</li>
+  <li>7. 検討事項・リスク</li>
+  <li>8. 非機能要件</li>
+</ul></div>
+
+<!-- 1. 概要 -->
+<h2>1. このシチュエーションの概要</h2>
+<div class="card card-blue">
+  <h4>プレイヤーの課題</h4>
+  <p>「トーナメントに出たいけど、当日行ってみたら定員いっぱいだった。リングゲームも席が空くまで店で待つしかない。チケットがどのトーナメントで使えるか分からない。」</p>
+  <p>PGOSでは、<strong>トーナメントへのセルフレジストレーション</strong>とリングゲームの<strong>ウェイティング登録</strong>をアプリから事前に行える。支払い方法はクレジットカード・現金・ウェブコイン・クラブポイント・チケットから選択でき、クーポン適用もアプリ内で完結。チケットや割引券から対象イベントを逆引き検索できる。ウェイティングでは呼び出しルールに基づいてプッシュ通知で呼び出される。</p>
+</div>
+
+<h4>ドキュメント構成</h4>
+<table>
+  <tr><th>セクション</th><th>内容</th></tr>
+  <tr><td><span class="section-badge section-c">共通</span> 共通設定</td><td>匿名モード・支払い方法・デポジット・チケット/クーポン・領収書</td></tr>
+  <tr><td><span class="section-badge section-t">3-2T</span> トーナメント</td><td>セルフレジストレーション・チェックイン・オルタネイト・リエントリ/アドオン・チェックアウト・iCal</td></tr>
+  <tr><td><span class="section-badge section-r">3-2R</span> リングゲーム</td><td>スケジュール確認・ウェイティング登録・呼び出しルール・チェックイン・リバイ・チェックアウト</td></tr>
+</table>
+
+<!-- 2. ストーリー -->
+<h2>2. ユーザーストーリー</h2>
+
+<div class="card card-amber">
+  <h4><span class="section-badge section-t">T</span> ストーリー1: 「SNSで見つけたトーナメントにチケットでエントリー」</h4>
+  <p>プレイヤーAはXで店舗Bの「サンデー杯」URLを発見。タップするとアプリが起動しトーナメント詳細が表示。先週のサテライトで獲得した<strong>チケット（有効期限が最も短いものを自動選択）</strong>でエントリー。チェックイン当日、全テーブル満席のため<strong>オルタネイト</strong>に。スタッフが席を案内しプレイイン。匿名モードを有効にしているため、他プレイヤーのアプリからは「GuestA3821」と表示。</p>
+</div>
+
+<div class="card card-amber">
+  <h4><span class="section-badge section-r">R</span> ストーリー2: 「リングゲームにウェイティング登録して呼び出しを待つ」</h4>
+  <p>プレイヤーBは店舗Cの詳細ページでリングゲームのスケジュールを確認。NLH 1-2 は毎日14:00〜26:00稼働。ウェイティング登録。電車内で<strong>「席が空きました」のプッシュ通知</strong>を受信するが、1分以内にチェックインできず。次の空席でも再呼び出し（2回目）。到着し、<strong>3回目の呼び出し前にスタッフに声をかけ</strong>、呼び出しリスト先頭に差し込まれて着席。</p>
+</div>
+
+<div class="card card-amber">
+  <h4><span class="section-badge section-c">共通</span> ストーリー3: 「後払いデポジットを活用」</h4>
+  <p>プレイヤーCは後払い対応の店舗Dに来店。クレジットカードで<strong>¥30,000のデポジット（与信枠確保）</strong>を設定。トーナメントとリングゲームの料金は退店時にまとめ払い。退店時にデポジットから¥18,500が実売上として確定。残りの与信は自動解放。<strong>領収書</strong>はエントリー締切後にアプリから発行。消費税額と適格番号が表示される。</p>
+</div>
+
+<!-- 3. 共通設定 -->
+<h2>3. <span class="section-badge section-c">共通</span> 共通設定</h2>
+
+<h3>3-1. 匿名モード（A2-0-01）</h3>
+<div class="card card-blue">
+  <p>プレイヤーが<strong>アカウント全体の設定</strong>として、トーナメント参加者リスト上の表示名を「GuestXXXXX」に変更できる機能。参加中のトーナメントを他のプレイヤーに知られたくない場合に利用。</p>
+</div>
+
+<table>
+  <tr><th>適用場所</th><th>匿名表示</th><th>備考</th></tr>
+  <tr><td>プレイヤーアプリ — トーナメント参加者リスト</td><td><strong>匿名可</strong>（GuestXXXXX）</td><td>他プレイヤーから見た表示</td></tr>
+  <tr><td>PGOS Clock（店内TV表示）</td><td>実名</td><td>会場内では実名が必要</td></tr>
+  <tr><td>PGOS Manager（スタッフ画面）</td><td>実名</td><td>運営上必要</td></tr>
+  <tr><td>ランキング（A3-4）</td><td>実名</td><td>公式記録</td></tr>
+  <tr><td>席移動・テーブルバランシング通知</td><td>実名</td><td>システム通知</td></tr>
+  <tr><td>レビュー投稿</td><td>実名</td><td>口コミの信頼性確保</td></tr>
+</table>
+
+<h3>3-2. 支払い方法（A2-0-02）</h3>
+<table>
+  <tr><th>支払い方法</th><th>概要</th><th>対応タイミング</th></tr>
+  <tr><td><strong>クレジットカード（セルフレジストレーション）</strong></td><td>オンライン決済（Stripe等）。各クラブが個別加盟店として決済アカウントを保有</td><td>事前オンライン</td></tr>
+  <tr><td><strong>クレジットカード（店頭）</strong></td><td>対面端末決済（CAT端末/Square等）。来店時に受付で決済</td><td>都度前払い / 退店時まとめ払い</td></tr>
+  <tr><td><strong>現金</strong></td><td>来店時に受付で支払い</td><td>都度前払い / 退店時まとめ払い</td></tr>
+  <tr><td><strong>ウェブコイン</strong></td><td>PGOSプラットフォーム全体で利用可能なポイント。クーポン割引後の金額に対して適用。利用時に手数料が発生（手数料はPGOS徴収）</td><td>事前オンライン / 都度前払い</td></tr>
+  <tr><td><strong>クラブポイント</strong></td><td>各クラブが独自に発行する店舗限定ポイント。ウェブコインとは別制度。残高表示は風営法対策として店舗チェックイン中に限定する可能性あり</td><td>都度前払い / 退店時まとめ払い</td></tr>
+  <tr><td><strong>チケット</strong></td><td>サテライト通過等で獲得。対象トーナメントのエントリーに利用。有効期限が短いものから自動選択</td><td>事前オンライン / 都度前払い</td></tr>
+</table>
+
+<h3>3-3. 支払いタイミング・デポジット（A2-0-03, A2-0-04）</h3>
+<table>
+  <tr><th>タイミング</th><th>概要</th><th>対応する支払い方法</th></tr>
+  <tr><td><strong>① 事前オンライン</strong></td><td>セルフレジストレーション時にオンラインで決済。即時確定</td><td>クレジットカード（セルフ）/ ウェブコイン / チケット</td></tr>
+  <tr><td><strong>② 都度前払い</strong></td><td>来店時に受付で支払い。スタッフが受領確認を記録</td><td>全種類</td></tr>
+  <tr><td><strong>③ 退店時まとめ払い（後払い）</strong></td><td>プレイ後に退店時にまとめて支払い。デポジット（与信枠確保）で安全性を確保</td><td>クレジットカード（店頭）/ 現金 / クラブポイント</td></tr>
+</table>
+
+<h4>デポジット機能（A2-0-04）</h4>
+<div class="card card-blue">
+  <ul>
+    <li><strong>方式</strong>: クレジットカードの与信枠確保（オーソリゼーション）。カードに課金せず枠のみ確保</li>
+    <li><strong>最大与信額</strong>: 10万円</li>
+    <li><strong>退店時</strong>: 実利用額を実売上として確定（キャプチャ）。未使用分の与信は自動解放</li>
+    <li><strong>履歴</strong>: デポジット決済はアカウントの履歴に表示。即時返金（オーソリ取消）操作が可能</li>
+  </ul>
+</div>
+
+<h3>3-4. チケット・クーポン（A2-0-05, A2-0-06）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th></tr>
+  <tr><td>A2-0-05</td><td>逆引き検索</td><td>取得済みのチケットやクーポンから、利用可能なトーナメント・リングゲームの一覧を表示。チケット詳細画面から対象イベントへ直接遷移</td></tr>
+  <tr><td>A2-0-06</td><td>チケット利用順序</td><td>同一トーナメントに利用可能なチケットが複数ある場合、有効期限が短いものから自動選択。プレイヤーが手動で変更することも可能</td></tr>
+</table>
+
+<h3>3-5. 会計・領収書（A2-C）</h3>
+
+<h4>デジタル領収書の仕様</h4>
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>表示項目</td><td>利用明細（エントリー費/遊技料/飲食等）、クーポン割引額、消費税額、<strong>適格請求書発行事業者登録番号（インボイス番号）</strong></td></tr>
+  <tr><td>非表示項目</td><td>ウェブコイン利用時のPGOS手数料（クラブの徴収額ではないため）</td></tr>
+  <tr><td>発行タイミング</td><td>オンライン領収書は<strong>エントリーが締め切られた段階</strong>から発行可能</td></tr>
+  <tr><td>不可変性</td><td>発行済み領収書はキャンセル・削除・修正不可</td></tr>
+  <tr><td>返金時</td><td>別途「<strong>返金レシート（適格返還請求書）</strong>」を発行。元の領収書番号を参照する形で管理</td></tr>
+</table>
+
+<div class="card card-red">
+  <p><strong>返金レシート方式を採用する理由:</strong> 日本のインボイス制度（適格請求書等保存方式）では、返金・値引きが発生した場合に「適格返還請求書」を元の適格請求書とは別に発行することが定められている。元の領収書を不可変にすることで、監査証跡を確保し、二重発行のリスクを防止する。</p>
+</div>
+
+<!-- 4. トーナメント -->
+<h2>4. <span class="section-badge section-t">3-2T</span> トーナメント参加</h2>
+
+<h3>4-1. トーナメント状態モデル（拡張版）</h3>
+<table>
+  <tr><th>状態</th><th>英語</th><th>意味</th><th>アプリ表示</th></tr>
+  <tr><td style="font-weight:700;">レジストレーション済</td><td>Registered</td><td>エントリー登録済み、チェックイン前</td><td>「登録済み — チェックイン待ち」</td></tr>
+  <tr><td style="font-weight:700;">オルタネイト<span class="new-badge">新規</span></td><td>Alternate</td><td>チェックイン済みだが自動配席できる席がない。スタッフが順番に呼び出し配席</td><td>「オルタネイト — スタッフが席を案内します」</td></tr>
+  <tr><td style="font-weight:700;">プレイイン</td><td>Play-in</td><td>テーブルに着席してプレイ中</td><td>「プレイ中」</td></tr>
+  <tr><td style="font-weight:700;">シートアウト</td><td>Seat-out</td><td>バスト/セルフバスト。受付中なら保留（リエントリ可）</td><td>「バスト — リエントリ可能」</td></tr>
+  <tr><td style="font-weight:700;">プレイアウト</td><td>Play-out</td><td>完全退出。仮順位確定</td><td>「終了」</td></tr>
+</table>
+
+<div class="flow-box">
+  <strong>状態遷移図:</strong><br><br>
+  （未登録）<br>
+  <span class="arrow">↓</span> セルフレジストレーション or スタッフ登録<br>
+  <strong>レジストレーション済</strong>（チェックイン待ち）<br>
+  <span class="arrow">↓</span> チェックイン（QR / NFC / スタッフ）<br>
+  ┣━ 席あり → <strong>プレイイン</strong>（自動配席）<br>
+  ┗━ 席なし → <strong>オルタネイト</strong>（配席待ち）→ スタッフ配席 → <strong>プレイイン</strong><br>
+  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span class="arrow">↓</span> バスト / セルフバスト（受付中のみ）<br>
+  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<strong>シートアウト</strong><br>
+  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;┣━ 受付中 → リエントリ → <strong>プレイイン</strong><br>
+  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;┗━ 受付終了 → <strong>プレイアウト</strong>（仮順位確定）
+</div>
+
+<div class="card card-blue">
+  <h4>重要ルール</h4>
+  <ul>
+    <li><strong>セルフバスト</strong>: 受付中に限りプレイヤーが自発的にバスト申告可能。リエントリへの導線</li>
+    <li><strong>セルフチェックアウト禁止</strong>: 受付中はプレイヤーの自発的プレイアウト不可（仮順位操作の防止）</li>
+    <li><strong>オルタネイト→自動配席</strong>: 自動で切り替わらない。スタッフが任意で自動配席モードに復帰</li>
+    <li><strong>席QR制御</strong>: オルタネイト時はプレイヤーが勝手に席QRでプレイインすることを防止。クラブが席QR受付を無効にする設定が可能</li>
+  </ul>
+</div>
+
+<h3>4-2. セルフレジストレーション（A2-T-01〜03）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th></tr>
+  <tr><td>A2-T-01</td><td>セルフレジストレーション</td><td>アプリからトーナメントへの事前エントリー。受付中のみ利用可能</td><td><span class="badge badge-must">Must</span></td></tr>
+  <tr><td>A2-T-02</td><td>支払い・クーポン適用</td><td>支払い方法選択（A2-0-02）。クーポン割引後にウェブコイン/クラブポイントを適用。併用不可クーポンは1枚のみ。手数料事前表示</td><td><span class="badge badge-must">Must</span></td></tr>
+  <tr><td>A2-T-03</td><td>チケットによるエントリー</td><td>サテライト通過等で獲得したチケットを利用。有効期限が短いものを自動選択</td><td><span class="badge badge-must">Must</span></td></tr>
+</table>
+
+<div class="flow-box">
+  <strong>セルフレジストレーション フロー:</strong><br><br>
+  ① トーナメント詳細（P-EVENT-DETAIL）— ストラクチャー・ペイアウト確認<br>
+  <span class="arrow">↓</span> 「エントリーする」タップ<br>
+  ② 支払い方法選択 — ○クレカ(セルフ) ○ウェブコイン ○チケット ○現金(当日払い)<br>
+  &emsp;クーポン: [エントリー¥500引 ▼]（併用不可のものは1枚のみ選択）<br>
+  <span class="arrow">↓</span><br>
+  ③ 確認画面 — エントリー費: ¥3,000 / クーポン: -¥500 / 小計: ¥2,500 / 手数料: ¥125 / 合計: 2,625 pt<br>
+  <span class="arrow">↓</span> 生体認証で確定<br>
+  ④ 完了 — QRコード表示（チェックイン用）/ カレンダー追加ボタン
+</div>
+
+<h3>4-3. チェックイン（A2-T-04）</h3>
+<table>
+  <tr><th>条件</th><th>チェックイン後の遷移</th></tr>
+  <tr><td>自動配席可能（空席あり）</td><td>→ <strong>プレイイン</strong>（テーブル/シート自動抽選）</td></tr>
+  <tr><td>自動配席不可（全テーブル満席/バランシング待ち）</td><td>→ <strong>オルタネイト</strong>（配席待ちリスト）</td></tr>
+</table>
+
+<h3>4-4. オルタネイト（A2-T-05）<span class="new-badge">新規</span></h3>
+<div class="card card-blue">
+  <p>全テーブルが満席、またはテーブルバランシングの都合で即座に配席できない場合の待機状態。</p>
+  <ul>
+    <li>スタッフがオルタネイトリストの順番に従い、プレイヤーを呼び出し</li>
+    <li>スタッフが<strong>任意の席を指定</strong>してプレイインへ遷移</li>
+    <li>プレイヤーは席QRによるセルフプレイイン不可（クラブ設定で席QR受付を無効にできる）</li>
+    <li>オルタネイトへの遷移はシステム自動。オルタネイトから自動配席への復帰はスタッフが任意で切り替え</li>
+    <li>アプリ表示: 「オルタネイト — スタッフが席を案内します（現在の順番: ○番目）」</li>
+  </ul>
+</div>
+
+<h3>4-5. リエントリ・アドオン（A2-T-06〜07）</h3>
+<div class="card card-red">
+  <p><strong>注意: トーナメントにリバイは存在しない。</strong> リバイはリングゲーム固有の機能（5-5参照）。トーナメントで追加チップを得る方法は<strong>リエントリ</strong>（バスト後の再参加）と<strong>アドオン</strong>（ブレイク時の追加購入）のみ。</p>
+</div>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th></tr>
+  <tr><td>A2-T-06</td><td>リエントリ</td><td>バスト後にリエントリ（受付中のみ）。席変更はクラブ設定で「席変更あり（デフォルト）/ なし / 選択式」。席変更ありの場合はランダム再抽選。変更なしの場合は同じ席に戻る。自動配席でない場合はスタッフ指定 or 席QR（クラブが有効にしている場合のみ）</td><td><span class="badge badge-must">Must</span></td></tr>
+  <tr><td>A2-T-07</td><td>アドオン</td><td>ブレイク時等に追加チップを購入。アプリからリクエスト可能。スタッフ承認後に反映</td><td><span class="badge badge-should">Should</span></td></tr>
+</table>
+
+<h3>4-6. セルフバスト・チェックアウト（A2-T-08〜09）</h3>
+<table>
+  <tr><th>操作</th><th>受付中</th><th>受付終了後</th></tr>
+  <tr><td><strong>セルフバスト</strong>（自発的にシートアウト）</td><td>可能。リエントリの導線</td><td>プレイアウト扱い（仮順位確定）</td></tr>
+  <tr><td><strong>セルフチェックアウト</strong>（自発的にプレイアウト）</td><td><strong>不可</strong>（仮順位操作の防止）</td><td>—（バストで自動プレイアウト）</td></tr>
+  <tr><td><strong>バスト</strong>（チップ全損）</td><td>シートアウト → リエントリ可</td><td>シートアウト + プレイアウト同時</td></tr>
+</table>
+
+<h3>4-7. 再エントリー制限（A2-T-10）<span class="new-badge">新規</span></h3>
+<div class="card card-blue">
+  <p>以下のプレイヤーは、同一トーナメントに対して<strong>セルフレジストレーション不可</strong>:</p>
+  <ul>
+    <li>そのトーナメントで<strong>チェックアウト（プレイアウト）済み</strong>のプレイヤー</li>
+    <li>そのトーナメントのエントリーを<strong>キャンセルしたことがある</strong>プレイヤー</li>
+  </ul>
+  <p>スタッフ操作によるエントリーは可能だが、「このプレイヤーは過去にチェックアウト/キャンセル済みです」のアラートが表示される。</p>
+  <p>※他のトーナメントへのエントリーには影響しない。</p>
+</div>
+
+<h3>4-8. iCal・参加予定共有（A2-T-13〜14）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th></tr>
+  <tr><td>A2-T-13</td><td>iCal連携</td><td>トーナメント詳細ページから iCal / Google Calendar に追加。iCalフォーマットで出力</td><td><span class="badge badge-should">Should</span></td></tr>
+  <tr><td>A2-T-14</td><td>参加予定の共有</td><td>相互フォロー＆公開設定のフレンドに対して参加予定を共有。フレンドのトーナメント一覧に「〇〇も参加予定」と表示</td><td><span class="badge badge-could">Could</span></td></tr>
+</table>
+
+<h3>4-9. ディープリンク（A2-T-15）</h3>
+<div class="card card-blue">
+  <p>SNS等で共有されたトーナメントURLをタップ → アプリがインストール済みならアプリ起動 → トーナメント詳細 → セルフレジストレーション。未インストールならPGOS Portal（Web）のトーナメント詳細ページを表示し、サイト内でアプリインストールを案内。Universal Links（iOS）/ App Links（Android）で実装。</p>
+</div>
+
+<h4>トーナメントリストの表示優先順序（A2-T-16, A1-2-07 更新）</h4>
+<table>
+  <tr><th>順位</th><th>状態</th><th>表示内容</th></tr>
+  <tr><td>①</td><td>プレイイン中</td><td>リアルタイム進行情報（残り人数・平均スタック等）</td></tr>
+  <tr><td>①-b</td><td>オルタネイト中</td><td>「スタッフが席を案内します（順番: ○番目）」</td></tr>
+  <tr><td>②</td><td>レジストレーション済（チェックイン待ち）</td><td>開始時刻・会場情報を強調</td></tr>
+  <tr><td>②-b</td><td>参加済み（プレイアウト）</td><td>結果・順位・獲得ポイント</td></tr>
+  <tr><td>③</td><td>受付中</td><td>エントリー締切カウントダウン</td></tr>
+  <tr><td>④</td><td>本日開催予定</td><td>開始時刻・受付開始時刻</td></tr>
+  <tr><td>⑤</td><td>今後の予定</td><td>日付順</td></tr>
+</table>
+
+<!-- 5. リングゲーム -->
+<h2>5. <span class="section-badge section-r">3-2R</span> リングゲーム参加</h2>
+
+<h3>5-1. リングゲームスケジュール（A2-R-01）<span class="new-badge">新規</span></h3>
+<div class="card card-blue">
+  <p>店舗がレートごとにリングゲームの稼働テーブルを日別にスケジューリング（カレンダー管理）。プレイヤーアプリでは店舗詳細ページのリングゲームタブで確認可能。</p>
+</div>
+
+<table>
+  <tr><th>テーブル</th><th>稼働時間</th><th>チェックイン締切</th><th>クローズ</th></tr>
+  <tr><td>NLH 1-2 (T1)</td><td>毎日 14:00〜26:00</td><td>25:00</td><td>26:00</td></tr>
+  <tr><td>NLH 2-5 (T2)</td><td>毎日 16:00〜26:00</td><td>25:00</td><td>26:00</td></tr>
+  <tr><td>PLO 2-5 (T3)</td><td>金・土 18:00〜26:00</td><td>25:00</td><td>26:00</td></tr>
+</table>
+<p style="font-size:8px;color:#888;">※ 上記は表示例</p>
+
+<h3>5-2. ウェイティング登録（A2-R-02〜03, A2-R-05〜06）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th></tr>
+  <tr><td>A2-R-02</td><td>セルフウェイティング登録</td><td>アプリからリングゲームのウェイティングリストに事前登録。スケジュール公開中のテーブルに対して事前登録可能</td><td><span class="badge badge-must">Must</span></td></tr>
+  <tr><td>A2-R-03</td><td>リアルタイム状況表示</td><td>待ち人数・自分の順番・推定待ち時間。テーブルの着席/空席数</td><td><span class="badge badge-must">Must</span></td></tr>
+  <tr><td>A2-R-05</td><td>複数テーブル同時登録</td><td>複数テーブル/レートに同時登録。着席時に他のウェイティングは自動キャンセル</td><td><span class="badge badge-should">Should</span></td></tr>
+  <tr><td>A2-R-06</td><td>キャンセル・順番変更</td><td>いつでもキャンセル可能。「あとで」操作（順番を後ろに回す）も対応</td><td><span class="badge badge-must">Must</span></td></tr>
+</table>
+
+<h3>5-3. 呼び出しルール（A2-R-04）<span class="new-badge">新規</span></h3>
+
+<div class="flow-box">
+  <strong>呼び出しフロー（最大3回呼び出し + 保留リスト）:</strong><br><br>
+  ① 席が空く → ウェイティングリスト先頭プレイヤーに<strong>プッシュ通知</strong><br>
+  <span class="arrow">↓</span> 1分以内にチェックイン？<br>
+  ┣━ YES → <strong>チェックイン → チップイン → 着席</strong><br>
+  ┗━ NO → 次のプレイヤーを呼び出し<br>
+  &emsp;&emsp;&emsp;&emsp; 元プレイヤーは<strong>呼び出しカウント+1</strong><br>
+  &emsp;&emsp;&emsp;&emsp; 次の空席では<strong>優先的に再呼び出し</strong>（先頭に差し込み）<br><br>
+  ② 2回目の空席 → 元プレイヤーに再呼び出し（1分以内にチェックイン？）<br>
+  ③ 3回目の空席 → 元プレイヤーに再呼び出し（1分以内にチェックイン？）<br><br>
+  <span class="arrow">↓</span> 3回呼び出し後もチェックインなし<br>
+  <strong>保留リストに移動</strong>（15分間）<br>
+  アプリ表示: 「保留中 — 店頭スタッフにお声がけください」<br><br>
+  ┣━ スタッフが来店確認 → <strong>呼び出しリスト先頭に差し込み</strong> → 次の空席で最優先呼び出し<br>
+  ┗━ 15分間スタッフ確認なし → <strong>自動キャンセル</strong>
+</div>
+
+<h4>呼び出しルール サマリー</h4>
+<table>
+  <tr><th>パラメータ</th><th>値</th><th>備考</th></tr>
+  <tr><td>チェックイン応答期限</td><td>呼び出し後1分以内</td><td>1分以内にチェックインが必要</td></tr>
+  <tr><td>最大呼び出し回数</td><td>3回</td><td>3回まで優先的に再呼び出し</td></tr>
+  <tr><td>保留リスト滞在時間</td><td>15分</td><td>15分後に自動キャンセル</td></tr>
+  <tr><td>保留→呼び出し復帰</td><td>スタッフが来店確認</td><td>確認後、呼び出しリスト先頭に差し込み</td></tr>
+</table>
+
+<h3>5-4. チェックイン（A2-R-07）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th></tr>
+  <tr><td>A2-R-07</td><td>チェックイン</td><td>QR / NFC で店舗チェックイン。ウェイティング呼び出し後のチェックイン → チップイン処理へ。チェックイン締切時間を過ぎた場合は受付不可</td><td><span class="badge badge-must">Must</span></td></tr>
+</table>
+
+<h3>5-5. リバイ — チップ追加（A2-R-08）</h3>
+<div class="card card-blue">
+  <p><strong>リバイはリングゲーム固有の機能。</strong> プレイ中にチップ残高が減った際、追加チップを購入する。トーナメントでは「リエントリ」（一度バストして再参加）と「アドオン」（ブレイク時の追加購入）のみ。</p>
+</div>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th></tr>
+  <tr><td>A2-R-08</td><td>リバイ（チップ追加）</td><td>プレイ中にアプリからチップ追加をリクエスト。スタッフ承認後に反映。追加額を記録。最大バイイン制限のチェック</td><td><span class="badge badge-should">Should</span></td></tr>
+</table>
+
+<h3>5-6. チェックアウト（A2-R-09）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th></tr>
+  <tr><td>A2-R-09</td><td>チェックアウト</td><td>プレイヤーが離席してチップアウト。チップイン額 - チップアウト額を自動記録。プレイ時間を自動記録。経験値蓄積に連動</td><td><span class="badge badge-must">Must</span></td></tr>
+</table>
+
+<!-- 6. 連携 -->
+<h2>6. 店舗・運営側への連携（相互参照）</h2>
+<table>
+  <tr><th>プレイヤーの操作</th><th>運営側への影響</th><th>運営側 要件ID</th></tr>
+  <tr><td><span class="section-badge section-t">T</span> セルフレジストレーション</td><td>参加者リストにリアルタイム追加</td><td>B1-3-01, B1-3-02</td></tr>
+  <tr><td><span class="section-badge section-t">T</span> チェックイン → オルタネイト</td><td>オルタネイトリストに追加。スタッフが配席操作</td><td>B1-3-13</td></tr>
+  <tr><td><span class="section-badge section-t">T</span> リエントリ</td><td>リエントリ記録。席変更設定に基づく再配席</td><td>B1-3-03, B1-3-12</td></tr>
+  <tr><td><span class="section-badge section-r">R</span> ウェイティング登録</td><td>ウェイティングリストに追加</td><td>B2-2-01, B2-2-02</td></tr>
+  <tr><td><span class="section-badge section-r">R</span> 呼び出し無応答 → 保留</td><td>保留リストに移動。来店確認はスタッフ操作</td><td>B2-2-06</td></tr>
+  <tr><td><span class="section-badge section-r">R</span> リバイ（チップ追加）</td><td>リバイ記録。スタッフ承認</td><td>B2-3-06</td></tr>
+  <tr><td><span class="section-badge section-c">共通</span> ポイント/クラブポイント支払い</td><td>精算対象/クラブポイント残高反映</td><td>B4-3, B4-1-11</td></tr>
+  <tr><td><span class="section-badge section-c">共通</span> クーポンQRスキャン</td><td>クーポン利用記録・割引計上</td><td>B7-9-04, B7-9-06</td></tr>
+  <tr><td><span class="section-badge section-c">共通</span> デポジット設定</td><td>与信枠管理。退店時キャプチャ</td><td>B4-1-10</td></tr>
+  <tr><td><span class="section-badge section-c">共通</span> 領収書発行</td><td>不可変の適格請求書として発行</td><td>B4-1-04</td></tr>
+</table>
+
+<!-- 7. 検討事項 -->
+<h2>7. 検討事項・リスク</h2>
+<table>
+  <tr><th>項目</th><th>内容</th><th>対応方針</th></tr>
+  <tr><td><span class="section-badge section-t">T</span> No-show</td><td>事前エントリー後に来店しないプレイヤー</td><td>クラブがキャンセルポリシーを設定可能（無料キャンセル期限、ペナルティ等）。No-show率の記録</td></tr>
+  <tr><td><span class="section-badge section-t">T</span> オルタネイトの長時間待機</td><td>オルタネイトが長引く場合のプレイヤー体験</td><td>推定待ち時間の表示。キャンセル→返金の導線を提供</td></tr>
+  <tr><td><span class="section-badge section-t">T</span> 席QRの不正利用</td><td>プレイヤーが勝手に空席のQRを読んでプレイインする問題</td><td>クラブ設定で席QR受付を無効にする機能。オルタネイト中はデフォルトで無効</td></tr>
+  <tr><td><span class="section-badge section-r">R</span> 呼び出し通知の即時性</td><td>1分以内のチェックイン期限に対して通知遅延のリスク</td><td>プッシュ通知の即時性を95%タイル10秒以内で設計。バイブレーション・サウンド付き</td></tr>
+  <tr><td><span class="section-badge section-r">R</span> 保留リストの運用負荷</td><td>スタッフが来店確認の手動操作を忘れるリスク</td><td>Manager画面で保留リストを目立たせる表示。残り時間のカウントダウン</td></tr>
+  <tr><td><span class="section-badge section-c">共通</span> デポジット超過</td><td>利用額がデポジット（最大10万円）を超える場合</td><td>超過前にスタッフ/プレイヤーに通知。追加デポジットまたは都度精算への切り替え</td></tr>
+  <tr><td><span class="section-badge section-c">共通</span> クラブポイントの風営法</td><td>クラブポイント残高の店舗外表示が風営法に抵触する可能性</td><td>残高表示を店舗チェックイン中に限定する設計を検討。法務確認後に最終判断</td></tr>
+  <tr><td><span class="section-badge section-c">共通</span> オンライン決済の加盟店方式</td><td>各クラブが個別に決済アカウントを保有する運用負荷</td><td>Stripe Connect等のプラットフォーム決済を活用し、各クラブをConnected Accountとして管理</td></tr>
+  <tr><td><span class="section-badge section-c">共通</span> 領収書の返金フロー</td><td>トーナメント中止時やエントリーキャンセル時の返金と領収書の整合性</td><td>返金レシート（適格返還請求書）を別途発行。元の領収書はキャンセル不可（インボイス制度準拠）</td></tr>
+</table>
+
+<!-- 8. 非機能要件 -->
+<h2>8. 非機能要件</h2>
+<table>
+  <tr><th>項目</th><th>要件</th><th>備考</th></tr>
+  <tr><td>エントリー処理</td><td>セルフレジストレーションの確定処理は3秒以内</td><td>ポイント/クレカ決済を含む</td></tr>
+  <tr><td>ウェイティング更新</td><td>順番変更の反映は5秒以内</td><td>WebSocket リアルタイム</td></tr>
+  <tr><td>呼び出し通知</td><td>トリガーから端末到達まで10秒以内（95%タイル）</td><td>1分以内チェックイン期限に対応</td></tr>
+  <tr><td>ディープリンク</td><td>URLタップからアプリ/Web表示まで3秒以内</td><td>Universal Links / App Links</td></tr>
+  <tr><td>同時エントリー</td><td>同一トーナメントへの同時エントリーでの重複防止</td><td>楽観的ロック + 定員チェック</td></tr>
+  <tr><td>オフライン</td><td>エントリー済み情報・チェックインQRはオフラインでも表示可能</td><td>チェックイン時に必要</td></tr>
+  <tr><td>オーソリゼーション</td><td>デポジットの与信確保処理は5秒以内</td><td>決済ゲートウェイ連携</td></tr>
+  <tr><td>領収書生成</td><td>領収書PDF生成は3秒以内</td><td>インボイス番号自動挿入</td></tr>
+</table>
+
+<div class="footer-note">
+  PGOS — 3-2. 事前手続き（エントリー・ウェイティング登録）プレイヤー向け詳細 v2<br>
+  合同会社グローバルポイント — Confidential<br>
+  参照: docs/pgos/requirements/player-features.md, docs/pgos/requirements/operator-features.md
+</div>
+
+</body>
+</html>

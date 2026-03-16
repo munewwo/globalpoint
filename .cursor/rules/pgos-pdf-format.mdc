@@ -1,0 +1,53 @@
+---
+description: PGOS提案資料PDF生成のフォーマット・命名・保存ルール
+globs: docs/pgos/proposal/**
+alwaysApply: false
+---
+
+# PGOS 提案資料PDF生成ルール
+
+## 保存先・命名規則
+
+- 保存先: `docs/pgos/proposal/`
+- ファイル名: `{文書名}_{YYYY-MM-DD}.{html|pdf}`
+  - 例: `pgos-3-1-player_2026-03-14.pdf`
+- HTMLとPDFの両方を保存する（HTMLは再生成用）
+
+## PDF生成方法
+
+- HTMLを作成し、puppeteer で PDF に変換する
+- puppeteer は一時的に `npm install` し、生成後に `node_modules`, `package.json`, `package-lock.json` を削除する
+- 生成スクリプト (`generate-pdf.mjs`) も生成後に削除する
+
+## HTMLテンプレート仕様
+
+### ページ設定
+- サイズ: A4
+- マージン: 上18mm 左右15mm 下20mm
+- フッター: ページ番号 (X / Y)
+
+### デザイン
+- フォント: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif
+- 基本フォントサイズ: 9.5px、行間: 1.6
+- カラースキーム:
+  - プレイヤー向け: 青系 (#1565c0)
+  - 店舗・運営向け: 緑系 (#2e7d32)
+  - 共通/概要: 青系 (#0d47a1)
+
+### 構成要素
+- **表紙**: タイトル + サブタイトル + 対象バッジ（プレイヤー向け/運営向け）+ メタ情報
+- **目次**: リスト形式
+- **見出し**: h2 に下線ボーダー、h3/h4 は色分け
+- **テーブル**: ヘッダー背景色あり、全幅
+- **バッジ**: 優先度（Must赤/Should黄/Could灰）、フェーズ（Ph1青/Ph2紫/Ph3シアン）
+- **要件ID**: モノスペースフォント、グレー
+- **カード**: 背景色＋左ボーダー（色は用途で使い分け）
+- **ワイヤーフレーム**: モノスペースフォント、グレー背景
+- **画面定義**: screen-id バッジ + screen-name のヘッダー形式
+- **フローボックス**: 画面遷移を矢印で表現
+- **フッター注記**: 参照先ドキュメントパス
+
+### page-break制御
+- 表紙: `page-break-after: always`
+- 見出し: `page-break-after: avoid`
+- カード/ワイヤーフレーム: `page-break-inside: avoid`

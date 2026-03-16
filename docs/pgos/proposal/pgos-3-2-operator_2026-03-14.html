@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>PGOS 3-2 店舗・イベント運営向け — 事前手続き（エントリー・ウェイティング管理）</title>
+<style>
+  @page { size: A4; margin: 18mm 15mm 20mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif; font-size: 9.5px; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; }
+  .cover { page-break-after: always; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 88vh; text-align: center; }
+  .cover h1 { font-size: 24px; font-weight: 800; letter-spacing: 3px; margin-bottom: 6px; color: #2e7d32; }
+  .cover .subtitle { font-size: 14px; color: #333; margin-bottom: 4px; }
+  .cover .sub2 { font-size: 11px; color: #666; margin-bottom: 40px; }
+  .cover .meta { font-size: 10px; color: #999; line-height: 2; }
+  .cover .badge-operator { display: inline-block; background: #2e7d32; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 16px; border-radius: 20px; margin-bottom: 20px; }
+  h2 { font-size: 14px; font-weight: 700; color: #2e7d32; border-bottom: 2px solid #2e7d32; padding-bottom: 3px; margin-top: 26px; margin-bottom: 10px; page-break-after: avoid; }
+  h3 { font-size: 11.5px; font-weight: 700; color: #2e7d32; margin-top: 16px; margin-bottom: 6px; page-break-after: avoid; }
+  h4 { font-size: 10.5px; font-weight: 700; color: #333; margin-top: 12px; margin-bottom: 4px; page-break-after: avoid; }
+  p, li { margin: 2px 0; } ul, ol { padding-left: 16px; margin: 3px 0; } strong { color: #2e7d32; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px 0; font-size: 9px; }
+  th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: left; vertical-align: top; }
+  th { background: #e8f5e9; font-weight: 700; color: #1b5e20; white-space: nowrap; }
+  .badge { display: inline-block; font-size: 7.5px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 3px; vertical-align: middle; }
+  .badge-must { background: #c62828; color: #fff; } .badge-should { background: #f9a825; color: #fff; } .badge-could { background: #bdbdbd; color: #fff; }
+  .badge-ph1 { background: #1565c0; color: #fff; } .badge-ph2 { background: #6a1b9a; color: #fff; }
+  .card { background: #f8fbf8; border: 1px solid #d5e8d4; border-radius: 6px; padding: 10px 12px; margin: 8px 0 14px 0; page-break-inside: avoid; }
+  .card-green { border-left: 3px solid #43a047; }
+  .card-amber { border-left: 3px solid #ff8f00; background: #fffde7; }
+  .flow-box { background: #e8f5e9; border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 9.5px; line-height: 1.8; }
+  .flow-box .arrow { color: #2e7d32; font-weight: 700; }
+  .toc ul { list-style: none; padding-left: 0; } .toc li { margin: 2px 0; font-size: 10px; } .toc li::before { content: "— "; color: #2e7d32; font-weight: 700; }
+  .footer-note { text-align: center; color: #999; font-size: 8px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 8px; }
+  .relation-box { background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 9.5px; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>PGOS</h1>
+  <div class="subtitle">3-2. 事前手続き（エントリー・ウェイティング管理）</div>
+  <div class="sub2">シチュエーション別 機能マップ — 詳細編</div>
+  <div class="badge-operator">店舗・イベント運営向け</div>
+  <div class="meta">
+    対象コンポーネント: PGOS Manager（Web管理画面）/ PGOS Floor（スタッフ端末）<br>
+    合同会社グローバルポイント<br>
+    2026年3月14日
+  </div>
+</div>
+
+<!-- TOC -->
+<h2>目次</h2>
+<div class="toc"><ul>
+  <li>1. このシチュエーションの概要</li>
+  <li>2. ユーザーストーリー</li>
+  <li>3. プレイヤーのトーナメント状態モデル（復習）</li>
+  <li>4. トーナメントの受付状態と制御</li>
+  <li>5. 機能要件一覧</li>
+  <li>&emsp;5-A. セルフレジストレーション受付（B1-3 抜粋）</li>
+  <li>&emsp;5-B. レジストレーション期間の設定（B1-3-05）</li>
+  <li>&emsp;5-C. 受付終了後のスタッフ操作（B1-3-07）</li>
+  <li>&emsp;5-D. チェックインとエントリーの同時処理（B1-3-09）</li>
+  <li>&emsp;5-E. リエントリ管理（B1-3-12）</li>
+  <li>&emsp;5-F. ウェイティングリスト管理（B2-2）</li>
+  <li>&emsp;5-G. POS/決済（B4-1 抜粋）</li>
+  <li>&emsp;5-H. ポイント精算（B4-3 抜粋）</li>
+  <li>&emsp;5-I. クーポン利用処理（B7-9 抜粋）</li>
+  <li>6. セルフレジストレーション受付の運用フロー</li>
+  <li>7. ウェイティングリスト運用フロー</li>
+  <li>8. プレイヤー側への連携（相互参照）</li>
+  <li>9. 検討事項・リスク</li>
+  <li>10. 非機能要件</li>
+</ul></div>
+
+<!-- 1 -->
+<h2>1. このシチュエーションの概要</h2>
+
+<div class="card card-green">
+  <h4>店舗の課題</h4>
+  <p>「当日の参加者数が開始まで読めず、テーブル配置が直前まで決まらない。リングゲームのウェイティングも紙で管理していて、連絡も個別に電話やLINE。事前に参加者を把握でき、効率的にウェイティングを管理したい。」</p>
+  <p>PGOSでは、<strong>プレイヤーのセルフレジストレーション（事前エントリー）をリアルタイムで受付・管理</strong>。事前エントリー数を把握して準備に活かせる。ウェイティングリストはアプリからの登録・自動通知に対応し、スタッフの連絡業務を削減。受付期間の設定と受付終了後のスタッフ操作の柔軟性を両立。</p>
+</div>
+
+<h4>対象フェーズと対象コンポーネント</h4>
+<table>
+  <tr><th>項目</th><th>内容</th></tr>
+  <tr><td>主要フェーズ</td><td>Phase 1 (MVP) — 参加者管理とウェイティングは初期リリースに含まれる</td></tr>
+  <tr><td>PGOS Manager</td><td>Webアプリ（レスポンシブ）+ タブレット最適化。エントリー管理・ウェイティング管理の主要画面</td></tr>
+  <tr><td>PGOS Floor</td><td>スタッフ向けモバイルアプリ。チェックイン処理・配席操作等。未導入時は Manager で代替可能</td></tr>
+</table>
+
+<h4>対応する機能領域</h4>
+<table>
+  <tr><th>機能領域</th><th>ID範囲</th><th>概要</th></tr>
+  <tr><td>B1-3. 参加者管理</td><td>B1-3-01〜12</td><td>セルフレジストレーション受付、リバイ/アドオン、バスト記録、リエントリ</td></tr>
+  <tr><td>B2-2. ウェイティングリスト管理</td><td>B2-2-01〜05</td><td>リングゲームのウェイティングリスト管理</td></tr>
+  <tr><td>B4-1. POS/レジ機能（抜粋）</td><td>B4-1-01, 03, 06〜08</td><td>エントリー費の決済・前払い/後払い</td></tr>
+  <tr><td>B4-3. ポイント精算（抜粋）</td><td>B4-3-01〜03</td><td>ポイント利用分の精算管理</td></tr>
+  <tr><td>B7-9. クーポン（抜粋）</td><td>B7-9-04, 06</td><td>クーポンQRスキャン・会計連動</td></tr>
+</table>
+
+<!-- 2 -->
+<h2>2. ユーザーストーリー</h2>
+
+<div class="card card-amber">
+  <h4>ストーリー1: 「事前エントリーを活用してスムーズに開始」</h4>
+  <p>店舗スタッフAは、本日19時開始の「デイリーNLH」の<strong>PGOS Managerの参加者管理画面</strong>を確認。15名が事前エントリー（セルフレジストレーション）済み。うち3名はポイント決済完了、12名は現金（当日店頭払い）。事前エントリー数から2テーブルを準備。開始30分前に受付を開始し、当日参加の4名をカウンターで登録。<strong>チェックインとエントリーを同時処理</strong>し、即座にテーブル抽選を実行。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>ストーリー2: 「受付終了後の遅刻者をスタッフ操作で対応」</h4>
+  <p>トーナメント開始後、遅刻したプレイヤーBが来店。受付は既に終了しているが、テーブルにはBのためのチップが置かれている。スタッフは<strong>PGOS Managerで手動エントリー</strong>を実行。「受付終了後のエントリーです。続行しますか？」のアラートが表示されるが、「続行」を選択してBを<strong>チェックインとエントリーの同時処理</strong>で登録。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>ストーリー3: 「ウェイティングリストの自動管理」</h4>
+  <p>金曜夜、NLH 1-2テーブルが満席。アプリからウェイティング登録したプレイヤーが5名。プレイヤーCが離席すると、<strong>ウェイティングリストの先頭プレイヤーに自動でプッシュ通知</strong>が送信。スタッフAはManagerの画面で通知状況を確認。10分経過しても反応がない場合は<strong>自動スキップ</strong>され、次のプレイヤーに通知。</p>
+</div>
+
+<!-- 3 -->
+<h2>3. プレイヤーのトーナメント状態モデル（復習）</h2>
+
+<table>
+  <tr><th>状態</th><th>英語</th><th>意味</th><th>Manager 上の表示</th><th>3-2 での関連</th></tr>
+  <tr><td style="font-weight:700;">レジストレーション済</td><td>Registered</td><td>エントリー登録済み。チェックイン前</td><td>「登録済み」（チェックイン待ち）</td><td><strong>セルフレジストレーションで到達する状態</strong></td></tr>
+  <tr><td style="font-weight:700;">プレイイン</td><td>Play-in</td><td>チェックイン完了。テーブルに着席</td><td>「着席中」（テーブル/シート表示）</td><td><strong>チェックイン処理後に遷移</strong></td></tr>
+  <tr><td style="font-weight:700;">シートアウト</td><td>Seat-out</td><td>バスト。受付中なら保留（リエントリ可）</td><td>「バスト」（受付中は「リエントリ待ち」）</td><td><strong>リエントリ管理に関連</strong></td></tr>
+  <tr><td style="font-weight:700;">プレイアウト</td><td>Play-out</td><td>トーナメントから完全退出</td><td>「退出」（順位確定）</td><td>—</td></tr>
+</table>
+
+<div class="card card-green">
+  <p><strong>運営側のポイント:</strong></p>
+  <ul>
+    <li>バスト時、受付中（レジストレーションオープン）であればシートアウト状態で保留。リエントリ（再プレイイン）の可能性がある</li>
+    <li>レジストレーションクローズ後のバストでは、シートアウトとプレイアウトが同時に発生し、順位が確定</li>
+    <li>スタッフは「チェックイン + エントリー同時処理」（B1-3-09）で、レジストレーション済 → プレイインへ直接遷移させることができる</li>
+  </ul>
+</div>
+
+<!-- 4 -->
+<h2>4. トーナメントの受付状態と制御</h2>
+
+<table>
+  <tr><th>受付状態</th><th>トリガー</th><th>セルフレジストレーション（アプリ）</th><th>スタッフ操作（Manager）</th></tr>
+  <tr><td style="font-weight:700;">受付前</td><td>トーナメント作成時（デフォルト）</td><td>不可</td><td>不可</td></tr>
+  <tr><td style="font-weight:700;">受付中</td><td>クラブ指定時刻で自動遷移、またはスタッフ手動変更</td><td><strong>可能</strong></td><td>可能</td></tr>
+  <tr><td style="font-weight:700;">受付終了</td><td>クラブ設定のクローズ時刻で自動遷移、またはスタッフ手動変更</td><td><strong>不可</strong>（ブロック）</td><td><strong>可能</strong>（アラート付き）</td></tr>
+  <tr><td style="font-weight:700;">進行中</td><td>トーナメント開始</td><td>不可</td><td>可能（アラート付き）</td></tr>
+  <tr><td style="font-weight:700;">終了</td><td>全プレイヤーがプレイアウト、またはスタッフ手動終了</td><td>不可</td><td>不可</td></tr>
+</table>
+
+<div class="card card-green">
+  <h4>受付開始タイミングの設定方法</h4>
+  <ul>
+    <li><strong>絶対指定</strong>: 「2026年3月15日 17:00に受付開始」のような日時指定</li>
+    <li><strong>相対指定</strong>: 「トーナメント開始の2時間前に受付開始」のような相対設定</li>
+    <li><strong>手動</strong>: スタッフがPGOS Managerでステータスを「受付中」に変更</li>
+  </ul>
+  <p>セルフレジストレーション（アプリからのエントリー）は「受付中」の間のみ可能。受付終了後は、<strong>スタッフ操作のみ</strong>でエントリーを登録できる（テーブルにチップを置いて後から来る等のケースに対応）。</p>
+</div>
+
+<!-- 5 -->
+<h2>5. 機能要件一覧</h2>
+
+<h3>5-A. セルフレジストレーション受付（B1-3 抜粋）</h3>
+<p>プレイヤーアプリからの事前エントリーの受付・管理。</p>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-3-01</td><td>参加者の登録</td><td>PGOSアカウントとの紐付けによる参加者登録。ゲスト登録（アカウント未保有者）にも対応。セルフレジストレーション・スタッフ操作の両方で登録可能</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B1-3-02</td><td>セルフレジストレーション受付管理</td><td>プレイヤーアプリからの事前エントリー（セルフレジストレーション）を受付・管理。参加者リストに「セルフ」「スタッフ」の区分で表示。事前エントリー数のリアルタイム集計</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B1-3-03</td><td>リバイ・アドオンの記録</td><td>プレイヤーのリバイ/アドオンを記録。アプリからのリクエスト（A2-3-03）承認機能</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B1-3-04</td><td>バスト記録</td><td>プレイヤーのバスト（エリミネーション）を記録。シートアウト状態への遷移。受付終了後のバストでは順位を自動確定（プレイアウト）</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B1-3-06</td><td>参加者一覧のリアルタイム表示</td><td>参加者の状態（レジストレーション済/プレイイン/シートアウト/プレイアウト）をリアルタイム表示。プレイヤーアプリ側にも反映</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B1-3-08</td><td>エントリー数の非公開設定</td><td>エントリー数・アドオン数を非公開に設定可能（リーグ終了まで等）。非公開時はプレイヤーアプリでのエントリー数表示・🔥バッジを非表示</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B1-3-10</td><td>カウンターフリー</td><td>どのカウンター（端末）からでも任意のトーナメントへのエントリー処理が可能。端末がトーナメントに紐づかない設計</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B1-3-11</td><td>プレイングディーラー対応</td><td>エントリーリストにPDスロットを追加し、強制的にプレイヤー1名として扱う</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<h3>5-B. レジストレーション期間の設定（B1-3-05）</h3>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-3-05</td><td>レジストレーション期間の設定</td><td>受付開始時刻（絶対指定 / トーナメント開始○時間前の相対指定）と受付終了時刻（レベル指定 / 絶対時刻）を設定。設定時刻でトーナメントステータスが自動遷移。スタッフによる手動ステータス変更も可能</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h4>設定例</h4>
+<table>
+  <tr><th>パターン</th><th>受付開始</th><th>受付終了</th><th>備考</th></tr>
+  <tr><td>一般的なデイリー</td><td>開始2時間前（相対）</td><td>レベル8終了時（レベル指定）</td><td>19時開始 → 17時から受付開始</td></tr>
+  <tr><td>大型トーナメント</td><td>3日前 12:00（絶対）</td><td>開始30分後（相対）</td><td>事前エントリーを促進</td></tr>
+  <tr><td>当日のみ</td><td>当日 10:00（絶対）</td><td>スタッフ手動</td><td>手動でクローズ</td></tr>
+</table>
+
+<h3>5-C. 受付終了後のスタッフ操作（B1-3-07）</h3>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-3-07</td><td>受付終了後のエントリー</td><td>受付終了後もスタッフがエントリー登録を実行可能。アラート「受付終了後のエントリーです。続行しますか？」を表示した上で処理。テーブルにチップを置いて後から来店するプレイヤーに対応</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<div class="card card-green">
+  <p><strong>設計思想:</strong> セルフ（プレイヤーアプリ）は受付終了でシステム的にブロック。スタッフ操作は時間外でも可能にすることで、<strong>システム的な締切管理と現場の柔軟性を両立</strong>。</p>
+</div>
+
+<h3>5-D. チェックインとエントリーの同時処理（B1-3-09）</h3>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-3-09</td><td>チェックイン + エントリー同時処理</td><td>スタッフ操作でエントリー + チェックインを1操作で完了。プレイヤーの状態をレジストレーション済を経由せず直接プレイインへ遷移。当日来店してその場でエントリーするプレイヤーに対応</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>5-E. リエントリ管理（B1-3-12）</h3>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-3-12</td><td>リエントリ管理</td><td>シートアウト（バスト）状態のプレイヤーがリエントリする際、再度プレイインへ遷移。リエントリ回数の制限設定（上限なし / 最大N回）に対応。追加費用の記録</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h4>リエントリフロー</h4>
+<div class="flow-box">
+  プレイイン中<br>
+  <span class="arrow">↓</span> バスト<br>
+  シートアウト（受付中 → リエントリ可能）<br>
+  <span class="arrow">↓</span> リエントリ操作（スタッフ or プレイヤーアプリ）<br>
+  リエントリ費用記録 → レジストレーション済 → チェックイン → プレイイン<br><br>
+  シートアウト（受付終了 → リエントリ不可）<br>
+  <span class="arrow">↓</span> 自動プレイアウト（順位確定）
+</div>
+
+<h3>5-F. ウェイティングリスト管理（B2-2）</h3>
+<p>リングゲームのウェイティングリストを管理。アプリからの登録を受け付け、順番管理と自動通知を提供。</p>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B2-2-01</td><td>ウェイティングリスト管理</td><td>テーブルごとのウェイティングリスト管理。登録順で順番管理。アプリ登録と店頭登録を同一キューで管理</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B2-2-02</td><td>アプリからのリモート登録受付</td><td>プレイヤーアプリからのリモートウェイティング登録を受付・承認。Manager画面にリアルタイム反映</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B2-2-03</td><td>順番到来時の自動通知</td><td>席が空いた時、ウェイティングリスト先頭のプレイヤーにプッシュ通知を自動送信。一定時間（店舗設定: デフォルト10分）無応答の場合は自動スキップし、次の順番に通知</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B2-2-04</td><td>優先度設定</td><td>常連・VIP等に対する優先順位の設定</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B2-2-05</td><td>複数テーブルウェイティング管理</td><td>同一プレイヤーが複数テーブルにウェイティング登録した場合の管理。いずれかに着席した時点で他のウェイティングを自動キャンセル</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>5-G. POS/決済（B4-1 抜粋）</h3>
+<p>エントリーに関連する決済処理。</p>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B4-1-01</td><td>遊技料の記録</td><td>トーナメントエントリー費・リングゲーム料金の記録</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B4-1-03</td><td>支払い方法の記録</td><td>現金 / ポイント / クレジットカードの区分。クーポン利用時の割引額も記録</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B4-1-06</td><td>前払い（当日店頭払い）</td><td>チェックイン前に受付で支払う方式。スタッフが受領確認を記録。セルフレジストレーションで「現金」を選択したプレイヤーはこのフロー</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B4-1-07</td><td>後払い（退店時一括）</td><td>プレイ後にまとめて退店時に支払う方式。未精算で退店した場合の残高管理・次回来店時通知</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B4-1-08</td><td>決済消し込み</td><td>キャンセル時に「返金ポイント付与」と「決済自体の取消し（消し込み）」を選択可能</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>5-H. ポイント精算（B4-3 抜粋）</h3>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B4-3-01</td><td>ポイント利用分の管理</td><td>プレイヤーがポイントで支払った分（エントリー費等）の精算管理</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B4-3-02</td><td>精算対象額の自動計算</td><td>広告料支払額の範囲内で精算対象額を自動計算</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B4-3-03</td><td>精算申請</td><td>精算申請とステータス確認</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<h3>5-I. クーポン利用処理（B7-9 抜粋）</h3>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B7-9-04</td><td>クーポンQRスキャン</td><td>プレイヤーがアプリに表示したQRコード（プレイヤーごとにユニーク）をスタッフがスキャン。ログインユーザーとの照合を行い不正利用を防止。1回限り利用クーポンはスキャン後に即無効化</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+  <tr><td>B7-9-06</td><td>クーポンの会計連動</td><td>クーポン利用時に割引額を売上記録に自動計上。ポイント利用はクーポン割引後の金額に対して適用。複数クーポンの併用はクーポン作成時の「併用可否」設定に従う</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<!-- 6 -->
+<h2>6. セルフレジストレーション受付の運用フロー</h2>
+
+<h3>シナリオ A: 事前エントリーの多いトーナメント</h3>
+<div class="card card-green">
+<ol>
+  <li>トーナメント作成時にレジストレーション期間を設定（開始2時間前 〜 レベル8終了時）</li>
+  <li>受付開始 → プレイヤーアプリに「エントリーする」ボタンが表示される</li>
+  <li>セルフレジストレーション受付 → <strong>参加者管理画面に「セルフ」としてリアルタイム追加</strong></li>
+  <li>事前エントリー数を確認してテーブル数を決定（例: 18名 → 2テーブル）</li>
+  <li>当日来店プレイヤーをカウンターで登録（<strong>チェックイン + エントリー同時処理</strong>）</li>
+  <li>テーブル・シートのランダム抽選を実行</li>
+  <li>トーナメント開始 → 受付終了時刻でセルフレジストレーション自動ブロック</li>
+  <li>遅刻者はスタッフ操作でエントリー（アラート確認後に続行）</li>
+</ol>
+</div>
+
+<h3>シナリオ B: 当日受付のみのトーナメント</h3>
+<div class="card card-green">
+<ol>
+  <li>セルフレジストレーションを無効に設定（B1-3-05で受付開始を設定しない、または手動のみ）</li>
+  <li>来店プレイヤーを受付でスタッフが登録（チェックイン + エントリー同時処理）</li>
+  <li>ゲスト登録（アカウント未保有者）にも対応</li>
+  <li>スタッフが手動で受付終了に変更</li>
+</ol>
+</div>
+
+<!-- 7 -->
+<h2>7. ウェイティングリスト運用フロー</h2>
+
+<div class="flow-box">
+  <strong>基本フロー（スタッフ視点）:</strong><br><br>
+  ① テーブルオープン → テーブル情報がプレイヤーアプリに公開<br>
+  <span class="arrow">↓</span><br>
+  ② プレイヤーがアプリからウェイティング登録 → <strong>Manager のウェイティングリストにリアルタイム追加</strong><br>
+  &emsp; または、店頭でスタッフがウェイティング登録（同一キュー）<br>
+  <span class="arrow">↓</span><br>
+  ③ テーブルに空席発生（プレイヤーが離席）<br>
+  <span class="arrow">↓</span> 自動トリガー<br>
+  ④ ウェイティングリスト先頭のプレイヤーに<strong>プッシュ通知を自動送信</strong><br>
+  <span class="arrow">↓</span><br>
+  ⑤-a プレイヤーが来店 → チェックイン → チップイン → 着席<br>
+  ⑤-b 10分間無応答 → <strong>自動スキップ</strong> → 次のプレイヤーに通知<br>
+  ⑤-c プレイヤーが「あとで」操作 → 順番を後ろに移動
+</div>
+
+<h4>無応答時間の設定</h4>
+<table>
+  <tr><th>設定項目</th><th>デフォルト値</th><th>備考</th></tr>
+  <tr><td>順番到来後の応答期限</td><td>10分</td><td>店舗ごとに変更可能</td></tr>
+  <tr><td>「あと○人」の事前通知</td><td>あと1人</td><td>通知タイミングを店舗が設定</td></tr>
+  <tr><td>スキップ後の扱い</td><td>リストから削除</td><td>「後ろに回す」設定も可能</td></tr>
+</table>
+
+<!-- 8 -->
+<h2>8. プレイヤー側への連携（相互参照）</h2>
+
+<div class="relation-box">
+  <h4>この運営側機能が影響するプレイヤー側の画面・体験</h4>
+  <table>
+    <tr><th>運営側の操作</th><th>プレイヤー側への影響</th><th>プレイヤー側要件ID</th></tr>
+    <tr><td>受付状態を「受付中」に変更</td><td>アプリに「エントリーする」ボタンが表示される</td><td>A2-3-01</td></tr>
+    <tr><td>受付を終了</td><td>アプリのエントリーボタンが非活性化</td><td>A2-3-01</td></tr>
+    <tr><td>エントリーを承認（スタッフ操作）</td><td>プレイヤーの状態がレジストレーション済 or プレイインに遷移</td><td>A2-3-01</td></tr>
+    <tr><td>リバイ/アドオンを承認</td><td>プレイヤーのリバイ/アドオンリクエストが処理される</td><td>A2-3-03</td></tr>
+    <tr><td>バストを記録</td><td>プレイヤーの状態がシートアウトに遷移。リエントリ可否が表示</td><td>A2-3-04</td></tr>
+    <tr><td>ウェイティングリストに空き発生</td><td>プレイヤーにプッシュ通知が届く</td><td>A2-1-03</td></tr>
+    <tr><td>ウェイティングをスキップ</td><td>プレイヤーに「スキップされました」通知。次のプレイヤーに通知</td><td>A2-1-03</td></tr>
+    <tr><td>決済キャンセル（消し込み）</td><td>ポイント返還またはエントリーキャンセル</td><td>A4-1-03</td></tr>
+    <tr><td>クーポンQRスキャン（利用処理）</td><td>プレイヤーのクーポンが利用済みに変更</td><td>A4-2-03</td></tr>
+  </table>
+  <p style="font-size:8.5px;color:#666;margin-top:6px;">詳細は「3-2 プレイヤー向け」PDFを参照</p>
+</div>
+
+<!-- 9 -->
+<h2>9. 検討事項・リスク</h2>
+
+<table>
+  <tr><th>項目</th><th>内容</th><th>対応方針</th></tr>
+  <tr><td>セルフレジストレーションの無断不参加（No-show）</td><td>事前エントリー後に来店しないプレイヤーへの対応。テーブル配置の計画が狂う</td><td>店舗がキャンセルポリシーを設定可能に（無料キャンセル期限、キャンセル料/ポイントペナルティ）。No-show 率の記録・レポート</td></tr>
+  <tr><td>ゲストプレイヤーの管理</td><td>アカウント未保有者の参加管理。戦績の紐付けが困難</td><td>ゲスト登録で最低限の参加管理を提供。正式登録への導線を設置。後日アカウント作成時にゲスト戦績のマージ（Could）</td></tr>
+  <tr><td>受付終了後のスタッフ操作の記録</td><td>受付終了後のエントリーが頻発する場合、受付期間設定が適切でない可能性</td><td>受付終了後エントリーの頻度をダッシュボードで表示。受付終了時刻の見直しを提案</td></tr>
+  <tr><td>ポイント決済と現金の混在</td><td>同一トーナメントでポイント決済と現金決済が混在する場合の精算管理</td><td>支払い方法を参加者ごとに記録し、精算時にポイント利用分を自動集計</td></tr>
+  <tr><td>ウェイティングのアプリ依存</td><td>アプリを持たない来店客のウェイティング管理</td><td>スタッフがManagerから手動でウェイティング登録。アプリ登録と同一キューで管理</td></tr>
+  <tr><td>クーポンと決済の順序</td><td>クーポン適用 → ポイント利用の順序関係</td><td>クーポン割引を先に適用し、割引後の金額に対してポイントを適用。併用不可クーポンは1枚のみ選択可</td></tr>
+</table>
+
+<!-- 10 -->
+<h2>10. 非機能要件</h2>
+
+<table>
+  <tr><th>項目</th><th>要件</th><th>備考</th></tr>
+  <tr><td>参加者一覧の更新</td><td>セルフレジストレーション・チェックインの反映は3秒以内</td><td>WebSocket リアルタイム</td></tr>
+  <tr><td>ウェイティングリスト更新</td><td>空席発生からウェイティング通知送信まで5秒以内</td><td>自動トリガー</td></tr>
+  <tr><td>プッシュ通知</td><td>トリガーから端末到達まで30秒以内（95%タイル）</td><td>ウェイティング通知は即時性が重要</td></tr>
+  <tr><td>決済処理</td><td>ポイント決済の確定処理は3秒以内</td><td>ロック制御含む</td></tr>
+  <tr><td>同時エントリー制御</td><td>同一トーナメントへの同時エントリーで定員超過が発生しない</td><td>楽観的ロック + 定員チェック</td></tr>
+  <tr><td>同時接続</td><td>プランに応じた同時ログイン数を保証</td><td>Manager の同時利用端末数</td></tr>
+  <tr><td>ブラウザ対応</td><td>Chrome / Safari / Edge 最新2バージョン</td><td>Manager</td></tr>
+</table>
+
+<div class="footer-note">
+  PGOS — 3-2. 事前手続き（エントリー・ウェイティング管理）店舗・イベント運営向け詳細<br>
+  合同会社グローバルポイント — Confidential<br>
+  参照: docs/pgos/requirements/operator-features.md
+</div>
+
+</body>
+</html>
