@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>PGOS 3-4 プレイヤー向け — プレイ中（トーナメント）</title>
+<style>
+  @page { size: A4; margin: 18mm 15mm 20mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif; font-size: 9.5px; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; }
+  .cover { page-break-after: always; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 88vh; text-align: center; }
+  .cover h1 { font-size: 24px; font-weight: 800; letter-spacing: 3px; margin-bottom: 6px; color: #1565c0; }
+  .cover .subtitle { font-size: 14px; color: #333; margin-bottom: 4px; }
+  .cover .sub2 { font-size: 11px; color: #666; margin-bottom: 40px; }
+  .cover .meta { font-size: 10px; color: #999; line-height: 2; }
+  .cover .badge-player { display: inline-block; background: #1565c0; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 16px; border-radius: 20px; margin-bottom: 20px; }
+  h2 { font-size: 14px; font-weight: 700; color: #1565c0; border-bottom: 2px solid #1565c0; padding-bottom: 3px; margin-top: 26px; margin-bottom: 10px; page-break-after: avoid; }
+  h3 { font-size: 11.5px; font-weight: 700; color: #1565c0; margin-top: 16px; margin-bottom: 6px; page-break-after: avoid; }
+  h4 { font-size: 10.5px; font-weight: 700; color: #333; margin-top: 12px; margin-bottom: 4px; page-break-after: avoid; }
+  p, li { margin: 2px 0; } ul, ol { padding-left: 16px; margin: 3px 0; } strong { color: #1565c0; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px 0; font-size: 9px; }
+  th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: left; vertical-align: top; }
+  th { background: #e3f2fd; font-weight: 700; color: #0d47a1; white-space: nowrap; }
+  .badge { display: inline-block; font-size: 7.5px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 3px; vertical-align: middle; }
+  .badge-must { background: #c62828; color: #fff; } .badge-should { background: #f9a825; color: #fff; } .badge-could { background: #bdbdbd; color: #fff; }
+  .badge-ph1 { background: #1565c0; color: #fff; } .badge-ph2 { background: #6a1b9a; color: #fff; } .badge-ph3 { background: #00838f; color: #fff; }
+  .card { background: #f5f9ff; border: 1px solid #bbdefb; border-radius: 6px; padding: 10px 12px; margin: 8px 0 14px 0; page-break-inside: avoid; }
+  .card-blue { border-left: 3px solid #1976d2; }
+  .card-amber { border-left: 3px solid #ff8f00; background: #fffde7; }
+  .flow-box { background: #e3f2fd; border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 9.5px; line-height: 1.8; page-break-inside: avoid; }
+  .flow-box .arrow { color: #1565c0; font-weight: 700; }
+  .toc ul { list-style: none; padding-left: 0; } .toc li { margin: 2px 0; font-size: 10px; } .toc li::before { content: "— "; color: #1565c0; font-weight: 700; }
+  .footer-note { text-align: center; color: #999; font-size: 8px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 8px; }
+  .new-badge { display: inline-block; background: #e65100; color: #fff; font-size: 7px; font-weight: 700; padding: 1px 4px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+  .relation-box { background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 9.5px; }
+  .state-model { background: #e3f2fd; border: 1px solid #90caf9; border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-family: "SF Mono","Menlo",monospace; font-size: 9px; line-height: 1.8; page-break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <h1>PGOS</h1>
+  <div class="subtitle">3-4. プレイ中 — トーナメント</div>
+  <div class="sub2">シチュエーション別 機能マップ — 詳細編</div>
+  <div class="badge-player">プレイヤー向け</div>
+  <div class="meta">
+    対象コンポーネント: PGOS Player（iOS / Android アプリ）<br>
+    合同会社グローバルポイント<br>
+    2026年3月14日
+  </div>
+</div>
+
+<!-- TOC -->
+<h2>目次</h2>
+<div class="toc"><ul>
+  <li>1. このシチュエーションの概要</li>
+  <li>2. プレイ中の状態モデル</li>
+  <li>3. ユーザーストーリー</li>
+  <li>4. トーナメント情報の閲覧</li>
+  <li>&emsp;4-1. リアルタイム進行状況（A2-3-04）</li>
+  <li>&emsp;4-2. ブラインドスケジュール表示<span class="new-badge">新規</span></li>
+  <li>&emsp;4-3. テーブル・シート確認</li>
+  <li>5. プレイ中の操作</li>
+  <li>&emsp;5-1. アドオン申請（A2-3-03）</li>
+  <li>&emsp;5-2. リエントリー申請<span class="new-badge">新規</span></li>
+  <li>&emsp;5-3. 飲食オーダー（A2-4-01）</li>
+  <li>6. テーブル移動・イベント通知</li>
+  <li>&emsp;6-1. バランシング移動通知</li>
+  <li>&emsp;6-2. テーブルブレイク通知<span class="new-badge">新規</span></li>
+  <li>&emsp;6-3. ブレイク通知<span class="new-badge">新規</span></li>
+  <li>7. エリミネーション・結果</li>
+  <li>&emsp;7-1. エリミネーション通知<span class="new-badge">新規</span></li>
+  <li>&emsp;7-2. プレイアウト表示<span class="new-badge">新規</span></li>
+  <li>&emsp;7-3. ファイナルテーブル情報<span class="new-badge">新規</span></li>
+  <li>8. 店舗・運営側への連携</li>
+  <li>9. 検討事項・リスク</li>
+  <li>10. 非機能要件</li>
+</ul></div>
+
+<!-- 1. 概要 -->
+<h2>1. このシチュエーションの概要</h2>
+<div class="card card-blue">
+  <h4>プレイヤーの課題</h4>
+  <p>「いま何レベルで次のブラインドがいくらか確認したい。残り何人か知りたい。アドオンしたいけどディーラーを呼ばないといけない。席替えの通知を聞き逃した。」</p>
+  <p>PGOSでは、<strong>トーナメントの進行状況をリアルタイムでアプリに表示</strong>。ブラインドスケジュール、残り人数、平均スタック、賞金情報がいつでも確認できる。アドオンやリエントリーも<strong>アプリから申請</strong>でき、席替え通知は<strong>プッシュ通知で確実に受信</strong>。</p>
+</div>
+
+<h4>3-3（来店時）との関係</h4>
+<div class="card card-blue">
+  <p>3-3 のチェックイン完了後、プレイヤーは<strong>Play-in</strong> 状態でテーブルに着席。本ドキュメントはそこから<strong>エリミネーション（またはトーナメント終了）まで</strong>の体験を扱う。トーナメント結果の確定・ペイアウトは「3-6. プレイ終了・退店時」で定義。</p>
+</div>
+
+<!-- 2. 状態モデル -->
+<h2>2. プレイ中の状態モデル</h2>
+<div class="card card-blue">
+  <p>3-2 で定義したトーナメントプレイヤー状態モデルのうち、プレイ中に関連する遷移:</p>
+</div>
+
+<div class="state-model">
+  ┌─────────┐    席替え     ┌─────────┐<br>
+  │ Play-in │───────────→│ Play-in │（新テーブル/シート）<br>
+  └────┬────┘            └─────────┘<br>
+  &emsp;&emsp;&emsp;│<br>
+  &emsp;&emsp;&emsp;├── バスト（Reg期間中）──→ リエントリー可 → 再び Play-in<br>
+  &emsp;&emsp;&emsp;│<br>
+  &emsp;&emsp;&emsp;├── バスト（Reg終了後）──→ <strong>Play-out</strong>（最終順位確定）<br>
+  &emsp;&emsp;&emsp;│<br>
+  &emsp;&emsp;&emsp;└── 最後まで生存 ──→ <strong>トーナメント終了</strong>（3-6へ）
+</div>
+
+<table>
+  <tr><th>状態</th><th>説明</th><th>プレイヤーアプリの表示</th></tr>
+  <tr><td><strong>Play-in</strong></td><td>テーブルに着席してプレイ中</td><td>トーナメント情報画面（ブラインド、残り人数等）</td></tr>
+  <tr><td><strong>Seat-out</strong></td><td>一時離席中（ブラインドは消費される）</td><td>「離席中」バッジ。戻る際は通知なし</td></tr>
+  <tr><td><strong>Play-out</strong></td><td>レジストレーション終了後のバスト。最終順位確定</td><td>順位・獲得ポイント（該当時）の表示</td></tr>
+</table>
+
+<!-- 3. ストーリー -->
+<h2>3. ユーザーストーリー</h2>
+
+<div class="card card-amber">
+  <h4>ストーリー1: 「アプリでトーナメント進行をリアルタイム確認」</h4>
+  <p>プレイヤーAはサンデー杯に参加中。ハンドの合間にアプリを開くと、<strong>現在レベル6 / ブラインド 300-600 / アンテ 75 / 残り42名 / 平均スタック 28,000 / 次のブレイクまで12分</strong>が一目で確認できる。賞金テーブルを見ると「現在42名 → インマネは18名」と表示。あと24人の脱落でインマネだと分かる。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>ストーリー2: 「アドオン申請 → ディーラーがチップを配布」</h4>
+  <p>プレイヤーBはスタックが減ってきた。ブレイク中にアプリで<strong>「アドオンする」</strong>をタップ。支払い方法（ウェブコイン）を確認して申請完了。ディーラーのFloorアプリに通知が届き、ブレイク終了時に<strong>アドオン分のチップが配布</strong>される。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>ストーリー3: 「席替え通知を受信して移動」</h4>
+  <p>プレイヤーCのテーブルが解散（テーブルブレイク）。アプリに<strong>プッシュ通知「テーブル5 → テーブル2 / シート3 に移動してください」</strong>が届く。アプリ画面にも新しいテーブル/シート番号が表示され、迷わず移動。</p>
+</div>
+
+<!-- 4. 情報閲覧 -->
+<h2>4. トーナメント情報の閲覧</h2>
+
+<h3>4-1. リアルタイム進行状況（A2-3-04）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-3-04</td><td>リアルタイム進行状況</td><td>参加中のトーナメントの進行状況をアプリにリアルタイム表示: ①現在のレベル番号 ②ブラインド額（SB/BB）＋アンテ ③レベル残り時間 ④残りプレイヤー数 / 初期参加者数 ⑤平均スタック ⑥次のブレイクまでの時間 ⑦インマネまでの残り人数。情報はクロックと同期し自動更新</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h4>表示情報の詳細</h4>
+<table>
+  <tr><th>情報</th><th>更新タイミング</th><th>備考</th></tr>
+  <tr><td>ブラインド / アンテ</td><td>レベル遷移時</td><td>次のレベルの値も表示</td></tr>
+  <tr><td>レベル残り時間</td><td>リアルタイム（毎秒）</td><td>クロックと同期</td></tr>
+  <tr><td>残りプレイヤー数</td><td>エリミネーション発生時</td><td>リエントリー含む</td></tr>
+  <tr><td>平均スタック</td><td>エリミネーション発生時</td><td>総チップ数 ÷ 残り人数</td></tr>
+  <tr><td>インマネライン</td><td>エリミネーション発生時</td><td>賞金圏内まであと○人</td></tr>
+  <tr><td>賞金テーブル</td><td>参加者数確定時</td><td>順位別の賞金額/ポイント</td></tr>
+</table>
+
+<h3>4-2. ブラインドスケジュール表示（A2-3-05）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-3-05</td><td>ブラインドスケジュール表示</td><td>トーナメントの全ブラインドスケジュール（レベル別のSB/BB/アンテ、レベル時間、ブレイク位置）をアプリで一覧表示。現在のレベルがハイライトされ、スクロールで先のレベルを確認可能。アドオン可能レベル・レジストレーション終了レベルも明示</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>4-3. テーブル・シート確認</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-T-11</td><td>テーブル・シート確認</td><td>自分が現在座っているテーブル番号・シート番号をアプリに常時表示。席替え発生時は新しいテーブル/シートに更新。アプリを開けばいつでも現在の配席を確認可能</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<!-- 5. プレイ中の操作 -->
+<h2>5. プレイ中の操作</h2>
+
+<h3>5-1. アドオン申請（A2-3-03）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-3-03</td><td>アドオン申請</td><td>アドオン可能期間中にアプリから申請。①アドオン額・チップ額の確認 ②支払い方法の選択（事前決済のウェブコイン/カード or 現金を選択） ③申請送信 → スタッフ/ディーラーに通知。アドオンは通常ブレイク中に処理されるが、クラブ設定によりプレイ中も可能。アドオン可能期間外は申請ボタンが非活性</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>5-2. リエントリー申請（A2-3-06）<span class="new-badge">新規</span></h3>
+<div class="card card-blue">
+  <p>バスト後、レジストレーション期間内であればアプリからリエントリーを申請できる。</p>
+</div>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-3-06</td><td>リエントリー申請</td><td>バスト後にアプリに「リエントリーする」ボタンを表示（レジストレーション期間中 かつ リエントリー上限未達の場合のみ）。①エントリー費・チップ額の確認 ②支払い方法の選択 ③申請送信 → 新しいテーブル/シートが割り当てられ Play-in に復帰。残りリエントリー回数を表示（B1-3-14 の上限設定に基づく）</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>5-3. 飲食オーダー（A2-4-01）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-4-01</td><td>飲食オーダー</td><td>テーブルを離れずにアプリからフード・ドリンクを注文。メニュー表示 → 商品選択 → 注文確定 → テーブルに配達。支払いはデポジット引落し or 退店時精算</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph3">3</span></td></tr>
+</table>
+
+<!-- 6. テーブル移動・イベント通知 -->
+<h2>6. テーブル移動・イベント通知</h2>
+
+<h3>6-1. バランシング移動通知</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-T-13</td><td>バランシング移動通知</td><td>テーブルバランシング（テーブル間の人数差を均等化するための移動）が発生した場合、移動対象のプレイヤーに<strong>プッシュ通知</strong>で新しいテーブル/シートを通知。アプリ画面の配席情報も即時更新</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>6-2. テーブルブレイク通知（A2-T-14）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-T-14</td><td>テーブルブレイク通知</td><td>自分のテーブルが解散（テーブルブレイク）になった場合、プッシュ通知で<strong>新しい移動先テーブル/シート</strong>を通知。「テーブル○が解散しました。テーブル△ / シート□ に移動してください」の形式</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>6-3. ブレイク通知（A2-T-15）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-T-15</td><td>ブレイク通知</td><td>トーナメントのブレイク開始/終了をプッシュ通知。①ブレイク開始:「ブレイクに入ります（○分間）」 ②ブレイク終了2分前:「ブレイク終了まで2分です」 ③ブレイク終了:「ブレイクが終了しました。テーブルにお戻りください」。アドオン可能なブレイクの場合は「アドオン受付中」も表示</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<!-- 7. エリミネーション・結果 -->
+<h2>7. エリミネーション・結果</h2>
+
+<h3>7-1. エリミネーション通知（A2-T-16）<span class="new-badge">新規</span></h3>
+<div class="card card-blue">
+  <p>バストした際のプレイヤーアプリの表示。</p>
+</div>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-T-16</td><td>エリミネーション通知</td><td>スタッフがエリミネーション記録を行うと、プレイヤーアプリに結果を表示: ①<strong>順位</strong>（レジストレーション終了後のバストの場合） ②<strong>リエントリー案内</strong>（レジストレーション中のバストの場合、「リエントリーする」ボタン） ③<strong>賞金/ポイント</strong>（入賞の場合）。入賞した場合は祝福アニメーションを表示</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>7-2. プレイアウト表示（A2-T-18）<span class="new-badge">新規</span></h3>
+<div class="card card-blue">
+  <p>レジストレーション終了後のバスト = Play-out。順位が確定し、トーナメントからの退出が完了する。</p>
+</div>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-T-18</td><td>プレイアウト表示</td><td>Play-out 時にアプリに表示: ①最終順位（○○位 / ○○名中） ②入賞した場合は賞金額/ポイント ③トーナメント参加のサマリー（参加費、アドオン回数、プレイ時間）。入賞の場合は「ペイアウトは受付で精算してください」の案内。戦績への自動反映は 3-7 で定義</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>7-3. ファイナルテーブル情報（A2-T-19）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-T-19</td><td>ファイナルテーブル情報</td><td>ファイナルテーブル到達時に、残りプレイヤーの情報をアプリに表示: ①各プレイヤーのチップカウント（公開設定の場合） ②順位別の賞金テーブル。チョップ（ディール）提案がある場合はアプリに通知</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<!-- 8. 連携 -->
+<h2>8. 店舗・運営側への連携（相互参照）</h2>
+<div class="relation-box">
+  <table>
+    <tr><th>プレイヤーの操作</th><th>運営側への影響</th><th>運営側 要件ID</th></tr>
+    <tr><td>リアルタイム進行状況の閲覧</td><td>クロック情報の配信</td><td>B1-2-01, B1-2-02</td></tr>
+    <tr><td>アドオン申請</td><td>アドオン処理・チップ配布</td><td>B1-3-03</td></tr>
+    <tr><td>リエントリー申請</td><td>リエントリー処理・再配席</td><td>B1-3-14</td></tr>
+    <tr><td>席替え通知の受信</td><td>バランシング / テーブルブレイク実行</td><td>B1-4-08, B1-4-06</td></tr>
+    <tr><td>エリミネーション通知の受信</td><td>エリミネーション記録</td><td>B1-3-04</td></tr>
+    <tr><td>飲食オーダー</td><td>飲食オーダー受付・配達</td><td>B4-5-01（3-7で定義予定）</td></tr>
+  </table>
+</div>
+
+<!-- 9. 検討事項 -->
+<h2>9. 検討事項・リスク</h2>
+<table>
+  <tr><th>項目</th><th>内容</th><th>対応方針</th></tr>
+  <tr><td>チップカウントの公開範囲</td><td>プレイ中のチップカウントをどこまで公開するか。全員に公開すると戦略に影響</td><td>ファイナルテーブルのみ公開（デフォルト）。クラブ設定で変更可能</td></tr>
+  <tr><td>アドオン申請の乱用</td><td>頻繁なアドオン申請によるスタッフ負荷</td><td>アドオン可能回数の制限（クラブ設定）。ブレイク中のみ受付（デフォルト）</td></tr>
+  <tr><td>通知の頻度</td><td>プレイ中の過度な通知がプレイの妨げになる</td><td>重要通知（席替え・バスト）のみプッシュ。情報系（ブレイク等）はアプリ内のみ（設定可能）</td></tr>
+  <tr><td>リアルタイム情報の遅延</td><td>クロック同期の遅延により実際と異なる情報が表示される</td><td>5秒以内の同期を目標。最終的にはクロック（PGOS Clock）が正</td></tr>
+  <tr><td>オフライン時の情報表示</td><td>ネットワーク切断時にリアルタイム情報が更新されない</td><td>最後に取得した情報を表示し「オフライン」バッジを付与。席替え通知は復帰後に受信</td></tr>
+</table>
+
+<!-- 10. 非機能要件 -->
+<h2>10. 非機能要件</h2>
+<table>
+  <tr><th>項目</th><th>要件</th><th>備考</th></tr>
+  <tr><td>クロック同期</td><td>PGOS Clock との時刻差5秒以内</td><td>WebSocket / SSE による同期</td></tr>
+  <tr><td>残り人数更新</td><td>エリミネーション記録から3秒以内に反映</td><td>API / Push</td></tr>
+  <tr><td>席替え通知</td><td>バランシング確定から5秒以内に受信</td><td>プッシュ通知</td></tr>
+  <tr><td>アドオン申請応答</td><td>申請から確認まで3秒以内</td><td>サーバー処理</td></tr>
+  <tr><td>バッテリー消費</td><td>リアルタイム同期でバッテリー消費が過大にならない設計</td><td>同期間隔の最適化</td></tr>
+</table>
+
+<div class="footer-note">
+  PGOS — 3-4. プレイ中（トーナメント）プレイヤー向け詳細<br>
+  合同会社グローバルポイント — Confidential
+</div>
+
+</body>
+</html>

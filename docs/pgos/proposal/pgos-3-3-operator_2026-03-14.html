@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>PGOS 3-3 運営向け — 来店時（チェックイン・受付）</title>
+<style>
+  @page { size: A4; margin: 18mm 15mm 20mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif; font-size: 9.5px; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; }
+  .cover { page-break-after: always; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 88vh; text-align: center; }
+  .cover h1 { font-size: 24px; font-weight: 800; letter-spacing: 3px; margin-bottom: 6px; color: #2e7d32; }
+  .cover .subtitle { font-size: 14px; color: #333; margin-bottom: 4px; }
+  .cover .sub2 { font-size: 11px; color: #666; margin-bottom: 40px; }
+  .cover .meta { font-size: 10px; color: #999; line-height: 2; }
+  .cover .badge-operator { display: inline-block; background: #2e7d32; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 16px; border-radius: 20px; margin-bottom: 20px; }
+  h2 { font-size: 14px; font-weight: 700; color: #2e7d32; border-bottom: 2px solid #2e7d32; padding-bottom: 3px; margin-top: 26px; margin-bottom: 10px; page-break-after: avoid; }
+  h3 { font-size: 11.5px; font-weight: 700; color: #2e7d32; margin-top: 16px; margin-bottom: 6px; page-break-after: avoid; }
+  h4 { font-size: 10.5px; font-weight: 700; color: #333; margin-top: 12px; margin-bottom: 4px; page-break-after: avoid; }
+  p, li { margin: 2px 0; } ul, ol { padding-left: 16px; margin: 3px 0; } strong { color: #2e7d32; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px 0; font-size: 9px; }
+  th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: left; vertical-align: top; }
+  th { background: #e8f5e9; font-weight: 700; color: #1b5e20; white-space: nowrap; }
+  .badge { display: inline-block; font-size: 7.5px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 3px; vertical-align: middle; }
+  .badge-must { background: #c62828; color: #fff; } .badge-should { background: #f9a825; color: #fff; } .badge-could { background: #bdbdbd; color: #fff; }
+  .badge-ph1 { background: #1565c0; color: #fff; } .badge-ph2 { background: #6a1b9a; color: #fff; }
+  .card { background: #f1f8e9; border: 1px solid #c5e1a5; border-radius: 6px; padding: 10px 12px; margin: 8px 0 14px 0; page-break-inside: avoid; }
+  .card-green { border-left: 3px solid #2e7d32; }
+  .card-amber { border-left: 3px solid #ff8f00; background: #fffde7; }
+  .card-red { border-left: 3px solid #c62828; background: #fef2f2; }
+  .flow-box { background: #e8f5e9; border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 9.5px; line-height: 1.8; page-break-inside: avoid; }
+  .flow-box .arrow { color: #2e7d32; font-weight: 700; }
+  .toc ul { list-style: none; padding-left: 0; } .toc li { margin: 2px 0; font-size: 10px; } .toc li::before { content: "— "; color: #2e7d32; font-weight: 700; }
+  .footer-note { text-align: center; color: #999; font-size: 8px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 8px; }
+  .section-badge { display: inline-block; font-size: 8px; font-weight: 700; padding: 2px 8px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+  .section-t { background: #0d47a1; color: #fff; }
+  .section-r { background: #e65100; color: #fff; }
+  .section-c { background: #4a148c; color: #fff; }
+  .new-badge { display: inline-block; background: #e65100; color: #fff; font-size: 7px; font-weight: 700; padding: 1px 4px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+  .modified-badge { display: inline-block; background: #2e7d32; color: #fff; font-size: 7px; font-weight: 700; padding: 1px 4px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+  .relation-box { background: #ede7f6; border: 1px solid #b39ddb; border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 9.5px; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <h1>PGOS</h1>
+  <div class="subtitle">3-3. 来店時（チェックイン・受付）</div>
+  <div class="sub2">シチュエーション別 機能マップ — 詳細編 v2</div>
+  <div class="badge-operator">店舗・イベント運営向け</div>
+  <div class="meta">
+    対象コンポーネント: PGOS Manager（Web）/ PGOS Floor（モバイル）<br>
+    合同会社グローバルポイント<br>
+    2026年3月14日<br>
+    v2: 入店チェックイン廃止、リングゲーム「テーブルサイド受付」モデルに再設計
+  </div>
+</div>
+
+<!-- TOC -->
+<h2>目次</h2>
+<div class="toc"><ul>
+  <li>1. このシチュエーションの概要</li>
+  <li>2. 機能領域マップ</li>
+  <li>3. ユーザーストーリー</li>
+  <li>4. <span class="section-badge section-c">共通</span> 共通機能</li>
+  <li>&emsp;4-1. QRスキャンによる会員認識（B3-1-02）</li>
+  <li>&emsp;4-2. 顧客アラート（B3-2-04）</li>
+  <li>&emsp;4-3. ゲスト登録（B3-1-03）</li>
+  <li>&emsp;4-4. 受付ダッシュボード<span class="new-badge">新規</span></li>
+  <li>&emsp;4-5. カウンターフリー設計（B1-3-10）</li>
+  <li>&emsp;4-6. 支払い処理（B4-1-06）</li>
+  <li>&emsp;4-7. シャドウプレイヤーの変換（B1-3-11 参照）</li>
+  <li>5. <span class="section-badge section-t">3-3T</span> トーナメント — チェックイン運用</li>
+  <li>&emsp;5-1. チェックイン処理</li>
+  <li>&emsp;5-2. ウォークインのエントリー + チェックイン</li>
+  <li>&emsp;5-3. 配席管理</li>
+  <li>&emsp;5-4. ノーショー管理<span class="new-badge">新規</span></li>
+  <li>&emsp;5-5. 年齢確認<span class="new-badge">新規</span></li>
+  <li>6. <span class="section-badge section-r">3-3R</span> リングゲーム — テーブルサイド受付<span class="modified-badge">修正</span></li>
+  <li>&emsp;6-1. 設計思想: 着席優先 → テーブルサイド受付<span class="new-badge">新規</span></li>
+  <li>&emsp;6-2. ウェイティング呼び出し → 着席 → テーブル処理</li>
+  <li>&emsp;6-3. 直接来店 → 着席 → テーブル処理</li>
+  <li>&emsp;6-4. チップイン記録</li>
+  <li>7. プレイヤー側との連携</li>
+  <li>8. 検討事項・リスク</li>
+  <li>9. 非機能要件</li>
+</ul></div>
+
+<!-- 1. 概要 -->
+<h2>1. このシチュエーションの概要</h2>
+<div class="card card-green">
+  <h4>運営の課題</h4>
+  <p>「受付が混雑して回しきれない。初来店のお客様のゲスト登録に時間がかかる。リングゲームのお客様までカウンターに並ばせるのは非効率。注意人物を見逃してしまう。」</p>
+  <p>PGOSでは、<strong>トーナメントはQRスキャンで瞬時にチェックイン</strong>。リングゲームは<strong>先にプレイヤーを着席させ、スタッフがテーブルに出向いて手続き</strong>する設計でカウンター混雑を解消。ゲスト登録も簡素化し、カウンターフリー設計で<strong>どの端末・どのスタッフからでも同じ操作</strong>が可能。</p>
+</div>
+
+<h4>トーナメントとリングゲームの運用フローの違い</h4>
+<div class="card card-green">
+  <table>
+    <tr><th></th><th><span class="section-badge section-t">トーナメント</span></th><th><span class="section-badge section-r">リングゲーム</span></th></tr>
+    <tr><td><strong>受付方式</strong></td><td>受付カウンターでチェックイン（カウンターフリーも可）</td><td><strong>テーブルサイド受付</strong>: プレイヤーが着席後、スタッフがテーブルに出向く</td></tr>
+    <tr><td><strong>本人確認タイミング</strong></td><td>チェックイン時（受付カウンター）</td><td>着席後（テーブルサイド）</td></tr>
+    <tr><td><strong>配席</strong></td><td>システム自動抽選</td><td>スタッフ案内 or プレイヤーが空席に着席</td></tr>
+    <tr><td><strong>支払い・チップ</strong></td><td>チェックイン時に未払い精算</td><td>テーブルでバイイン→支払い→チップ配布</td></tr>
+  </table>
+</div>
+
+<h4>ドキュメント構成</h4>
+<table>
+  <tr><th>セクション</th><th>内容</th><th>コンポーネント</th></tr>
+  <tr><td><span class="section-badge section-c">共通</span></td><td>会員認識・アラート・ゲスト登録・受付ダッシュボード・支払い・シャドウプレイヤー変換</td><td>Manager / Floor</td></tr>
+  <tr><td><span class="section-badge section-t">3-3T</span></td><td>トーナメントチェックイン処理・ウォークイン・配席・ノーショー管理・年齢確認</td><td>Manager / Floor</td></tr>
+  <tr><td><span class="section-badge section-r">3-3R</span></td><td>テーブルサイド受付・着席後の本人確認・チップイン記録</td><td>Floor（中心）/ Manager</td></tr>
+</table>
+
+<h4>3-2（事前手続き）との役割分担</h4>
+<div class="card card-green">
+  <table>
+    <tr><th>項目</th><th>3-2（事前手続き）で定義済み</th><th>3-3（来店時）で扱う範囲</th></tr>
+    <tr><td>エントリー</td><td>セルフレジストレーション、オンライン決済、チケット利用</td><td>来店時のエントリー確認、未払い決済、ウォークインエントリー</td></tr>
+    <tr><td>ウェイティング</td><td>ウェイティング登録、呼び出しルール、保留リスト</td><td>呼び出し後の着席 → テーブルサイド受付</td></tr>
+    <tr><td>シャドウプレイヤー</td><td>登録・管理方法の定義（B1-3-11）</td><td>プレイヤー来店時のシャドウ → 通常プレイヤー変換</td></tr>
+    <tr><td>決済</td><td>支払い方法の種類・デポジット（B4-1-10）</td><td>来店時の現金/カード受領処理</td></tr>
+  </table>
+</div>
+
+<!-- 2. 機能領域 -->
+<h2>2. 機能領域マップ</h2>
+<table>
+  <tr><th>ID</th><th>領域</th><th>3-3 で対象とする要件</th></tr>
+  <tr><td>B3-1</td><td>会員認識・チェックイン</td><td>B3-1-02, B3-1-03, B3-1-04, B3-1-05, B3-1-06</td></tr>
+  <tr><td>B3-2</td><td>顧客管理</td><td>B3-2-04</td></tr>
+  <tr><td>B1-3</td><td>参加者管理</td><td>B1-3-09, B1-3-10, B1-3-11, B1-3-16</td></tr>
+  <tr><td>B1-4</td><td>配席管理</td><td>B1-4-01</td></tr>
+  <tr><td>B4-1</td><td>POS・決済</td><td>B4-1-06</td></tr>
+  <tr><td>B2-2</td><td>ウェイティング管理</td><td>B2-2-03</td></tr>
+  <tr><td>B2-5</td><td>チップ管理</td><td>B2-5-01</td></tr>
+  <tr><td>B2-6</td><td>テーブルサイド受付</td><td>B2-6-01<span class="new-badge">新規</span></td></tr>
+</table>
+
+<!-- 3. ストーリー -->
+<h2>3. ユーザーストーリー</h2>
+
+<div class="card card-amber">
+  <h4><span class="section-badge section-t">T</span> ストーリー1: 「QRスキャンで瞬時に受付完了」</h4>
+  <p>トーナメント開場時間。スタッフAはFloorアプリを手に受付に立つ。プレイヤーがQRコードを提示。スキャンすると画面に<strong>「会員: 田中太郎 / eKYC済 / 年齢: 30代 / エントリー済: サンデー杯（ウェブコイン決済完了）」</strong>と表示。アラートなし。「チェックイン」ボタンをタップ → 自動配席実行 →「テーブル3 / シート5」を口頭で案内。所要時間10秒。</p>
+</div>
+
+<div class="card card-amber">
+  <h4><span class="section-badge section-c">共通</span> ストーリー2: 「初来店ゲストの受付」</h4>
+  <p>初来店のプレイヤーがカウンターに。PGOSアカウントなし。スタッフBがFloorアプリで「ゲスト登録」を選択。名前と生年月日を入力するとQRコードが自動発行され、プレイヤーのスマートフォンに表示。<strong>年齢が確認され「20歳以上」のバッジが表示</strong>。そのままデイリーNLHにウォークインエントリー。現金でエントリー費を受領し、チェックイン完了。</p>
+</div>
+
+<div class="card card-amber">
+  <h4><span class="section-badge section-r">R</span> ストーリー3: 「テーブルに出向いて受付」<span class="modified-badge">修正</span></h4>
+  <p>NLH 1-2で席が空いた。PGOS Managerが自動的にウェイティングリスト1番のプレイヤーにプッシュ通知を送信。プレイヤーが店舗に到着し、<strong>スタッフが案内した席に着席</strong>。スタッフCが<strong>Floorアプリを持ってテーブルに出向き</strong>、プレイヤーのQRをスキャン → 本人確認 → バイイン額 ¥10,000 を確認 → 現金受領 → <strong>チップ ¥10,000相当を配布</strong>。カウンターを経由せず、<strong>テーブルですべて完結</strong>。</p>
+</div>
+
+<!-- 4. 共通 -->
+<h2>4. <span class="section-badge section-c">共通</span> 共通機能</h2>
+
+<h3>4-1. QRスキャンによる会員認識（B3-1-02）</h3>
+<div class="card card-green">
+  <p>QRスキャンは<strong>トーナメントの受付カウンター</strong>でも<strong>リングゲームのテーブルサイド</strong>でも同じ操作・同じ表示。スタッフはFloorアプリのカメラでプレイヤーのQRをスキャンするだけで、全情報が即座に表示される。</p>
+</div>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B3-1-02</td><td>QRスキャンによる会員認識</td><td>PGOS Floor / ManagerでプレイヤーのQRコードをスキャンすると、以下を即座に表示: ①会員名・アイコン ②年代タグ（10代/20代/…） ③eKYCステータス（未/済/期限切れ） ④当日のエントリー状況（エントリー済みトーナメント名、決済状況） ⑤ウェイティング状況 ⑥顧客アラート（該当時）。NFC読取にも同様に対応</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h4>QRスキャン後の表示情報</h4>
+<table>
+  <tr><th>表示項目</th><th>内容</th><th>表示条件</th></tr>
+  <tr><td>会員情報</td><td>名前、アイコン、会員ID</td><td>常に表示</td></tr>
+  <tr><td>年代タグ</td><td>10代/20代/30代…（年齢非表示、年代のみ）</td><td>常に表示</td></tr>
+  <tr><td>eKYCステータス</td><td>未確認 / 確認済 / 期限切れ</td><td>常に表示</td></tr>
+  <tr><td>エントリー状況</td><td>エントリー済みトーナメント名、決済ステータス</td><td>エントリーがある場合</td></tr>
+  <tr><td>ウェイティング</td><td>登録中のリングゲーム、順番</td><td>ウェイティング中の場合</td></tr>
+  <tr><td>顧客アラート</td><td>警告メッセージ（赤色ハイライト）</td><td>アラート設定がある場合</td></tr>
+  <tr><td>来店履歴</td><td>直近の来店日・回数</td><td>常に表示</td></tr>
+</table>
+
+<h3>4-2. 顧客アラート（B3-2-04）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B3-2-04</td><td>顧客アラート</td><td>QRスキャン時に、事前に設定された注意フラグを持つプレイヤーの場合、<strong>赤色アラートを画面上部に表示</strong>。アラートには設定されたメッセージ（例:「過去にトラブルあり。店長に報告」「要身分証確認」「出入り禁止」）を含む。アラートの設定・編集はPGOS Managerの顧客管理画面から行う。出入り禁止フラグがある場合はチェックイン/テーブル受付をブロック可能（設定による）</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>4-3. ゲスト登録（B3-1-03）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B3-1-03</td><td>ゲスト登録</td><td>PGOSアカウントを持たないプレイヤーが来店した場合、スタッフがFloor/Managerから最小限の情報（名前・生年月日）でゲスト登録を実施。仮会員QRコードが即時発行される。ゲストはトーナメント/リングゲームに参加可能。ただしウェブコイン決済・戦績公開・ランキングには非対応</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B3-1-04</td><td>ゲスト → 会員移行</td><td>ゲスト（仮会員）がPGOSアプリで正式登録を完了すると、ゲストとしての戦績・来店記録が自動的に正式アカウントに引き継がれる</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>4-4. 受付ダッシュボード（B3-1-05）<span class="new-badge">新規</span></h3>
+<div class="card card-green">
+  <p><strong>受付ダッシュボード</strong>は、PGOS Managerに表示されるリアルタイムサマリー。トーナメントの来店予定・チェックイン状況と、リングゲームのテーブル稼働状況を一目で把握できる。</p>
+</div>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B3-1-05</td><td>受付ダッシュボード</td><td>以下の情報をリアルタイム表示: ①<strong>トーナメント来店予定</strong>（事前エントリー済み・未チェックインの人数、名前リスト） ②<strong>チェックイン済み</strong>（トーナメント別の人数） ③<strong>リングゲーム テーブル状況</strong>（テーブル別の着席数/空席数、テーブル受付未処理の有無） ④<strong>ノーショー候補</strong>（事前エントリー済みだが開始時刻を過ぎてもチェックインなし） ⑤<strong>本日の来客合計</strong>。フィルターでトーナメント別・リングゲーム別の絞り込みが可能</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>4-5. カウンターフリー設計（B1-3-10）</h3>
+<div class="card card-green">
+  <p>3-2 で定義済み（B1-3-10）。3-3 の文脈では: <strong>どのスタッフが、どの端末（PC/タブレット/スマートフォン）からでも、チェックイン・ゲスト登録・支払い処理を実行可能</strong>。特にリングゲームでは、スタッフが<strong>Floorアプリを持ってテーブルに出向く</strong>ことで、カウンターを経由せずにすべての手続きを完結できる。</p>
+</div>
+
+<h3>4-6. 支払い処理（B4-1-06）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B4-1-06</td><td>来店時の支払い処理</td><td>トーナメント: チェックイン時に未払い分を受付で処理。リングゲーム: テーブルサイドでバイイン額の支払いを処理。①現金受領 → Managerで受領確認ボタン ②店頭カード決済 → 決済端末連携 ③デポジット設定 → 与信枠確保。未払いがある場合は「未払い」バッジが表示される</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h4>支払いパターン</h4>
+<table>
+  <tr><th>パターン</th><th>トーナメント（受付）</th><th>リングゲーム（テーブル）</th></tr>
+  <tr><td>現金</td><td>受付で現金受領 → 受領確認</td><td>テーブルで現金受領 → 受領確認 → チップ配布</td></tr>
+  <tr><td>店頭カード</td><td>受付でカード決済</td><td>テーブルでポータブル決済端末使用 or カウンターに誘導</td></tr>
+  <tr><td>デポジット</td><td>与信確保 → 退店時精算</td><td>与信確保 → 退店時精算（3-2 B4-1-10 参照）</td></tr>
+  <tr><td>事前決済済み</td><td>「決済済み」表示 → チェックイン</td><td>—（リングゲームは来店時にバイイン支払い）</td></tr>
+  <tr><td>チケット利用</td><td>チケット検証 → チェックイン</td><td>—（チケットはトーナメントのみ）</td></tr>
+</table>
+
+<h3>4-7. シャドウプレイヤーの変換（B1-3-11 参照）</h3>
+<div class="card card-green">
+  <p>3-2 で定義したシャドウプレイヤー（B1-3-11）に対応するプレイヤーが来店した場合、スタッフがQRスキャンまたはプレイヤー名検索で<strong>シャドウプレイヤーにアカウントを紐付け</strong>、通常のプレイヤーに変換する。</p>
+</div>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B3-1-07</td><td>シャドウプレイヤー変換</td><td>シャドウプレイヤーの詳細画面から「プレイヤーを紐付ける」操作で紐付け。変換後、シャドウプレイヤーとして記録されたバスト記録・席情報・チップ情報がすべて紐付けたアカウントに引き継がれる。QRスキャン結果に「対応するシャドウプレイヤーが存在します」の通知を表示<span class="new-badge">新規</span></td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<!-- 5. トーナメント -->
+<h2>5. <span class="section-badge section-t">3-3T</span> トーナメント — チェックイン運用</h2>
+
+<div class="card card-green">
+  <p>トーナメントでは<strong>チェックインが必要</strong>。受付カウンターまたはスタッフ（カウンターフリー）でQRスキャン → エントリー確認 → 支払い確認 → チェックイン → 配席の流れで処理する。</p>
+</div>
+
+<h3>5-1. チェックイン処理</h3>
+<div class="flow-box">
+  <strong>スタッフによるチェックインフロー:</strong><br><br>
+  ① プレイヤーがQRコード提示 → Floor / Manager でスキャン<br>
+  <span class="arrow">↓</span><br>
+  ② 会員情報＋エントリー状況＋アラート表示<br>
+  <span class="arrow">↓</span> アラートなし or 確認済み<br>
+  ③ 未払いがある場合 → 支払い処理（現金受領 / カード決済）<br>
+  <span class="arrow">↓</span><br>
+  ④ 「チェックイン」ボタン → 自動配席実行<br>
+  <span class="arrow">↓</span><br>
+  ⑤-a 空席あり → <strong>プレイイン</strong>（テーブル/シートを口頭案内 + プレイヤーアプリに通知）<br>
+  ⑤-b 全席満席 → <strong>オルタネイト</strong>（番号案内 + オルタネイトリストに追加）
+</div>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-3-02</td><td>チェックイン処理</td><td>QRスキャン → エントリー確認 → 支払い確認 → チェックイン → 配席。事前エントリーの有無・決済状況が一画面に表示され、スタッフは最小限のタップでチェックインを完了できる。チェックイン完了時にプレイヤーの状態が Registered → Play-in（または Alternate）に自動遷移</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>5-2. ウォークインのエントリー + チェックイン（B1-3-09）</h3>
+<div class="card card-green">
+  <p>事前エントリーなしで来店したプレイヤーに対し、<strong>エントリーとチェックインを1操作で完了</strong>（3-2 B1-3-09 参照）。レジストレーション受付中のトーナメントが対象。</p>
+</div>
+
+<div class="flow-box">
+  ① QRスキャン → 「エントリー済みトーナメントなし」と表示<br>
+  <span class="arrow">↓</span><br>
+  ② 受付中トーナメント一覧から選択<br>
+  <span class="arrow">↓</span><br>
+  ③ 支払い処理（現金 / カード / チケット）<br>
+  <span class="arrow">↓</span><br>
+  ④ 「エントリー＋チェックイン」ボタン → 配席実行<br>
+  <span class="arrow">↓</span><br>
+  ⑤ プレイイン or オルタネイト
+</div>
+
+<h3>5-3. 配席管理（B1-4-01）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-4-01</td><td>自動配席</td><td>チェックイン時に空席があれば、テーブル/シートを自動抽選して割当。テーブルバランシング（各テーブルのプレイヤー数を均等化）を考慮。スタッフが手動で配席先を変更することも可能。配席結果はプレイヤーアプリに即時通知。配席アルゴリズムはランダム抽選（デフォルト）、フェーズ2で高度な配席ロジック（同一クラブ常連の分散等）を検討</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>5-4. ノーショー管理（B1-3-16）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-3-16</td><td>ノーショー管理</td><td>事前エントリー済みだが<strong>ノーショー判定時刻</strong>（デフォルト: レジストレーション終了時点。クラブ設定で変更可能）までにチェックインしなかったプレイヤーを自動的に「ノーショー」ステータスに変更。ノーショー処理: ①エントリーリストで「ノーショー」として記録 ②クラブのキャンセルポリシーに基づく返金処理（全額返金 / 一部返金 / 返金なし）を自動適用 ③オルタネイト待ちのプレイヤーがいる場合、解放された席に自動配席 ④プレイヤーアプリにノーショー通知を送信。スタッフによるノーショー判定の手動実行も可能</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>5-5. 年齢確認（B3-1-06）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B3-1-06</td><td>年齢確認ワークフロー</td><td>QRスキャン時に年代タグを自動表示。eKYC未完了のプレイヤーの場合、<strong>「身分証確認推奨」</strong>を表示。風営法適用店舗では18歳未満の入場を制限。スタッフが目視で年齢確認を行った場合、「年齢確認済み」を記録可能。年齢確認が必要なプレイヤー（eKYC未完了かつ初来店）は受付ダッシュボードで「要確認」としてハイライト</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<!-- 6. リングゲーム -->
+<h2>6. <span class="section-badge section-r">3-3R</span> リングゲーム — テーブルサイド受付<span class="modified-badge">修正</span></h2>
+
+<h3>6-1. 設計思想: 着席優先 → テーブルサイド受付<span class="new-badge">新規</span></h3>
+<div class="card card-green">
+  <h4>リングゲームはカウンターを経由しない</h4>
+  <p>リングゲームでは、プレイヤーは<strong>まず席に座り、その後スタッフがテーブルに出向いて手続き</strong>を行う。トーナメントのような受付カウンターでのチェックインは行わない。</p>
+  <ul>
+    <li><strong>プレイヤーが着席</strong>: 空席に座る or スタッフに案内された席に座る</li>
+    <li><strong>スタッフがテーブルへ</strong>: Floorアプリを持ってテーブルに出向き、QRスキャン → 本人確認 → バイイン確認 → 支払い → チップ配布</li>
+    <li><strong>席QRによるセルフ受付</strong>: プレイヤーが席QR（B1-3-15）をスキャンして自分で受付を完了させることも可能（チップ配布のみスタッフが対応）</li>
+  </ul>
+</div>
+
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B2-6-01</td><td>テーブルサイド受付</td><td>リングゲームのプレイヤーが着席後、スタッフがFloorアプリでテーブルに出向き、QRスキャン → 本人確認 → バイイン額確認 → 支払い処理 → チップ配布までを一連で実行。テーブルの座席表上に「新着席（受付未処理）」を表示し、スタッフに通知。プレイヤーが席QRをスキャンした場合は、本人確認＋バイイン額選択までをセルフで完了し、「チップ配布待ち」としてスタッフに通知<span class="new-badge">新規</span></td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>6-2. ウェイティング呼び出し → 着席 → テーブル処理</h3>
+<div class="flow-box">
+  <strong>呼び出し後のフロー（運営側）:</strong><br><br>
+  ① 席が空く → PGOS Managerが自動でウェイティング1番に通知送信<br>
+  <span class="arrow">↓</span> 1分以内に応答<br>
+  ② プレイヤーが来店 → <strong>スタッフが席に案内（または自分で着席）</strong><br>
+  <span class="arrow">↓</span><br>
+  ③ Floorアプリに「新着席（受付未処理）」が表示される<br>
+  <span class="arrow">↓</span><br>
+  ④ スタッフがテーブルに出向き → QRスキャン → 本人確認 → バイイン額確認<br>
+  <span class="arrow">↓</span><br>
+  ⑤ 支払い処理 → チップ配布 → 座席表を「プレイイン」に更新
+</div>
+
+<div class="card card-green">
+  <p>呼び出しルールの詳細（1分/3回/保留リスト）は3-2で定義済み（B2-2-03, B2-2-04, B2-2-06）。1分ルールの対象はプレイヤーアプリ上の<strong>応答操作</strong>であり、着席後のテーブル受付処理とは別のタイムライン。</p>
+</div>
+
+<h3>6-3. 直接来店 → 着席 → テーブル処理</h3>
+<div class="flow-box">
+  <strong>空席がある場合のフロー（運営側）:</strong><br><br>
+  ① プレイヤーが来店 → スタッフが空席を案内 or プレイヤーが空席に着席<br>
+  <span class="arrow">↓</span><br>
+  ② Floorアプリ / Manager座席表に「新着席（受付未処理）」が表示<br>
+  <span class="arrow">↓</span><br>
+  ③ スタッフがテーブルに出向き → QRスキャン → 本人確認 → アラート確認<br>
+  <span class="arrow">↓</span><br>
+  ④ バイイン額確認 → 支払い処理 → チップ配布<br>
+  <span class="arrow">↓</span><br>
+  ⑤ 座席表を「プレイイン」に更新
+</div>
+
+<div class="card card-green">
+  <p><strong>新規来店（アカウントなし）の場合:</strong> テーブルでゲスト登録（B3-1-03）を実施してからテーブル受付に進む。Floorアプリでゲスト登録 → QR発行 → そのままテーブル受付の流れで、プレイヤーを席から移動させずに対応可能。</p>
+</div>
+
+<h3>6-4. チップイン記録（B2-5-01）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B2-5-01</td><td>チップイン記録</td><td>テーブルサイド受付時にバイイン額をシステムに記録。①テーブルの最小/最大バイインの範囲内であることを自動検証 ②支払い方法（現金 / カード / デポジット）を記録 ③チップ配布をスタッフが確認ボタンで記録。バイイン履歴（初回バイイン + リバイ）はプレイヤー別にトラッキング。チップトラッキングは3-5（プレイ中 — リングゲーム）で詳細定義</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<!-- 7. 連携 -->
+<h2>7. プレイヤー側との連携（相互参照）</h2>
+<div class="relation-box">
+  <table>
+    <tr><th>セクション</th><th>運営側の操作</th><th>プレイヤーへの影響</th><th>プレイヤー側 要件ID</th></tr>
+    <tr><td><span class="section-badge section-c">C</span></td><td>ゲスト登録</td><td>仮会員QR発行。後日正式登録で紐付け</td><td>A6-3-01</td></tr>
+    <tr><td><span class="section-badge section-t">T</span></td><td>チェックイン → 配席</td><td>テーブル/シート番号のプッシュ通知</td><td>A2-T-11</td></tr>
+    <tr><td><span class="section-badge section-t">T</span></td><td>ノーショー判定</td><td>ノーショー通知。キャンセルポリシー適用通知</td><td>A2-T-17</td></tr>
+    <tr><td><span class="section-badge section-r">R</span></td><td>テーブルサイドでQRスキャン</td><td>本人確認完了通知</td><td>A2-2-01</td></tr>
+    <tr><td><span class="section-badge section-r">R</span></td><td>チップイン確認</td><td>バイイン額・チップ数の画面表示</td><td>A2-R-10</td></tr>
+    <tr><td><span class="section-badge section-c">C</span></td><td>シャドウプレイヤー変換</td><td>アカウント紐付け → 戦績引き継ぎ</td><td>—</td></tr>
+  </table>
+</div>
+
+<!-- 8. 検討事項 -->
+<h2>8. 検討事項・リスク</h2>
+<table>
+  <tr><th>セクション</th><th>項目</th><th>内容</th><th>対応方針</th></tr>
+  <tr><td><span class="section-badge section-c">C</span></td><td>QRコードのセキュリティ</td><td>QRコードのスクリーンショットによるなりすまし防止</td><td>QRコードに有効期限を設定（30秒〜1分で自動更新）。ワンタイムトークン方式を検討</td></tr>
+  <tr><td><span class="section-badge section-c">C</span></td><td>受付混雑時のスループット</td><td>大規模トーナメント（100名以上）の開場時に受付が集中</td><td>セルフチェックイン端末（店舗設置QR方式）の活用。複数スタッフによるFloorアプリでの並列処理</td></tr>
+  <tr><td><span class="section-badge section-c">C</span></td><td>オフライン時の対応</td><td>店舗のネットワーク障害時のチェックイン/テーブル受付処理</td><td>緊急モード（手動記録 → オンライン復旧後に一括同期）を検討</td></tr>
+  <tr><td><span class="section-badge section-t">T</span></td><td>出入り禁止プレイヤーの事前エントリー</td><td>出入り禁止フラグがオンラインエントリー後に設定される場合</td><td>QRスキャン時にアラートを表示し、チェックインをブロック。返金はキャンセルポリシーに従う</td></tr>
+  <tr><td><span class="section-badge section-t">T</span></td><td>ノーショーの繰り返し</td><td>常習的にノーショーするプレイヤーへの対策</td><td>ノーショー回数の記録。一定回数超過時にアラート表示。将来的にはセルフレジストレーション制限を検討</td></tr>
+  <tr><td><span class="section-badge section-r">R</span></td><td>着席前のプレイヤー確認</td><td>着席してからQRスキャンする場合、不正プレイヤーが一時的に席を占有する可能性</td><td>顧客アラート（B3-2-04）によりスキャン時にブロック。席の仮占有は短時間で発生リスクは低い</td></tr>
+  <tr><td><span class="section-badge section-r">R</span></td><td>テーブル受付のスタッフ通知</td><td>プレイヤーが着席したがスタッフが気付かない場合</td><td>Floorアプリに「新着席プレイヤーあり」通知を表示。席QRスキャンによりセルフ受付でカバー</td></tr>
+  <tr><td><span class="section-badge section-r">R</span></td><td>テーブルでの決済手段制限</td><td>テーブルサイドではカード決済端末が手元にない場合がある</td><td>ポータブル決済端末の導入、またはデポジット方式（事前に与信確保）での対応。現金は問題なし</td></tr>
+</table>
+
+<!-- 9. 非機能要件 -->
+<h2>9. 非機能要件</h2>
+<table>
+  <tr><th>項目</th><th>要件</th><th>備考</th></tr>
+  <tr><td>QRスキャン → 会員情報表示</td><td>2秒以内</td><td>アラート判定含む（カウンター/テーブル共通）</td></tr>
+  <tr><td>チェックインボタン → 配席完了</td><td>3秒以内</td><td>自動配席アルゴリズム実行含む（トーナメント）</td></tr>
+  <tr><td>テーブルサイド受付完了</td><td>QRスキャンからチップ配布確認まで30秒以内</td><td>オペレーション時間含む（リングゲーム）</td></tr>
+  <tr><td>新着席通知</td><td>着席検出から5秒以内</td><td>席QRスキャン or スタッフの手動登録</td></tr>
+  <tr><td>ゲスト登録 → QR発行</td><td>3秒以内</td><td>サーバー登録含む</td></tr>
+  <tr><td>受付ダッシュボード更新</td><td>5秒以内</td><td>リアルタイム更新</td></tr>
+  <tr><td>ノーショー自動判定</td><td>判定時刻から30秒以内</td><td>バッチ処理ではなくリアルタイム</td></tr>
+  <tr><td>同時チェックイン処理</td><td>50件/分以上</td><td>大規模トーナメント開場時</td></tr>
+  <tr><td>対応ブラウザ</td><td>Chrome / Safari / Firefox 最新2バージョン</td><td>Manager Web</td></tr>
+  <tr><td>Floor対応OS</td><td>iOS 16+, Android 12+</td><td>Floor モバイルアプリ</td></tr>
+</table>
+
+<div class="footer-note">
+  PGOS — 3-3. 来店時（チェックイン・受付）店舗・イベント運営向け詳細 v2<br>
+  合同会社グローバルポイント — Confidential<br>
+  参照: docs/pgos/requirements/operator-features.md
+</div>
+
+</body>
+</html>

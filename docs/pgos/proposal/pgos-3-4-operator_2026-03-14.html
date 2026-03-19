@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>PGOS 3-4 運営向け — プレイ中（トーナメント）</title>
+<style>
+  @page { size: A4; margin: 18mm 15mm 20mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif; font-size: 9.5px; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; }
+  .cover { page-break-after: always; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 88vh; text-align: center; }
+  .cover h1 { font-size: 24px; font-weight: 800; letter-spacing: 3px; margin-bottom: 6px; color: #2e7d32; }
+  .cover .subtitle { font-size: 14px; color: #333; margin-bottom: 4px; }
+  .cover .sub2 { font-size: 11px; color: #666; margin-bottom: 40px; }
+  .cover .meta { font-size: 10px; color: #999; line-height: 2; }
+  .cover .badge-operator { display: inline-block; background: #2e7d32; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 16px; border-radius: 20px; margin-bottom: 20px; }
+  h2 { font-size: 14px; font-weight: 700; color: #2e7d32; border-bottom: 2px solid #2e7d32; padding-bottom: 3px; margin-top: 26px; margin-bottom: 10px; page-break-after: avoid; }
+  h3 { font-size: 11.5px; font-weight: 700; color: #2e7d32; margin-top: 16px; margin-bottom: 6px; page-break-after: avoid; }
+  h4 { font-size: 10.5px; font-weight: 700; color: #333; margin-top: 12px; margin-bottom: 4px; page-break-after: avoid; }
+  p, li { margin: 2px 0; } ul, ol { padding-left: 16px; margin: 3px 0; } strong { color: #2e7d32; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px 0; font-size: 9px; }
+  th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: left; vertical-align: top; }
+  th { background: #e8f5e9; font-weight: 700; color: #1b5e20; white-space: nowrap; }
+  .badge { display: inline-block; font-size: 7.5px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 3px; vertical-align: middle; }
+  .badge-must { background: #c62828; color: #fff; } .badge-should { background: #f9a825; color: #fff; } .badge-could { background: #bdbdbd; color: #fff; }
+  .badge-ph1 { background: #1565c0; color: #fff; } .badge-ph2 { background: #6a1b9a; color: #fff; } .badge-ph3 { background: #00838f; color: #fff; }
+  .card { background: #f1f8e9; border: 1px solid #c5e1a5; border-radius: 6px; padding: 10px 12px; margin: 8px 0 14px 0; page-break-inside: avoid; }
+  .card-green { border-left: 3px solid #2e7d32; }
+  .card-amber { border-left: 3px solid #ff8f00; background: #fffde7; }
+  .flow-box { background: #e8f5e9; border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 9.5px; line-height: 1.8; page-break-inside: avoid; }
+  .flow-box .arrow { color: #2e7d32; font-weight: 700; }
+  .toc ul { list-style: none; padding-left: 0; } .toc li { margin: 2px 0; font-size: 10px; } .toc li::before { content: "— "; color: #2e7d32; font-weight: 700; }
+  .footer-note { text-align: center; color: #999; font-size: 8px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 8px; }
+  .new-badge { display: inline-block; background: #e65100; color: #fff; font-size: 7px; font-weight: 700; padding: 1px 4px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+  .relation-box { background: #ede7f6; border: 1px solid #b39ddb; border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 9.5px; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <h1>PGOS</h1>
+  <div class="subtitle">3-4. プレイ中 — トーナメント</div>
+  <div class="sub2">シチュエーション別 機能マップ — 詳細編</div>
+  <div class="badge-operator">店舗・イベント運営向け</div>
+  <div class="meta">
+    対象コンポーネント: PGOS Manager（Web）/ PGOS Clock（大画面）/ PGOS Floor（モバイル）<br>
+    合同会社グローバルポイント<br>
+    2026年3月14日
+  </div>
+</div>
+
+<!-- TOC -->
+<h2>目次</h2>
+<div class="toc"><ul>
+  <li>1. このシチュエーションの概要</li>
+  <li>2. 機能領域マップ</li>
+  <li>3. ユーザーストーリー</li>
+  <li>4. ストラクチャー管理</li>
+  <li>&emsp;4-1. ストラクチャー定義（B1-1-01）</li>
+  <li>&emsp;4-2. ストラクチャーテンプレート<span class="new-badge">新規</span></li>
+  <li>5. トーナメントクロック</li>
+  <li>&emsp;5-1. クロック表示（B1-2-01）</li>
+  <li>&emsp;5-2. マルチデバイス同期（B1-2-02）</li>
+  <li>&emsp;5-3. クロック操作</li>
+  <li>&emsp;5-4. オフライン動作保証（B1-2-09）</li>
+  <li>&emsp;5-5. ブレイク管理<span class="new-badge">新規</span></li>
+  <li>6. 配席・テーブル管理</li>
+  <li>&emsp;6-1. ランダムシート抽選（B1-4-02）</li>
+  <li>&emsp;6-2. オートバランシング（B1-4-08）</li>
+  <li>&emsp;6-3. オートテーブルブレイク（B1-4-06）</li>
+  <li>&emsp;6-4. バブル管理<span class="new-badge">新規</span></li>
+  <li>7. エリミネーション・順位管理</li>
+  <li>&emsp;7-1. エリミネーション記録（B1-3-04）</li>
+  <li>&emsp;7-2. 自動順位確定<span class="new-badge">新規</span></li>
+  <li>&emsp;7-3. リエントリー処理（B1-3-14 参照）</li>
+  <li>8. アドオン管理</li>
+  <li>9. PGOS Floor ディーラーモード</li>
+  <li>10. サテライト通過処理<span class="new-badge">新規</span></li>
+  <li>11. プレイヤー側との連携</li>
+  <li>12. 検討事項・リスク</li>
+  <li>13. 非機能要件</li>
+</ul></div>
+
+<!-- 1. 概要 -->
+<h2>1. このシチュエーションの概要</h2>
+<div class="card card-green">
+  <h4>運営の課題</h4>
+  <p>「ブラインドレベルを手動管理するのが大変。テーブル間のバランスを取るのに時間がかかる。エリミネーションの順位を間違えると揉める。複数画面でクロックを同期できない。」</p>
+  <p>PGOSでは、<strong>ストラクチャーとクロックを一元管理</strong>し、TV・タブレット・スマホで同期表示。テーブルバランシングとテーブルブレイクを<strong>自動提案</strong>し、エリミネーション記録で<strong>順位を自動確定</strong>。ディーラーは<strong>Floorアプリのディーラーモード</strong>で必要な情報を手元で確認。</p>
+</div>
+
+<h4>対象コンポーネントの役割</h4>
+<table>
+  <tr><th>コンポーネント</th><th>3-4 での役割</th></tr>
+  <tr><td><strong>PGOS Manager</strong>（Web）</td><td>ストラクチャー設定、クロック制御、テーブル管理、エリミネーション記録の中心</td></tr>
+  <tr><td><strong>PGOS Clock</strong>（大画面TV）</td><td>会場に設置する大画面表示。ブラインド、レベル残り時間、残り人数等を表示</td></tr>
+  <tr><td><strong>PGOS Floor</strong>（モバイル）</td><td>ディーラーモード: テーブルQRでログイン、エリミネーション記録、アドオン処理</td></tr>
+  <tr><td><strong>PGOS Player</strong>（アプリ）</td><td>クロック情報をリアルタイム受信（プレイヤー向け 3-4 参照）</td></tr>
+</table>
+
+<!-- 2. 機能領域 -->
+<h2>2. 機能領域マップ</h2>
+<table>
+  <tr><th>ID</th><th>領域</th><th>要件</th></tr>
+  <tr><td>B1-1</td><td>ストラクチャー管理</td><td>B1-1-01, B1-1-02, B1-1-03</td></tr>
+  <tr><td>B1-2</td><td>トーナメントクロック</td><td>B1-2-01, B1-2-02, B1-2-03, B1-2-04, B1-2-05, B1-2-09</td></tr>
+  <tr><td>B1-3</td><td>参加者管理</td><td>B1-3-03, B1-3-04, B1-3-14</td></tr>
+  <tr><td>B1-4</td><td>配席・テーブル管理</td><td>B1-4-02, B1-4-06, B1-4-08, B1-4-09</td></tr>
+  <tr><td>B1-6</td><td>チケット管理</td><td>B1-6-02</td></tr>
+  <tr><td>B6-4</td><td>Floor ディーラーモード</td><td>B6-4-02</td></tr>
+</table>
+
+<!-- 3. ストーリー -->
+<h2>3. ユーザーストーリー</h2>
+
+<div class="card card-amber">
+  <h4>ストーリー1: 「クロックを起動してトーナメント開始」</h4>
+  <p>TDのスタッフAがPGOS Managerで「サンデー杯」のストラクチャーを選択（テンプレートから「デイリーNLH 60名」を読み込み）。会場のTV2台にPGOS Clockを表示。「クロックスタート」ボタンで開始。<strong>TV・Manager・プレイヤーアプリすべてで同じ残り時間が表示</strong>。レベル遷移、ブレイク開始は自動。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>ストーリー2: 「エリミネーション記録 → 自動バランシング」</h4>
+  <p>テーブル3でプレイヤーがバスト。ディーラーBがFloorアプリのディーラーモードで「エリミネーション」→ バストしたプレイヤーを選択 → 記録。Managerの座席表が即時更新され、<strong>残り39名 → 38名</strong>に。テーブル間の人数差が2名以上になったため、<strong>オートバランシングが移動候補を提案</strong>。TDが「実行」をタップすると、移動対象プレイヤーのアプリに席替え通知が届く。</p>
+</div>
+
+<div class="card card-amber">
+  <h4>ストーリー3: 「テーブルブレイク → 自動再配席」</h4>
+  <p>残り18名（3テーブル）。TDがテーブル4のテーブルブレイクを決定。Managerで「テーブル4をブレイク」を選択すると、テーブル4の6名が<strong>残りの2テーブルにランダムに再配席</strong>。全プレイヤーに新しい席が通知される。Managerの座席表は2テーブル構成に自動更新。</p>
+</div>
+
+<!-- 4. ストラクチャー管理 -->
+<h2>4. ストラクチャー管理</h2>
+
+<h3>4-1. ストラクチャー定義（B1-1-01）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-1-01</td><td>ストラクチャー定義</td><td>トーナメントのブラインドストラクチャーを定義: ①レベルごとのSB/BB/アンテ ②各レベルの時間（分） ③ブレイクの挿入位置と時間 ④スタートチップ量 ⑤アドオン可能レベル範囲 ⑥レジストレーション終了レベル。すべての項目をManagerのUI上で編集可能</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h4>ストラクチャー定義の項目</h4>
+<table>
+  <tr><th>項目</th><th>設定内容</th><th>例</th></tr>
+  <tr><td>レベル構成</td><td>レベル番号、SB、BB、アンテ、レベル時間（分）</td><td>Lv.1: 25/50/0, 15min</td></tr>
+  <tr><td>ブレイク</td><td>挿入レベル、ブレイク時間（分）</td><td>Lv.4後に10分ブレイク</td></tr>
+  <tr><td>スタートチップ</td><td>初期チップ量</td><td>15,000</td></tr>
+  <tr><td>アドオン</td><td>可能レベル範囲、アドオン額、チップ量、回数上限</td><td>Lv.1〜6, ¥1,000, 15,000チップ, 1回</td></tr>
+  <tr><td>レジストレーション終了</td><td>終了レベル（3-2 B1-3-05 で定義）</td><td>Lv.8 終了時</td></tr>
+  <tr><td>カラーアップ</td><td>チップ交換タイミング</td><td>Lv.5 ブレイク時に25チップ回収</td></tr>
+</table>
+
+<h3>4-2. ストラクチャーテンプレート（B1-1-02）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-1-02</td><td>ストラクチャーテンプレート</td><td>よく使うストラクチャーをテンプレートとして保存・再利用。①クラブ独自のテンプレート作成・編集・削除 ②テンプレートからのトーナメント作成（コピーして編集可能） ③PGOSが提供するプリセットテンプレート（デイリーNLH 30名/60名/100名等）</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<!-- 5. クロック -->
+<h2>5. トーナメントクロック</h2>
+
+<h3>5-1. クロック表示（B1-2-01）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-2-01</td><td>トーナメントクロック表示</td><td>大画面（TV/モニター）に以下を表示: ①現在のレベル番号 ②SB/BB/アンテ ③レベル残り時間（カウントダウン） ④次のレベルのSB/BB/アンテ ⑤残りプレイヤー数 / エントリー数 ⑥平均スタック ⑦次のブレイクまでの時間。視認性の高いフォント・レイアウトで表示。フルスクリーン対応</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h4>クロック表示の構成要素</h4>
+<table>
+  <tr><th>要素</th><th>表示位置</th><th>更新タイミング</th></tr>
+  <tr><td>レベル残り時間</td><td>中央（最大サイズ）</td><td>毎秒</td></tr>
+  <tr><td>SB / BB / アンテ</td><td>上部</td><td>レベル遷移時</td></tr>
+  <tr><td>次のレベルのブラインド</td><td>上部（サブ情報）</td><td>レベル遷移時</td></tr>
+  <tr><td>残りプレイヤー / エントリー</td><td>下部</td><td>エリミネーション時</td></tr>
+  <tr><td>平均スタック</td><td>下部</td><td>エリミネーション時</td></tr>
+  <tr><td>トーナメント名</td><td>最上部</td><td>固定</td></tr>
+  <tr><td>ブレイク情報</td><td>下部</td><td>レベル遷移時</td></tr>
+</table>
+
+<h3>5-2. マルチデバイス同期（B1-2-02）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-2-02</td><td>マルチデバイス同期</td><td>複数のデバイス（TV、PC、タブレット、スマートフォン）でクロックを同時表示し、すべてのデバイスで<strong>同一の残り時間を表示</strong>。Managerでクロックを操作（一時停止、レベルスキップ等）すると全デバイスに即時反映。PGOS Clock（大画面専用ページ）のURLを共有するだけで任意のTVに表示可能</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>5-3. クロック操作</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-2-03</td><td>クロック操作</td><td>Managerからクロックを操作: ①<strong>スタート / ポーズ</strong> ②<strong>レベル進む / 戻る</strong>（手動でレベルを前後に移動） ③<strong>時間追加</strong>（現在のレベルに時間を追加） ④<strong>時間短縮</strong>（残り時間を減らす）。ポーズ中は全デバイスで「PAUSED」を表示</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+  <tr><td>B1-2-04</td><td>ポーズ要因記録<span class="new-badge">新規</span></td><td>クロックをポーズした際に要因を記録可能（任意）: フロアコール、テーブルブレイク、カラーアップ、その他。ポーズ履歴をトーナメントログに記録</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<h3>5-4. オフライン動作保証（B1-2-09）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-2-09</td><td>オフライン動作保証</td><td>ネットワーク切断時もPGOS Clockのカウントダウンは継続。ローカルで時刻を管理し、復旧後にサーバーと再同期。ManagerのクロックUIもオフラインで操作可能（PWA / Service Worker対応）</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>5-5. ブレイク管理（B1-2-05）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-2-05</td><td>ブレイク管理</td><td>ストラクチャーで定義されたブレイクを自動実行。①ブレイク開始時にクロックがブレイクタイマーに切り替わる ②ブレイク残り時間をカウントダウン ③ブレイク終了時に自動的に次のレベルに遷移 ④ブレイク中のアドオン受付を表示（設定時）。TDの判断でブレイクの追加・時間延長も可能</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<!-- 6. 配席・テーブル管理 -->
+<h2>6. 配席・テーブル管理</h2>
+
+<h3>6-1. ランダムシート抽選（B1-4-02）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-4-02</td><td>ランダムシート抽選</td><td>チェックイン時（3-3）およびテーブルブレイク時に、テーブル/シートをランダムに抽選して割当。テーブルバランシング（各テーブルの人数を均等化）を考慮。抽選結果は即時にManagerの座席表に反映し、プレイヤーアプリにも通知。手動での配席変更も可能</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>6-2. オートバランシング（B1-4-08）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-4-08</td><td>オートバランシング</td><td>テーブル間のプレイヤー数の差が<strong>2名以上</strong>になった場合、移動対象者を自動選出して提案。①差が2名以上で「バランシング推奨」を表示 ②移動候補プレイヤーを提案（直近に着席したプレイヤー or ランダム） ③TDが「実行」または「変更」を選択 ④実行時に移動対象プレイヤーのアプリに通知。完全自動実行（TD承認なし）の設定も可能</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>6-3. オートテーブルブレイク（B1-4-06）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-4-06</td><td>オートテーブルブレイク</td><td>残りプレイヤー数に応じてテーブルブレイクを自動提案。①目標テーブル数（残り人数に基づき算出）を表示 ②ブレイク対象テーブルを提案 ③TDが「実行」→ 対象テーブルのプレイヤーをランダムに残りテーブルへ再配席 ④全プレイヤーに新配席を通知。ファイナルテーブル移行（残り1テーブル）も同じ仕組みで処理</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h4>テーブル数の目安</h4>
+<table>
+  <tr><th>残り人数</th><th>推奨テーブル数（9人卓）</th><th>推奨テーブル数（6人卓）</th></tr>
+  <tr><td>46〜54名</td><td>6卓</td><td>9卓</td></tr>
+  <tr><td>37〜45名</td><td>5卓</td><td>8卓</td></tr>
+  <tr><td>28〜36名</td><td>4卓</td><td>6卓</td></tr>
+  <tr><td>19〜27名</td><td>3卓</td><td>5卓</td></tr>
+  <tr><td>10〜18名</td><td>2卓</td><td>3卓</td></tr>
+  <tr><td>9名以下</td><td>ファイナルテーブル</td><td>—</td></tr>
+</table>
+
+<h3>6-4. バブル管理（B1-4-09）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-4-09</td><td>バブル管理</td><td>インマネラインの1名手前（バブル）に到達した際、<strong>ハンド・フォー・ハンド</strong>（全テーブル同時進行）を支援。①Managerに「バブル到達」を表示 ②ハンド・フォー・ハンドモードを有効化 → クロック表示に「HAND FOR HAND」を追加 ③各テーブルのハンド完了をディーラーがFloorアプリで報告 ④全テーブル完了後に次のハンドを開始。バブル突破時に「IN THE MONEY」を全デバイスに表示</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph2">2</span></td></tr>
+</table>
+
+<!-- 7. エリミネーション -->
+<h2>7. エリミネーション・順位管理</h2>
+
+<h3>7-1. エリミネーション記録（B1-3-04）</h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-3-04</td><td>エリミネーション記録</td><td>プレイヤーのバスト（脱落）をシステムに記録。①Manager / Floor（ディーラーモード）からバストプレイヤーを選択して記録 ②記録時に残りプレイヤー数が自動更新 ③クロック表示の残り人数・平均スタックが即時更新 ④プレイヤーアプリにエリミネーション通知を送信。レジストレーション期間中のバストの場合はリエントリーを促す通知も送信</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<div class="flow-box">
+  <strong>エリミネーション記録フロー:</strong><br><br>
+  ① ディーラーがFloor（ディーラーモード）で「エリミネーション」をタップ<br>
+  <span class="arrow">↓</span><br>
+  ② バストしたプレイヤーを選択（テーブルの着席者一覧から）<br>
+  <span class="arrow">↓</span><br>
+  ③ 「記録」→ プレイヤーの状態が Play-in → Play-out に遷移<br>
+  <span class="arrow">↓</span><br>
+  ④ 残り人数・平均スタック・順位が自動更新<br>
+  <span class="arrow">↓</span><br>
+  ⑤ プレイヤーアプリに通知（順位 / リエントリー案内 / 入賞情報）
+</div>
+
+<h3>7-2. 自動順位確定（B1-3-17）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-3-17</td><td>自動順位確定</td><td>エリミネーション記録の順序に基づき、順位を自動確定。①レジストレーション終了後のバスト順に降順で順位を付与 ②同時バスト（複数プレイヤーが同一ハンドで脱落）の場合は開始チップ量で決定（設定変更可能） ③順位確定と同時に賞金/ポイントの自動計算 ④最終順位はトーナメント結果として確定し、変更にはTD権限が必要</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>7-3. リエントリー処理（B1-3-14 参照）</h3>
+<div class="card card-green">
+  <p>リエントリーの可否・回数上限は 3-2 で定義済み（B1-3-14）。3-4 では<strong>プレイ中にバストしたプレイヤーのリエントリー処理</strong>を扱う。</p>
+  <ul>
+    <li>バスト → エリミネーション記録 → リエントリー可能期間内なら「リエントリー」ボタンが表示される</li>
+    <li>スタッフがリエントリーを処理 → 支払い確認 → 新しいテーブル/シートをランダム抽選 → Play-in に復帰</li>
+    <li>リエントリー時のスタートチップはストラクチャー定義に従う（通常は初期チップと同額）</li>
+  </ul>
+</div>
+
+<!-- 8. アドオン管理 -->
+<h2>8. アドオン管理</h2>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-3-03</td><td>アドオン処理</td><td>アドオン可能期間中に、プレイヤーからの申請またはスタッフの操作でアドオンを処理。①プレイヤーアプリからの申請をFloor/Managerで受信 ②支払い方法を確認（事前決済/現金/カード） ③チップの配布を記録 ④アドオン回数を参加者リストに記録。ブレイク中に一括処理するのが標準だが、クラブ設定でプレイ中のアドオンも可能</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<!-- 9. ディーラーモード -->
+<h2>9. PGOS Floor ディーラーモード</h2>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B6-4-02</td><td>Floor ディーラーモード</td><td>ディーラーがテーブルに設置されたQRコードをスキャン＋パスワードでログインし、そのテーブル専用のFloor画面を表示。機能: ①<strong>エリミネーション記録</strong>（テーブルの着席者一覧からバスト選択） ②<strong>アドオン申請の受付・処理</strong> ③<strong>席替え通知の確認</strong>（バランシング/テーブルブレイク時） ④<strong>ショットクロック</strong>（プレイヤーごとの持ち時間カウントダウン） ⑤<strong>新着席プレイヤー通知</strong>（バランシングで移動してきたプレイヤー）</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<div class="card card-green">
+  <p><strong>ディーラーモードの特徴:</strong> ディーラーは自分のスマートフォンでFloorアプリを使用。テーブルQRスキャンで自動的にそのテーブルにログインするため、ディーラーチェンジ時もスムーズに引き継ぎ可能。ディーラーモードは最小限の権限（エリミネーション記録、アドオン処理、閲覧）のみで、テーブル管理やクロック操作はTD権限が必要。</p>
+</div>
+
+<!-- 10. サテライト -->
+<h2>10. サテライト通過処理（B1-6-02）<span class="new-badge">新規</span></h2>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>B1-6-02</td><td>サテライト通過処理</td><td>サテライトトーナメントの上位入賞者に対し、本戦のチケットを自動発行。①サテライトのペイアウト設定で「通過枠」を定義 ②トーナメント終了時にペイアウト確定 → 通過者に自動的にチケット発行 ③発行されたチケットはプレイヤーアプリの「チケット一覧」に表示 ④チケットの利用（本戦エントリー）は 3-2 B1-6-03 で定義済み</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<!-- 11. 連携 -->
+<h2>11. プレイヤー側との連携（相互参照）</h2>
+<div class="relation-box">
+  <table>
+    <tr><th>運営側の操作</th><th>プレイヤーへの影響</th><th>プレイヤー側 要件ID</th></tr>
+    <tr><td>クロック スタート/進行</td><td>リアルタイム進行状況の配信</td><td>A2-3-04, A2-3-05</td></tr>
+    <tr><td>バランシング実行</td><td>席替え通知</td><td>A2-T-13</td></tr>
+    <tr><td>テーブルブレイク実行</td><td>テーブルブレイク通知</td><td>A2-T-14</td></tr>
+    <tr><td>ブレイク開始/終了</td><td>ブレイク通知</td><td>A2-T-15</td></tr>
+    <tr><td>エリミネーション記録</td><td>バスト通知（順位/リエントリー案内）</td><td>A2-T-16</td></tr>
+    <tr><td>アドオン処理</td><td>アドオン完了通知</td><td>A2-3-03</td></tr>
+    <tr><td>リエントリー処理</td><td>新テーブル/シート通知</td><td>A2-3-06</td></tr>
+    <tr><td>サテライト通過処理</td><td>チケット発行通知</td><td>—（3-7で定義予定）</td></tr>
+  </table>
+</div>
+
+<!-- 12. 検討事項 -->
+<h2>12. 検討事項・リスク</h2>
+<table>
+  <tr><th>項目</th><th>内容</th><th>対応方針</th></tr>
+  <tr><td>クロック同期の精度</td><td>ネットワーク遅延によるデバイス間の時刻差</td><td>サーバー時刻を基準に各デバイスが補正。許容差は1秒以内</td></tr>
+  <tr><td>エリミネーションの誤記録</td><td>誤ってバストを記録した場合の取消</td><td>「エリミネーション取消」機能を用意。TD権限が必要。取消履歴を記録</td></tr>
+  <tr><td>同時バストの順位</td><td>同一ハンドで複数プレイヤーが脱落した場合の順位決定</td><td>デフォルトは開始チップ量で決定。クラブ設定で変更可能（均等分配等）</td></tr>
+  <tr><td>大画面クロックの安定性</td><td>長時間表示でブラウザがクラッシュするリスク</td><td>メモリリークのないSPA設計。自動リロード機能</td></tr>
+  <tr><td>ディーラーモードのセキュリティ</td><td>テーブルQR + パスワードで十分か</td><td>パスワードは営業日ごとにリセット。操作ログで監査可能</td></tr>
+  <tr><td>マルチフライト対応</td><td>Day1A / Day1B 等の複数フライトの管理</td><td>Phase 2 で対応予定。各フライトを独立トーナメントとして管理し、Day2 で統合</td></tr>
+</table>
+
+<!-- 13. 非機能要件 -->
+<h2>13. 非機能要件</h2>
+<table>
+  <tr><th>項目</th><th>要件</th><th>備考</th></tr>
+  <tr><td>クロック同期精度</td><td>デバイス間の時刻差1秒以内</td><td>WebSocket / SSE</td></tr>
+  <tr><td>クロックオフライン継続</td><td>ネットワーク切断後も24時間以上継続</td><td>PWA / Service Worker</td></tr>
+  <tr><td>エリミネーション → 残り人数更新</td><td>3秒以内に全デバイスに反映</td><td>Push配信</td></tr>
+  <tr><td>バランシング計算</td><td>100名規模で2秒以内</td><td>サーバーサイド計算</td></tr>
+  <tr><td>座席表更新</td><td>操作から2秒以内に全クライアントに反映</td><td>リアルタイム同期</td></tr>
+  <tr><td>同時接続</td><td>Clock表示10台 + Manager5台 + Floor20台 を同時処理</td><td>1トーナメントあたり</td></tr>
+  <tr><td>対応ブラウザ（Clock）</td><td>Chrome / Safari 最新2バージョン</td><td>フルスクリーン対応</td></tr>
+  <tr><td>Floor対応OS</td><td>iOS 16+, Android 12+</td><td>ディーラーモード含む</td></tr>
+</table>
+
+<div class="footer-note">
+  PGOS — 3-4. プレイ中（トーナメント）店舗・イベント運営向け詳細<br>
+  合同会社グローバルポイント — Confidential
+</div>
+
+</body>
+</html>
