@@ -41,12 +41,13 @@
 <div class="cover">
   <h1>PGOS</h1>
   <div class="subtitle">3-4. プレイ中 — トーナメント</div>
-  <div class="sub2">シチュエーション別 機能マップ — 詳細編</div>
+  <div class="sub2">シチュエーション別 機能マップ — 詳細編 v2</div>
   <div class="badge-player">プレイヤー向け</div>
   <div class="meta">
     対象コンポーネント: PGOS Player（iOS / Android アプリ）<br>
     合同会社グローバルポイント<br>
-    2026年3月14日
+    2026年3月14日<br>
+    v2: ショットクロック（チェスクロック方式）を追加
   </div>
 </div>
 
@@ -60,21 +61,27 @@
   <li>&emsp;4-1. リアルタイム進行状況（A2-3-04）</li>
   <li>&emsp;4-2. ブラインドスケジュール表示<span class="new-badge">新規</span></li>
   <li>&emsp;4-3. テーブル・シート確認</li>
-  <li>5. プレイ中の操作</li>
-  <li>&emsp;5-1. アドオン申請（A2-3-03）</li>
-  <li>&emsp;5-2. リエントリー申請<span class="new-badge">新規</span></li>
-  <li>&emsp;5-3. 飲食オーダー（A2-4-01）</li>
-  <li>6. テーブル移動・イベント通知</li>
-  <li>&emsp;6-1. バランシング移動通知</li>
-  <li>&emsp;6-2. テーブルブレイク通知<span class="new-badge">新規</span></li>
-  <li>&emsp;6-3. ブレイク通知<span class="new-badge">新規</span></li>
-  <li>7. エリミネーション・結果</li>
-  <li>&emsp;7-1. エリミネーション通知<span class="new-badge">新規</span></li>
-  <li>&emsp;7-2. プレイアウト表示<span class="new-badge">新規</span></li>
-  <li>&emsp;7-3. ファイナルテーブル情報<span class="new-badge">新規</span></li>
-  <li>8. 店舗・運営側への連携</li>
-  <li>9. 検討事項・リスク</li>
-  <li>10. 非機能要件</li>
+  <li>5. ショットクロック（チェスクロック方式）<span class="new-badge">新規</span></li>
+  <li>&emsp;5-1. 設計思想: Triton Tempo モデル</li>
+  <li>&emsp;5-2. タイムバンク表示（A2-3-07）</li>
+  <li>&emsp;5-3. アクション中のカウントダウン（A2-3-08）</li>
+  <li>&emsp;5-4. タイムバンク加算（A2-3-09）</li>
+  <li>&emsp;5-5. タイムアウト時の処理（A2-3-10）</li>
+  <li>6. プレイ中の操作</li>
+  <li>&emsp;6-1. アドオン申請（A2-3-03）</li>
+  <li>&emsp;6-2. リエントリー申請<span class="new-badge">新規</span></li>
+  <li>&emsp;6-3. 飲食オーダー（A2-4-01）</li>
+  <li>7. テーブル移動・イベント通知</li>
+  <li>&emsp;7-1. バランシング移動通知</li>
+  <li>&emsp;7-2. テーブルブレイク通知<span class="new-badge">新規</span></li>
+  <li>&emsp;7-3. ブレイク通知<span class="new-badge">新規</span></li>
+  <li>8. エリミネーション・結果</li>
+  <li>&emsp;8-1. エリミネーション通知<span class="new-badge">新規</span></li>
+  <li>&emsp;8-2. プレイアウト表示<span class="new-badge">新規</span></li>
+  <li>&emsp;8-3. ファイナルテーブル情報<span class="new-badge">新規</span></li>
+  <li>9. 店舗・運営側への連携</li>
+  <li>10. 検討事項・リスク</li>
+  <li>11. 非機能要件</li>
 </ul></div>
 
 <!-- 1. 概要 -->
@@ -133,6 +140,11 @@
   <p>プレイヤーCのテーブルが解散（テーブルブレイク）。アプリに<strong>プッシュ通知「テーブル5 → テーブル2 / シート3 に移動してください」</strong>が届く。アプリ画面にも新しいテーブル/シート番号が表示され、迷わず移動。</p>
 </div>
 
+<div class="card card-amber">
+  <h4>ストーリー4: 「チェスクロックで持ち時間を管理」</h4>
+  <p>プレイヤーDはトーナメント参加時に<strong>タイムバンク 5分00秒</strong>が付与された（早期エントリーのボーナスで +30秒も加算済み）。ハンドごとに30秒のベースタイムが与えられ、30秒を超えた分だけタイムバンクを消費。リバーで大きなベットに直面し、追加で45秒考えたが、消費されたのは<strong>15秒だけ</strong>（ベースタイム30秒 + タイムバンク15秒）。アプリには残りタイムバンクが<strong>「4:45」</strong>とリアルタイム表示される。従来のタイムエクステンションチップなら30秒を丸ごと1枚消費するところ、必要な分だけ使えるので公平。</p>
+</div>
+
 <!-- 4. 情報閲覧 -->
 <h2>4. トーナメント情報の閲覧</h2>
 
@@ -165,16 +177,82 @@
   <tr><td>A2-T-11</td><td>テーブル・シート確認</td><td>自分が現在座っているテーブル番号・シート番号をアプリに常時表示。席替え発生時は新しいテーブル/シートに更新。アプリを開けばいつでも現在の配席を確認可能</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
 </table>
 
-<!-- 5. プレイ中の操作 -->
-<h2>5. プレイ中の操作</h2>
+<!-- 5. ショットクロック（チェスクロック方式） -->
+<h2>5. ショットクロック（チェスクロック方式）<span class="new-badge">新規</span></h2>
 
-<h3>5-1. アドオン申請（A2-3-03）</h3>
+<h3>5-1. 設計思想: Triton Tempo モデル</h3>
+<div class="card card-blue">
+  <h4>従来のショットクロックの課題</h4>
+  <p>従来型のショットクロックでは、ベースタイム（例: 30秒）を超えるとタイムエクステンションチップ（通常30秒単位）を消費する。しかし、5秒だけ追加で考えたい場合でも30秒チップを丸ごと1枚消費する必要があり、<strong>不公平・非効率</strong>という問題があった。また、プレイヤーが意図的に時間を使い切るスローイング（時間の浪費）を助長する側面もあった。</p>
+  <h4>PGOS が採用するチェスクロック方式</h4>
+  <p>2026年3月の Triton Poker Series で導入された <strong>Triton Tempo</strong> に着想を得たシステム。各プレイヤーにトーナメント全体を通した<strong>個人タイムバンク</strong>を付与し、ベースタイム超過分を<strong>秒単位</strong>で消費する。必要な時間だけ使えるため公平性が高く、全体のゲーム進行速度も向上する。</p>
+</div>
+
+<div class="card card-blue">
+  <h4>タイムバンクの基本ルール</h4>
+  <ul>
+    <li><strong>ベースタイム</strong>: ハンドごとの各アクションに与えられる基本思考時間（デフォルト: プリフロップ 20秒 / ポストフロップ 30秒、クラブ設定で変更可能）</li>
+    <li><strong>タイムバンク</strong>: トーナメント開始時に付与される個人持ち時間の合計（デフォルト: 5分、クラブ設定で変更可能）</li>
+    <li><strong>消費ルール</strong>: ベースタイムを超過した秒数だけタイムバンクから減算（1秒単位）</li>
+    <li><strong>追加付与</strong>: レベルアップ時、ブレイク後、深いラウンド進出時にタイムバンクが加算される（例: 5レベルごとに +30秒）</li>
+    <li><strong>早期エントリーボーナス</strong>: レジストレーション期間の早い段階で登録したプレイヤーに追加タイムバンクを付与（例: Day1開始前登録で +30秒）</li>
+    <li><strong>タイムバンク枯渇時</strong>: ベースタイム内にアクションしなければ自動フォールド</li>
+  </ul>
+</div>
+
+<h3>5-2. タイムバンク表示（A2-3-07）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-3-07</td><td>タイムバンク表示</td><td>トーナメント情報画面に<strong>自分の残りタイムバンク</strong>を常時表示（分:秒形式）。消費時にはリアルタイムでカウントダウンし、残り30秒以下で<strong>警告色（赤）</strong>に変化。加算イベント（レベルアップ等）時には「+30秒」等のアニメーションを表示。他プレイヤーのタイムバンク残量は、PGOS Clock（店舗ディスプレイ）に一覧表示される（プライバシー設定によりアプリでの閲覧は任意）<span class="new-badge">新規</span></td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h3>5-3. アクション中のカウントダウン（A2-3-08）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-3-08</td><td>アクション中カウントダウン</td><td>自分のアクション番が回ってきた際、アプリに<strong>ベースタイムのカウントダウン</strong>を表示。ベースタイム終了後は<strong>タイムバンクからのカウントダウン</strong>に自動切替（表示色を変更: 青→オレンジ）。カウントダウンは PGOS Clock と同期し、アプリ・店舗ディスプレイ・Floor アプリで同一の残り時間を表示。ベースタイム残り5秒で<strong>バイブレーション</strong>通知（設定可能）<span class="new-badge">新規</span></td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<div class="flow-box">
+  <strong>アクション時のタイム表示フロー:</strong><br>
+  アクション開始 <span class="arrow">→</span> ベースタイム開始（青表示: 30秒…29…28…）<br>
+  <span class="arrow">→</span> ベースタイム残り5秒（バイブ通知） <span class="arrow">→</span> ベースタイム 0秒<br>
+  <span class="arrow">→</span> タイムバンクに自動切替（オレンジ表示: 残りバンクからカウントダウン）<br>
+  <span class="arrow">→</span> アクション完了でタイマー停止 <span class="arrow">→</span> 消費秒数をタイムバンクから減算
+</div>
+
+<h3>5-4. タイムバンク加算（A2-3-09）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-3-09</td><td>タイムバンク加算</td><td>以下のタイミングでタイムバンクに時間を加算し、アプリに「+○秒」と通知: ①<strong>レベルアップ時</strong>（例: 5レベルごとに +30秒） ②<strong>ブレイク後</strong>（例: 各ブレイク後に +15秒） ③<strong>ファイナルテーブル到達時</strong>（例: +60秒） ④<strong>ヘッズアップ到達時</strong>（例: +120秒）。加算ルールはクラブ設定で定義（B1-2-10 のストラクチャー設定に基づく）<span class="new-badge">新規</span></td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<h4>タイムバンク加算のデフォルト設定例</h4>
+<table>
+  <tr><th>タイミング</th><th>加算時間</th><th>備考</th></tr>
+  <tr><td>トーナメント開始時</td><td>5分00秒</td><td>初期タイムバンク</td></tr>
+  <tr><td>早期エントリーボーナス</td><td>+30秒</td><td>Day1 開始前登録</td></tr>
+  <tr><td>5レベルごと</td><td>+30秒</td><td>自動加算</td></tr>
+  <tr><td>ブレイク後</td><td>+15秒</td><td>自動加算</td></tr>
+  <tr><td>ファイナルテーブル</td><td>+60秒</td><td>FT 到達時のみ</td></tr>
+  <tr><td>ヘッズアップ</td><td>+120秒</td><td>HU 到達時のみ</td></tr>
+</table>
+
+<h3>5-5. タイムアウト時の処理（A2-3-10）<span class="new-badge">新規</span></h3>
+<table>
+  <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
+  <tr><td>A2-3-10</td><td>タイムアウト処理</td><td>タイムバンクが 0 の状態でベースタイムを超過した場合、<strong>自動フォールド</strong>。アプリに「タイムアウト — フォールドしました」を表示。ただし、①<strong>オールイン vs オールイン</strong>等アクション不要の場面ではタイマーを停止 ②<strong>ビッグブラインドでチェック可能</strong>な場面ではフォールドではなくチェックを自動選択。タイムバンク残り30秒以下の場合、ハンド開始時に<strong>「タイムバンク残りわずか」</strong>のアラートを表示<span class="new-badge">新規</span></td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
+</table>
+
+<!-- 6. プレイ中の操作 -->
+<h2>6. プレイ中の操作</h2>
+
+<h3>6-1. アドオン申請（A2-3-03）</h3>
 <table>
   <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
   <tr><td>A2-3-03</td><td>アドオン申請</td><td>アドオン可能期間中にアプリから申請。①アドオン額・チップ額の確認 ②支払い方法の選択（事前決済のウェブコイン/カード or 現金を選択） ③申請送信 → スタッフ/ディーラーに通知。アドオンは通常ブレイク中に処理されるが、クラブ設定によりプレイ中も可能。アドオン可能期間外は申請ボタンが非活性</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
 </table>
 
-<h3>5-2. リエントリー申請（A2-3-06）<span class="new-badge">新規</span></h3>
+<h3>6-2. リエントリー申請（A2-3-06）<span class="new-badge">新規</span></h3>
 <div class="card card-blue">
   <p>バスト後、レジストレーション期間内であればアプリからリエントリーを申請できる。</p>
 </div>
@@ -184,37 +262,37 @@
   <tr><td>A2-3-06</td><td>リエントリー申請</td><td>バスト後にアプリに「リエントリーする」ボタンを表示（レジストレーション期間中 かつ リエントリー上限未達の場合のみ）。①エントリー費・チップ額の確認 ②支払い方法の選択 ③申請送信 → 新しいテーブル/シートが割り当てられ Play-in に復帰。残りリエントリー回数を表示（B1-3-14 の上限設定に基づく）</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
 </table>
 
-<h3>5-3. 飲食オーダー（A2-4-01）</h3>
+<h3>6-3. 飲食オーダー（A2-4-01）</h3>
 <table>
   <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
   <tr><td>A2-4-01</td><td>飲食オーダー</td><td>テーブルを離れずにアプリからフード・ドリンクを注文。メニュー表示 → 商品選択 → 注文確定 → テーブルに配達。支払いはデポジット引落し or 退店時精算</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph3">3</span></td></tr>
 </table>
 
-<!-- 6. テーブル移動・イベント通知 -->
-<h2>6. テーブル移動・イベント通知</h2>
+<!-- 7. テーブル移動・イベント通知 -->
+<h2>7. テーブル移動・イベント通知</h2>
 
-<h3>6-1. バランシング移動通知</h3>
+<h3>7-1. バランシング移動通知</h3>
 <table>
   <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
   <tr><td>A2-T-13</td><td>バランシング移動通知</td><td>テーブルバランシング（テーブル間の人数差を均等化するための移動）が発生した場合、移動対象のプレイヤーに<strong>プッシュ通知</strong>で新しいテーブル/シートを通知。アプリ画面の配席情報も即時更新</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
 </table>
 
-<h3>6-2. テーブルブレイク通知（A2-T-14）<span class="new-badge">新規</span></h3>
+<h3>7-2. テーブルブレイク通知（A2-T-14）<span class="new-badge">新規</span></h3>
 <table>
   <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
   <tr><td>A2-T-14</td><td>テーブルブレイク通知</td><td>自分のテーブルが解散（テーブルブレイク）になった場合、プッシュ通知で<strong>新しい移動先テーブル/シート</strong>を通知。「テーブル○が解散しました。テーブル△ / シート□ に移動してください」の形式</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
 </table>
 
-<h3>6-3. ブレイク通知（A2-T-15）<span class="new-badge">新規</span></h3>
+<h3>7-3. ブレイク通知（A2-T-15）<span class="new-badge">新規</span></h3>
 <table>
   <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
   <tr><td>A2-T-15</td><td>ブレイク通知</td><td>トーナメントのブレイク開始/終了をプッシュ通知。①ブレイク開始:「ブレイクに入ります（○分間）」 ②ブレイク終了2分前:「ブレイク終了まで2分です」 ③ブレイク終了:「ブレイクが終了しました。テーブルにお戻りください」。アドオン可能なブレイクの場合は「アドオン受付中」も表示</td><td><span class="badge badge-should">Should</span></td><td><span class="badge badge-ph1">1</span></td></tr>
 </table>
 
-<!-- 7. エリミネーション・結果 -->
-<h2>7. エリミネーション・結果</h2>
+<!-- 8. エリミネーション・結果 -->
+<h2>8. エリミネーション・結果</h2>
 
-<h3>7-1. エリミネーション通知（A2-T-16）<span class="new-badge">新規</span></h3>
+<h3>8-1. エリミネーション通知（A2-T-16）<span class="new-badge">新規</span></h3>
 <div class="card card-blue">
   <p>バストした際のプレイヤーアプリの表示。</p>
 </div>
@@ -224,7 +302,7 @@
   <tr><td>A2-T-16</td><td>エリミネーション通知</td><td>スタッフがエリミネーション記録を行うと、プレイヤーアプリに結果を表示: ①<strong>順位</strong>（レジストレーション終了後のバストの場合） ②<strong>リエントリー案内</strong>（レジストレーション中のバストの場合、「リエントリーする」ボタン） ③<strong>賞金/ポイント</strong>（入賞の場合）。入賞した場合は祝福アニメーションを表示</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
 </table>
 
-<h3>7-2. プレイアウト表示（A2-T-18）<span class="new-badge">新規</span></h3>
+<h3>8-2. プレイアウト表示（A2-T-18）<span class="new-badge">新規</span></h3>
 <div class="card card-blue">
   <p>レジストレーション終了後のバスト = Play-out。順位が確定し、トーナメントからの退出が完了する。</p>
 </div>
@@ -234,18 +312,19 @@
   <tr><td>A2-T-18</td><td>プレイアウト表示</td><td>Play-out 時にアプリに表示: ①最終順位（○○位 / ○○名中） ②入賞した場合は賞金額/ポイント ③トーナメント参加のサマリー（参加費、アドオン回数、プレイ時間）。入賞の場合は「ペイアウトは受付で精算してください」の案内。戦績への自動反映は 3-7 で定義</td><td><span class="badge badge-must">Must</span></td><td><span class="badge badge-ph1">1</span></td></tr>
 </table>
 
-<h3>7-3. ファイナルテーブル情報（A2-T-19）<span class="new-badge">新規</span></h3>
+<h3>8-3. ファイナルテーブル情報（A2-T-19）<span class="new-badge">新規</span></h3>
 <table>
   <tr><th>ID</th><th>要件</th><th>詳細</th><th>優先度</th><th>Ph</th></tr>
   <tr><td>A2-T-19</td><td>ファイナルテーブル情報</td><td>ファイナルテーブル到達時に、残りプレイヤーの情報をアプリに表示: ①各プレイヤーのチップカウント（公開設定の場合） ②順位別の賞金テーブル。チョップ（ディール）提案がある場合はアプリに通知</td><td><span class="badge badge-could">Could</span></td><td><span class="badge badge-ph2">2</span></td></tr>
 </table>
 
-<!-- 8. 連携 -->
-<h2>8. 店舗・運営側への連携（相互参照）</h2>
+<!-- 9. 連携 -->
+<h2>9. 店舗・運営側への連携（相互参照）</h2>
 <div class="relation-box">
   <table>
     <tr><th>プレイヤーの操作</th><th>運営側への影響</th><th>運営側 要件ID</th></tr>
     <tr><td>リアルタイム進行状況の閲覧</td><td>クロック情報の配信</td><td>B1-2-01, B1-2-02</td></tr>
+    <tr><td>ショットクロック（タイムバンク表示・カウントダウン）</td><td>チェスクロック管理・タイムバンク設定</td><td>B1-2-10, B1-2-11</td></tr>
     <tr><td>アドオン申請</td><td>アドオン処理・チップ配布</td><td>B1-3-03</td></tr>
     <tr><td>リエントリー申請</td><td>リエントリー処理・再配席</td><td>B1-3-14</td></tr>
     <tr><td>席替え通知の受信</td><td>バランシング / テーブルブレイク実行</td><td>B1-4-08, B1-4-06</td></tr>
@@ -254,8 +333,8 @@
   </table>
 </div>
 
-<!-- 9. 検討事項 -->
-<h2>9. 検討事項・リスク</h2>
+<!-- 10. 検討事項 -->
+<h2>10. 検討事項・リスク</h2>
 <table>
   <tr><th>項目</th><th>内容</th><th>対応方針</th></tr>
   <tr><td>チップカウントの公開範囲</td><td>プレイ中のチップカウントをどこまで公開するか。全員に公開すると戦略に影響</td><td>ファイナルテーブルのみ公開（デフォルト）。クラブ設定で変更可能</td></tr>
@@ -263,10 +342,13 @@
   <tr><td>通知の頻度</td><td>プレイ中の過度な通知がプレイの妨げになる</td><td>重要通知（席替え・バスト）のみプッシュ。情報系（ブレイク等）はアプリ内のみ（設定可能）</td></tr>
   <tr><td>リアルタイム情報の遅延</td><td>クロック同期の遅延により実際と異なる情報が表示される</td><td>5秒以内の同期を目標。最終的にはクロック（PGOS Clock）が正</td></tr>
   <tr><td>オフライン時の情報表示</td><td>ネットワーク切断時にリアルタイム情報が更新されない</td><td>最後に取得した情報を表示し「オフライン」バッジを付与。席替え通知は復帰後に受信</td></tr>
+  <tr><td>ショットクロック同期精度</td><td>アプリとディーラー端末/Clock間でカウントダウンにズレが生じる可能性</td><td>PGOS Clock（サーバー時刻）を正とし、アプリは補正済み時刻を表示。ズレが1秒以上生じた場合は自動再同期</td></tr>
+  <tr><td>タイムバンク枯渇後の体験</td><td>タイムバンクが0のプレイヤーはベースタイムのみで全アクションを行う必要があり、ストレスが高い</td><td>残り30秒以下でハンド開始時に警告。ファイナルテーブル等の重要局面では追加付与で緩和</td></tr>
+  <tr><td>ショットクロック非対応トーナメント</td><td>すべてのトーナメントでチェスクロックを使用するとは限らない</td><td>クラブ設定で「ショットクロック: 有効/無効」を選択可能。無効時はタイムバンク関連UIを非表示</td></tr>
 </table>
 
-<!-- 10. 非機能要件 -->
-<h2>10. 非機能要件</h2>
+<!-- 11. 非機能要件 -->
+<h2>11. 非機能要件</h2>
 <table>
   <tr><th>項目</th><th>要件</th><th>備考</th></tr>
   <tr><td>クロック同期</td><td>PGOS Clock との時刻差5秒以内</td><td>WebSocket / SSE による同期</td></tr>
@@ -274,10 +356,12 @@
   <tr><td>席替え通知</td><td>バランシング確定から5秒以内に受信</td><td>プッシュ通知</td></tr>
   <tr><td>アドオン申請応答</td><td>申請から確認まで3秒以内</td><td>サーバー処理</td></tr>
   <tr><td>バッテリー消費</td><td>リアルタイム同期でバッテリー消費が過大にならない設計</td><td>同期間隔の最適化</td></tr>
+  <tr><td>ショットクロック同期</td><td>アプリ表示とPGOS Clock/Floor間の誤差 500ms 以内</td><td>サーバー時刻基準の補正</td></tr>
+  <tr><td>タイムバンク更新</td><td>加算・消費イベント発生から1秒以内にアプリ反映</td><td>WebSocket / SSE</td></tr>
 </table>
 
 <div class="footer-note">
-  PGOS — 3-4. プレイ中（トーナメント）プレイヤー向け詳細<br>
+  PGOS — 3-4. プレイ中（トーナメント）プレイヤー向け詳細 v2<br>
   合同会社グローバルポイント — Confidential
 </div>
 
