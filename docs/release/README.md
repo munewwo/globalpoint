@@ -12,6 +12,7 @@
 
 | 日付 | タイトル | ファイル |
 |------|----------|----------|
+| 2026-09-04 | ウェブコインの運用変更に関するお知らせ | [リリースノート](2026-09-04-webcoin-operation-change.md) / [元PDF](2026-09-04-webcoin-operation-change.pdf) |
 | 2026-02-14 | 住所変更のお知らせ（合同会社グローバルポイント） | [リリースノート](2026-02-14-address-change.md) |
 | 2026-02-12 | FSTからのウェブコインに関する問い合わせと回答 | [リリースノート](2026-02-12-fst-webcoin-inquiry-qa.md) |
 | 2026-02-05 | 規約改定および認定リングゲームに関する事業者向け説明会 | [リリースノート](2026-02-05-terms-update-certified-ring-briefing.md) / [資料（テキスト版）](2026-02-05-terms-update-certified-ring-briefing-material.md) |
